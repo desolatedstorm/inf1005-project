@@ -69,3 +69,19 @@ function activateMenu()
         }
     })
 }
+
+  const fearRadios = document.querySelectorAll('input[name="fear"]');
+  const rooms = document.querySelectorAll('.room-card');
+
+  fearRadios.forEach(radio => {
+    radio.addEventListener('change', () => {
+      const value = radio.value;
+      rooms.forEach(room => {
+        if (value === 'all' || room.dataset.fear === value) {
+          room.style.display = 'block';
+        } else {
+          room.style.display = 'none';
+        }
+      });
+    });
+  });
