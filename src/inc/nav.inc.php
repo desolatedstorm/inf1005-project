@@ -3,8 +3,12 @@
           aria-label="Thirteenth navbar example"
         >
           <div class="container-fluid">
+            <a class="navbar-brand d-flex align-items-center col-lg-3 me-0" href="index.php">
+              <img src="../images/home.png" alt="Logo" height="30" class="me-2" />
+              Escape Room
+            </a>
             <button
-              class="navbar-toggler"
+              class="navbar-toggler ms-auto"
               type="button"
               data-bs-toggle="collapse"
               data-bs-target="#navbarsExample11"
@@ -18,10 +22,9 @@
               class="collapse navbar-collapse d-lg-flex"
               id="navbarsExample11"
             >
-              <a class="navbar-brand col-lg-3 me-0" href="#">Centered nav</a>
               <ul class="navbar-nav col-lg-6 justify-content-lg-center">
                 <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="#"
+                  <a class="nav-link active" aria-current="page" href="index.php"
                     >Home</a
                   >
                 </li>
@@ -49,7 +52,7 @@
                 </li>
               </ul>
               <div class="d-lg-flex col-lg-3 justify-content-lg-end">
-                <button class="btn btn-primary">Button</button>
+                <a class="btn btn-primary" href="login.php">Login / Sign Up</a>
               </div>
             </div>
           </div>
