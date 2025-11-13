@@ -6,6 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="Member Login" />
+    
     <title>Member Login</title>
     <?php
     include "inc/head.inc.php";

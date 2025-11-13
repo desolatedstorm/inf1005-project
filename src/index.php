@@ -101,7 +101,7 @@
 
             <div class="row g-4" id="roomContainer">
                 <div class="col-md-4 room-card" data-fear="mildly-scary">
-                    <div class="card">
+                    <div class="card" href="/pharaoh_room.php">
                         <img src="/images/P_Curse.jpg"
                             class="card-img-top" alt="Pharaoh's Curse">
                         <div class="card-body">
@@ -114,7 +114,7 @@
                 </div>
 
                 <div class="col-md-4 room-card" data-fear="very-scary">
-                    <div class="card">
+                    <div class="card" href="/haunt_room.php">
                         <img src="/images/Haunt.jpg"
                             class="card-img-top" alt="Haunted Mansion">
                         <div class="card-body">
