@@ -17,8 +17,8 @@
     include "inc/header.inc.php"
         ?>
     <section class="search-section section-gap text-center">
-        <div class="input-group rounded mx-auto w-100 w-sm-75 w-md-50" style="max-width:480px;">
-            <input type="search" class="form-control rounded" placeholder="Search for rooms..." aria-label="Search"
+        <div class="input-group rounded mx-auto w-100 w-sm-75 w-md-50" style="max-width:480px; padding-top:20px; padding-bottom:20px;">
+            <input type="search" class="form-control rounded" onkeyup="filterRooms()" placeholder="Search for rooms..." aria-label="Search"
                 aria-describedby="search-addon" />
             <button type="button" class="btn btn-outline-primary" id="search-addon">Search</button>
         </div>
@@ -93,7 +93,8 @@
                     </div>
                 </div>
             </div>
-            <h5 class="mb-3">Rooms</h5>
+            <section id="Rooms">
+            <h5 class="mb-3" style="padding-top: 40px;">Rooms</h5>
             <div class="text-center my-4">
                 <p class="text-muted">Showing 3 rooms</p>
             </div>
@@ -101,10 +102,11 @@
             <div class="row g-4" id="roomContainer">
                 <div class="col-md-4 room-card" data-fear="mildly-scary">
                     <div class="card">
-                        <img src=""
+                        <img src="/images/P_Curse.jpg"
                             class="card-img-top" alt="Pharaoh's Curse">
                         <div class="card-body">
                             <span class="badge bg-warning text-dark">Mildly Scary</span>
+                            
                             <h5 class="card-title mt-2">The Pharaoh's Curse</h5>
                             <p class="text-muted mb-0">Rating: ★4.8</p>
                         </div>
@@ -113,7 +115,7 @@
 
                 <div class="col-md-4 room-card" data-fear="very-scary">
                     <div class="card">
-                        <img src=""
+                        <img src="/images/Haunt.jpg"
                             class="card-img-top" alt="Haunted Mansion">
                         <div class="card-body">
                             <span class="badge bg-danger">Very Scary</span>
