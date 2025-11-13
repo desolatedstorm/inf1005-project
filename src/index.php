@@ -109,6 +109,7 @@
                             
                             <h5 class="card-title mt-2">The Pharaoh's Curse</h5>
                             <p class="text-muted mb-0">Rating: ★4.8</p>
+                            <a href="/pharaoh_room.php" class="stretched-link"></a>
                         </div>
                     </div>
                 </div>
@@ -121,6 +122,7 @@
                             <span class="badge bg-danger">Very Scary</span>
                             <h5 class="card-title mt-2">Haunted Mansion</h5>
                             <p class="text-muted mb-0">Rating: ★4.9</p>
+                            <a href="/metro_room.php" class="stretched-link"></a>
                         </div>
                     </div>
                 </div>
@@ -133,6 +135,7 @@
                             <span class="badge bg-secondary">Not Scary</span>
                             <h5 class="card-title mt-2">Metro</h5>
                             <p class="text-muted mb-0">Rating: ★4.6</p>
+                            <a href="/metro_room.php" class="stretched-link"></a>
                         </div>
                     </div>
                 </div>

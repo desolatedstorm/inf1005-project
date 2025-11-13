@@ -10,10 +10,7 @@
     </button>
     <div class="collapse navbar-collapse d-lg-flex" id="navbarsExample11">
       <ul class="navbar-nav col-lg-6 justify-content-lg-center">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="index.php">Home</a>
-        </li>
-        <li class="nav-item"><a class="nav-link" href="#Rooms">Rooms</a></li>
+        <li class="nav-item"><a class="nav-link" href="/index.php#Rooms">Rooms</a></li>
         <li class="nav-item">
           <a class="nav-link disabled" aria-disabled="true">Disabled</a>
         </li>
