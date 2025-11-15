@@ -20,7 +20,7 @@
             <h2>The Pharaoh&apos;s Curse</h2>
             <p>Uncover ancient secrets in the tomb of a forgotten pharaoh. Solve hieroglyphic puzzles and avoid deadly traps&dot;</p>
             <div class="row row-cols-2">
-                <img src="images/calendar.png" class="logo me-2">
+                <img src="images/calendar.png" class="logo me-2" alt="calendar logo">
                 <p>Select a date</p>
             </div>
             <?php
