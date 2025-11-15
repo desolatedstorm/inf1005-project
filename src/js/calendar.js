@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 /* Template from Colorlib */
-=======
-/* Credits to Colorlib */
->>>>>>> parent of 6ce9845 (Revert "bookings page first half")
 (function($) {
 
 	"use strict";
@@ -14,17 +10,10 @@ $(document).ready(function(){
     // Set click handlers for DOM elements
     $(".right-button").click({date: date}, next_year);
     $(".left-button").click({date: date}, prev_year);
-<<<<<<< HEAD
     // $(".month").click({date: date}, month_click);
     // $("#add-button").click({date: date}, new_event);
     // Set current month as active
     // $(".months-row").children().eq(date.getMonth()).addClass("active-month");
-=======
-    $(".month").click({date: date}, month_click);
-    $("#add-button").click({date: date}, new_event);
-    // Set current month as active
-    $(".months-row").children().eq(date.getMonth()).addClass("active-month");
->>>>>>> parent of 6ce9845 (Revert "bookings page first half")
     init_calendar(date);
     var events = check_events(today, date.getMonth()+1, date.getFullYear());
     show_events(events, months[date.getMonth()], today);
@@ -60,11 +49,7 @@ function init_calendar(date) {
             row.append(curr_date);
         }   
         else {
-<<<<<<< HEAD
             var curr_date = $("<td class='table-date' id='day" + day + "'>"+day+"</td>");
-=======
-            var curr_date = $("<td class='table-date'>"+day+"</td>");
->>>>>>> parent of 6ce9845 (Revert "bookings page first half")
             var events = check_events(day, month+1, year);
             if(today===day && $(".active-date").length===0) {
                 curr_date.addClass("active-date");
@@ -81,11 +66,7 @@ function init_calendar(date) {
     }
     // Append the last row and set the current year
     calendar_days.append(row);
-<<<<<<< HEAD
     $(".month").text(months[month]);
-=======
-    $(".year").text(year);
->>>>>>> parent of 6ce9845 (Revert "bookings page first half")
 }
 
 // Get the number of days in a given month/year
@@ -102,7 +83,6 @@ function date_click(event) {
     $(".active-date").removeClass("active-date");
     $(this).addClass("active-date");
     show_events(event.data.events, event.data.month, event.data.day);
-<<<<<<< HEAD
     // queries available slots (rename)
     new_event(event);
 };
@@ -118,35 +98,14 @@ function date_click(event) {
     // date.setMonth(new_month);
     // init_calendar(date);
 // }
-=======
-};
-
-// Event handler for when a month is clicked
-function month_click(event) {
-    $(".events-container").show(250);
-    $("#dialog").hide(250);
-    var date = event.data.date;
-    $(".active-month").removeClass("active-month");
-    $(this).addClass("active-month");
-    var new_month = $(".month").index(this);
-    date.setMonth(new_month);
-    init_calendar(date);
-}
->>>>>>> parent of 6ce9845 (Revert "bookings page first half")
 
 // Event handler for when the year right-button is clicked
 function next_year(event) {
     $("#dialog").hide(250);
     var date = event.data.date;
-<<<<<<< HEAD
     var next_month = date.getMonth()+1;
     $("month").html(next_month);
     date.setMonth(next_month);
-=======
-    var new_year = date.getFullYear()+1;
-    $("year").html(new_year);
-    date.setFullYear(new_year);
->>>>>>> parent of 6ce9845 (Revert "bookings page first half")
     init_calendar(date);
 }
 
@@ -154,7 +113,6 @@ function next_year(event) {
 function prev_year(event) {
     $("#dialog").hide(250);
     var date = event.data.date;
-<<<<<<< HEAD
     var prev_month = date.getMonth()-1;
     $("month").html(months[prev_month]);
     date.setMonth(prev_month);
@@ -165,16 +123,6 @@ function prev_year(event) {
 // & INCLUDE BOOKING JS CODE HERE
 // Event handler for clicking the new event button
 function new_event(event) { //available slots
-=======
-    var new_year = date.getFullYear()-1;
-    $("year").html(new_year);
-    date.setFullYear(new_year);
-    init_calendar(date);
-}
-
-// Event handler for clicking the new event button
-function new_event(event) {
->>>>>>> parent of 6ce9845 (Revert "bookings page first half")
     // if a date isn't selected then do nothing
     if($(".active-date").length===0)
         return;
