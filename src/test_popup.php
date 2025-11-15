@@ -5,10 +5,18 @@
         include "inc/head.inc.php"
         ?>
         <script defer src="js/main.js"></script>
+        <link rel="stylesheet" href="css/popup.css">
     </head>
     <body>
         
         <h1>This is to test page popup in page</h1>
-        <button type="button" id="popup" name="popup">Click me</button>
+        <button type="button" id="openPopup" name="openPopup">Click me</button>
+        
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <iframe id="popupFrame" src=""><iframe>
+            </div>
+        </div>
     </body>
 </html>
