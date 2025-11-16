@@ -8,7 +8,7 @@
     </head>
     <body>
         <?php
-        require_once "inc/functions.php";
+        require_once "inc/login_functions.php";
         $errorMsg = "";
         $success = true;
 

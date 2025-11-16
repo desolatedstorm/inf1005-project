@@ -1,5 +1,8 @@
 body {
-  background-color: aliceblue;
+  /* testing, change later */
+  background: linear-gradient(90deg, rgba(1, 0, 87, 1) 0%, rgba(1, 50, 120, 1) 100%);
+  /* Navy to slightly brighter blue - clean and professional */
+  color: #fff;
 }
 
 header.jumbotron {

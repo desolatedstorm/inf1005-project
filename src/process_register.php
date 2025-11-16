@@ -9,7 +9,7 @@
     <body>
         <main>
             <?php
-            require_once "inc/functions.php";
+            require_once "inc/login_functions.php";
             include "inc/nav.inc.php";
             $email = "";
             $errorMsg = "";
