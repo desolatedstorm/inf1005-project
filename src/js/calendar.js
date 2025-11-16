@@ -110,17 +110,20 @@
     function show_timings(date) {
         console.log(date);
         var formattedDate = formatDate(date);
-
+        console.log(formattedDate);
         $(".timeslots-container").empty();
-        $(".booking-form").hide();  // reset when switching date
+        $(".booking-form").hide();
+        $(".checkout-form").hide(); // Also hide checkout
 
         bookingPost(formattedDate).done(function(response) {
             if (!response.success) {
+                console.log("failed");
                 $(".timeslots-container").append(
                     $("<div class='event-card'><div class='event-name'>No Available Slots.</div></div>")
                 );
                 return;
             }
+            console.log(response);
 
             var available_slots = response.available_slots;
             
@@ -150,9 +153,10 @@
     }
 
     function bookingPost(date) {
+        console.log("hi");
         return $.ajax({
             type: 'POST',
-            url: 'inc/api_booking.php',
+            url: 'api/api_booking.php',
             data: { date: date },
             dataType: 'json'
         });
@@ -169,19 +173,22 @@
     var min = 2;
     var max = 8;
 
+    // Global booking data to be used after payment
+    var bookingData = {};
+
     function timeslot_click(event) {
         $(".timeslot").removeClass("active-timeslot");
-        event.data.card.addClass("active-timeslot"); // change background coloe to #A855F7
+        event.data.card.addClass("active-timeslot");
 
         $(".event-name").removeClass("active-name");
-        event.data.name.addClass("active-name"); // change text to white
+        event.data.name.addClass("active-name");
         
         $("#min-players").text(min);
         $("#max-players").text(max);
 
         $("#player-count").text(default_pax);
 
-        selectedTime = event.data.card.find(".event-name").text(); // store selected time for checkout page
+        selectedTime = event.data.card.find(".event-name").text();
         
         $(".booking-form").show(250);
         updateSubtotal();
@@ -214,7 +221,7 @@
     function updateSubtotal() {
         var subtotal = 0;
         var pax = parseInt($("#player-count").text());
-        if (pax >= 2 && pax <= 8) { // 2 - 8 pax
+        if (pax >= 2 && pax <= 8) {
             var subtotal = pax * price;
         }
         $(".pax").text(pax);
@@ -223,47 +230,177 @@
     }
 
     function onCheckoutclick(event) {
-        // room id/name - get from caller page
-        var room_id = 1; //tmp
-        // user id/name - get from cookies
-        var user_id = 1; //temp
-        // craft selected date
+        // Get booking details
+        var room_id = 1; // TODO: Get from actual page
+        var user_id = 1; // TODO: Get from session/cookies
+        
         var selectedDay = $(".active-date").attr("id");
         var month = months.indexOf($(".month").text());
         var year = event.data.date.getFullYear();
-
         var selectedDate = new Date(year, month, selectedDay);
         var formattedDate = formatDate(selectedDate);
 
+        var time = moment(selectedTime, "hh:mm A").format("HH:mm:ss");
         var pax = parseInt($("#player-count").text());
         var subtotal = parseFloat($("#subtotal").text());
 
-        console.log("Checkout info:", {
-            user: user_id,
-            room: room_id,
-            date: formattedDate,
-            time: selectedTime,
-            pax: pax,
-            subtotal: subtotal
-        });
+        // First, try to hold the slot
+        $.ajax({
+            type: 'POST',
+            url: 'api/api_hold_slot.php',
+            data: {
+                user_id: user_id,
+                room_id: room_id,
+                date: formattedDate,
+                time: time
+            },
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    console.log("Slot held successfully for 5 minutes");
+                    
+                    // Store booking data globally
+                    bookingData = {
+                        user_id: user_id,
+                        room_id: room_id,
+                        date: formattedDate,
+                        time: time,
+                        pax: pax,
+                        subtotal: subtotal,
+                        hold_id: response.hold_id
+                    };
 
-        // ajax to checkout api, api inserts booking hold
-        
-        // find out how to use dummy payment + confirm booking
-        // update booking to confirm status and send success response
-        // finally update page to show booking confirmation
-        // send email confirmaiton as well
+                    // Populate checkout form display
+                    $("#checkout-room").text("Room " + room_id);
+                    $("#checkout-date").text(formattedDate);
+                    $("#checkout-time").text(selectedTime);
+                    $("#checkout-players").text(pax);
+                    $("#checkout-total").text(subtotal);
+
+                    // Show checkout form
+                    $(".timeslots-container").hide(250);
+                    $(".booking-container").hide(250);
+                    $(".checkout-form").show(250, function() {
+                        // Initialize Stripe payment
+                        if (typeof initializePayment === 'function') {
+                            initializePayment();
+                        }
+                        
+                        // Start countdown timer
+                        startHoldTimer(response.expires_in_seconds);
+                    }); 
+                } else {
+                    alert(response.message || "Unable to hold this time slot. Please try another slot.");
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Error holding slot:", error);
+                alert("Unable to hold this time slot. Please try again.");
+            }
+        });
     }
+
+    // Countdown timer for hold expiration
+    var holdTimerInterval;
+    
+    function startHoldTimer(seconds) {
+        // Clear any existing timer
+        if (holdTimerInterval) {
+            clearInterval(holdTimerInterval);
+        }
+
+        var timeRemaining = seconds;
+        
+        // Create timer display if it doesn't exist
+        if ($('#hold-timer').length === 0) {
+            $('.checkout-form .section-title').after(
+                '<div id="hold-timer" class="alert alert-warning mt-3" role="alert">' +
+                '<strong>⏱️ Time remaining: <span id="timer-display">5:00</span></strong><br>' +
+                'Please complete payment before time expires.' +
+                '</div>'
+            );
+        }
+
+        // Update timer every second
+        holdTimerInterval = setInterval(function() {
+            timeRemaining--;
+            
+            var minutes = Math.floor(timeRemaining / 60);
+            var seconds = timeRemaining % 60;
+            $('#timer-display').text(minutes + ':' + (seconds < 10 ? '0' : '') + seconds);
+
+            // Change color when less than 1 minute remaining
+            if (timeRemaining <= 60) {
+                $('#hold-timer').removeClass('alert-warning').addClass('alert-danger');
+            }
+
+            // Timer expired
+            if (timeRemaining <= 0) {
+                clearInterval(holdTimerInterval);
+                $('#hold-timer').html(
+                    '<strong>⏰ Time expired!</strong><br>' +
+                    'Your hold on this time slot has expired. Please select the slot again.'
+                );
+                
+                // Disable payment button
+                $('#payment-submit-button').prop('disabled', true);
+                
+                // Show alert
+                setTimeout(function() {
+                    alert("Your hold on this time slot has expired. Please go back and select the slot again.");
+                    // Go back to booking form
+                    $(".checkout-form").hide(250);
+                    $(".timeslots-container").show(250);
+                    $(".booking-form").show(250);
+                }, 1000);
+            }
+        }, 1000);
+    }
+
+    // This function is called from the Stripe payment form after successful payment
+    window.handlePaymentSuccess = function() {
+        console.log("Payment successful, saving booking...");
+        
+        // Get billing details
+        const billingData = {
+            billing_address: document.getElementById('billing-address').value,
+            billing_city: document.getElementById('billing-city').value,
+            billing_postal: document.getElementById('billing-postal').value,
+            billing_country: document.getElementById('billing-country').value
+        };
+
+        // Combine booking data with billing data
+        const finalData = { ...bookingData, ...billingData };
+
+        // Now save to database with status "Confirmed"
+        $.ajax({
+            type: 'POST',
+            url: 'api/api_checkout.php',
+            data: finalData,
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    console.log("Booking saved successfully");
+                    // Redirect to success page or show confirmation
+                    window.location.href = 'booking_success.php?booking_id=' + response.booking_id;
+                } else {
+                    alert("Payment processed but booking save failed: " + response.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Error saving booking:", error);
+                alert("Payment processed but booking save failed. Please contact support.");
+            }
+        });
+    };
 
     function formatDate(date) {
         var formattedDate = date.getFullYear() + '-' + 
                             String(date.getMonth() + 1).padStart(2, '0') + '-' + 
                             String(date.getDate()).padStart(2, '0');
-        return formattedDate
+        return formattedDate;
     }
 
-    // query db for room name, desc, min, max, price peak + off peak using caller id
-    
     const months = [ 
         "January","February","March","April","May","June",
         "July","August","September","October","November","December"

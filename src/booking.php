@@ -1,3 +1,16 @@
+<?php 
+session_start();
+
+// Prevent direct access
+if (!isset($_SESSION['allow_booking']) || $_SESSION['allow_booking'] !== true) {
+    header('HTTP/1.0 403 Forbidden');
+    die('Direct access not permitted. Please access through the main page.');
+    header('Location: http://localhost:3000/index.php');
+}
+
+// one time use
+unset($_SESSION['allow_booking']);
+?>
 <!-- Floating Window Booking -->
 <!DOCTYPE html>
 <html lang="en">
@@ -10,6 +23,7 @@
         ?>
         <link rel="stylesheet" href="css/calendar.css"> 
         <script defer src="js/calendar.js"></script>
+        <script src="https://js.stripe.com/v3/"></script>
     </head>
     <body>
         <main class="container container-fluid">

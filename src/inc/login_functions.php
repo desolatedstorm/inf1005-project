@@ -16,12 +16,26 @@ function sanitize_input($data)
  */
 function getDBEnvVar()
 {
+    require __DIR__ . '/../vendor/autoload.php';
+
+    // Define the directory where your .env file is located
+    $rootdir = dirname(__DIR__);
+    $dotenv = Dotenv\Dotenv::createImmutable($rootdir);
+
+    // Load the variables
+    $dotenv->load();
+
+    $db_host = $_ENV['DB_HOST'] ?: "db";
+    $db_user = $_ENV['DB_USER'];
+    $db_pass = $_ENV['DB_PASS'];
+    $db_name = $_ENV['DB_NAME'];
+    $stripekey = $_ENV['STRIPESECRETKEY'];
     // Create DB connection
-    $db_host = getenv('DB_HOST') ?: "db";
-    $db_user = getenv('DB_USER');
-    $db_pass = getenv('DB_PASS');
-    $db_name = getenv('DB_NAME');
-    return array($db_host, $db_user, $db_pass, $db_name);
+    // $db_host = getenv('DB_HOST') ?: "db";
+    // $db_user = getenv('DB_USER');
+    // $db_pass = getenv('DB_PASS');
+    // $db_name = getenv('DB_NAME');
+    return array($db_host, $db_user, $db_pass, $db_name, $stripekey);
 }
 
 // Helper function to write member data to database.

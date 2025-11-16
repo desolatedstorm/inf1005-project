@@ -30,6 +30,9 @@ RUN if [ -f composer.json ]; then composer install --no-interaction --optimize-a
 # Install phpdotenv package
 RUN composer require vlucas/phpdotenv
 
+# Install stripe payment library
+RUN composer require stripe/stripe-php
+
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html
