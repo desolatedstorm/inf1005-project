@@ -30,8 +30,7 @@
 
             <div class="thumbnail-gallery">
                 <img src="/images/P_Curse.jpg" alt="Thumbnail 1" class="active" onclick="changeHeroImage(this.src)" />
-                <img src="/images/P_Curse.jpg" alt="Thumbnail 2" onclick="changeHeroImage(this.src)" />
-                <img src="/images/P_Curse.jpg" alt="Thumbnail 3" onclick="changeHeroImage(this.src)" />
+
             </div>
 
             <div class="room-content">
