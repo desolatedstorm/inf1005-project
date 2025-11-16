@@ -102,6 +102,7 @@ footer {
   padding: 25px 30px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   margin-top: 40px;
+  color: #000;
 }
 
 .room-card {
@@ -139,4 +140,8 @@ footer {
 
 .badge {
   font-size: 0.8rem;
+}
+
+.text-center.my-4 p {
+  color: #fff !important;
 }
