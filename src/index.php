@@ -49,6 +49,7 @@ function slugify($text)
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>Esacpe Quest</title>
     <?php include "inc/head.inc.php" ?>
@@ -65,7 +66,7 @@ function slugify($text)
                 aria-describedby="search-addon" />
             <button type="button" class="btn btn-outline-primary" id="search-addon">Search</button>
         </div>
-    </section>  
+    </section>
 
     <main class="page-content section-gap">
         <div class="container">
@@ -102,7 +103,7 @@ function slugify($text)
                         <label class="form-check-label" for="fearNotScary">Not Scary</label>
                     </div>
                 </div>
-<div class="mb-3">
+                <div class="mb-3">
                     <h6>Experience Type</h6>
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="radio" name="actor" value="all" id="actorAll" checked>
@@ -133,7 +134,7 @@ function slugify($text)
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="checkbox" value="fantasy" id="genreFantasy">
                         <label class="form-check-label" for="genreFantasy">Fantasy</label>
-                    </div>       
+                    </div>
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="checkbox" value="adventure" id="genreAdventure">
                         <label class="form-check-label" for="genreAdventure">Adventure</label>
@@ -147,57 +148,57 @@ function slugify($text)
 
             <!-- replaced static room count with dynamic allocation -->
             <section id="Rooms">
-            <h5 class="mb-3" style="padding-top: 40px;">Rooms</h5>
-            <div class="text-center my-4">
-                <p class="text-muted">Showing <?php echo $roomCount; ?> rooms</p>
-            </div>
+                <h5 class="mb-3" style="padding-top: 40px;">Rooms</h5>
+                <div class="text-center my-4">
+                    <p class="text-muted">Showing <?php echo $roomCount; ?> rooms</p>
+                </div>
 
-            <div class="row g-4" id="roomContainer">
-                <div class="col-md-4 room-card" data-fear="mildly-scary">
-                    <div class="card" href="/pharaoh_room.php">
-                        <img src="/images/P_Curse.jpg"
-                            class="card-img-top" alt="Pharaoh's Curse">
-                        <div class="card-body">
-                            <span class="badge bg-warning text-dark">Mildly Scary</span>
-                            
-                            <h5 class="card-title mt-2">The Pharaoh's Curse</h5>
-                            <p class="text-muted mb-0">Rating: ★4.8</p>
-                            <a href="/pharaoh_room.php" class="stretched-link"></a>
+                <div class="row g-4" id="roomContainer">
+                    <div class="col-md-4 room-card" data-fear="mildly-scary">
+                        <div class="card" href="/pharaoh_room.php">
+                            <img src="/images/P_Curse.jpg"
+                                class="card-img-top" alt="Pharaoh's Curse">
+                            <div class="card-body">
+                                <span class="badge bg-warning text-dark">Mildly Scary</span>
+
+                                <h5 class="card-title mt-2">The Pharaoh's Curse</h5>
+                                <p class="text-muted mb-0">Rating: ★4.8</p>
+                                <a href="/pharaoh_room.php" class="stretched-link"></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 room-card" data-fear="very-scary">
+                        <div class="card" href="/haunt_room.php">
+                            <img src="/images/Haunt.jpg"
+                                class="card-img-top" alt="Haunted Mansion">
+                            <div class="card-body">
+                                <span class="badge bg-danger">Very Scary</span>
+                                <h5 class="card-title mt-2">Haunted Mansion</h5>
+                                <p class="text-muted mb-0">Rating: ★4.9</p>
+                                <a href="/metro_room.php" class="stretched-link"></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 room-card" data-fear="not-scary">
+                        <div class="card">
+                            <img src="/images/metro.png"
+                                class="card-img-top" alt="Metro">
+                            <div class="card-body">
+                                <span class="badge bg-secondary">Not Scary</span>
+                                <h5 class="card-title mt-2">Metro</h5>
+                                <p class="text-muted mb-0">Rating: ★4.6</p>
+                                <a href="/metro_room.php" class="stretched-link"></a>
+                            </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="col-md-4 room-card" data-fear="very-scary">
-                    <div class="card" href="/haunt_room.php">
-                        <img src="/images/Haunt.jpg"
-                            class="card-img-top" alt="Haunted Mansion">
-                        <div class="card-body">
-                            <span class="badge bg-danger">Very Scary</span>
-                            <h5 class="card-title mt-2">Haunted Mansion</h5>
-                            <p class="text-muted mb-0">Rating: ★4.9</p>
-                            <a href="/metro_room.php" class="stretched-link"></a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4 room-card" data-fear="not-scary">
-                    <div class="card">
-                        <img src="/images/metro.png"
-                            class="card-img-top" alt="Metro">
-                        <div class="card-body">
-                            <span class="badge bg-secondary">Not Scary</span>
-                            <h5 class="card-title mt-2">Metro</h5>
-                            <p class="text-muted mb-0">Rating: ★4.6</p>
-                            <a href="/metro_room.php" class="stretched-link"></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
                 <!-- rooms (no mroe hard coding) -->
                 <!-- if filter derives no results -->
                 <div class="row g-4" id="roomContainer">
-                    
+
                     <?php if (empty($rooms)): ?>
                         <div class="col-12">
                             <p class="text-center h5">No rooms matching your criteria were found.</p>
@@ -210,7 +211,7 @@ function slugify($text)
                             $dataActor = slugify($room['roomExperienceType']);
                             $dataGenre = slugify($room['roomGenre']);
                         ?>
-<!-- in built data to make filter easier -->
+                            <!-- in built data to make filter easier -->
                             <div class="col-md-4 room-card"
                                 data-fear="<?php echo $dataFear; ?>"
                                 data-actor="<?php echo $dataActor; ?>"
@@ -220,7 +221,7 @@ function slugify($text)
                                 <div class="card">
                                     <img src="<?php echo htmlspecialchars($room['imagePath'] ?? '/images/placeholder.png'); ?>"
                                         class="card-img-top" alt="<?php echo htmlspecialchars($room['roomName']); ?>">
-                                        
+
                                     <div class="card-body">
                                         <span class="badge <?php echo getBadgeColor($room['roomFearLevel']); ?>">
                                             <?php echo htmlspecialchars($room['roomFearLevel']); ?>
