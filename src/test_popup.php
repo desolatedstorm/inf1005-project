@@ -1,3 +1,9 @@
+<?php
+session_start();
+
+// Set a flag to allow booking.php to load
+$_SESSION['allow_booking'] = true;
+?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
