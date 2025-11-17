@@ -61,6 +61,36 @@ function activateMenu() {
   })
 }
 
+const fearRadios = document.querySelectorAll('input[name="fear"]');
+const rooms = document.querySelectorAll('.room-card');
+const roomCountText = document.querySelector('.text-center.my-4 p');
+
+function updateRoomCount() {
+  const visibleRooms = Array.from(rooms).filter(room => room.style.display !== 'none');
+  const count = visibleRooms.length;
+  
+  if (roomCountText) {
+    roomCountText.textContent = `Showing ${count} room${count !== 1 ? 's' : ''}`;
+  }
+}
+
+fearRadios.forEach(radio => {
+  radio.addEventListener('change', () => {
+    const value = radio.value;
+    rooms.forEach(room => {
+      if (value === 'all' || room.dataset.fear === value) {
+        room.style.display = 'block';
+      } else {
+        room.style.display = 'none';
+      }
+    });
+    //update room count after filtering
+    updateRoomCount();
+  });
+});
+// Initial room count update
+updateRoomCount();
+
 
 
 //function to find all filter inputs on the page

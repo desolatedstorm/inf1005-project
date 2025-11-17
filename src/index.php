@@ -147,11 +147,52 @@ function slugify($text)
 
             <!-- replaced static room count with dynamic allocation -->
             <section id="Rooms">
-                <h5 class="mb-3" style="padding-top: 40px;">Rooms</h5>
-                <div class="text-center my-4">
-                    <p class="text-muted">Showing <?php echo $roomCount; ?> rooms</p>
+            <h5 class="mb-3" style="padding-top: 40px;">Rooms</h5>
+            <div class="text-center my-4">
+                <p class="text-muted">Showing <?php echo $roomCount; ?> rooms</p>
+            </div>
+
+            <div class="row g-4" id="roomContainer">
+                <div class="col-md-4 room-card" data-fear="mildly-scary">
+                    <div class="card" href="/pharaoh_room.php">
+                        <img src="/images/P_Curse.jpg"
+                            class="card-img-top" alt="Pharaoh's Curse">
+                        <div class="card-body">
+                            <span class="badge bg-warning text-dark">Mildly Scary</span>
+                            
+                            <h5 class="card-title mt-2">The Pharaoh's Curse</h5>
+                            <p class="text-muted mb-0">Rating: ★4.8</p>
+                            <a href="/pharaoh_room.php" class="stretched-link"></a>
+                        </div>
+                    </div>
                 </div>
 
+                <div class="col-md-4 room-card" data-fear="very-scary">
+                    <div class="card" href="/haunt_room.php">
+                        <img src="/images/Haunt.jpg"
+                            class="card-img-top" alt="Haunted Mansion">
+                        <div class="card-body">
+                            <span class="badge bg-danger">Very Scary</span>
+                            <h5 class="card-title mt-2">Haunted Mansion</h5>
+                            <p class="text-muted mb-0">Rating: ★4.9</p>
+                            <a href="/metro_room.php" class="stretched-link"></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 room-card" data-fear="not-scary">
+                    <div class="card">
+                        <img src="/images/metro.png"
+                            class="card-img-top" alt="Metro">
+                        <div class="card-body">
+                            <span class="badge bg-secondary">Not Scary</span>
+                            <h5 class="card-title mt-2">Metro</h5>
+                            <p class="text-muted mb-0">Rating: ★4.6</p>
+                            <a href="/metro_room.php" class="stretched-link"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
                 <!-- rooms (no mroe hard coding) -->
                 <!-- if filter derives no results -->
