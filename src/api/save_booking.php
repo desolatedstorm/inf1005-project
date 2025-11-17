@@ -1,8 +1,7 @@
 <?php 
 header('Content-Type: application/json');
 
-//require_once '../vendor/autoload.php';
-require_once '../inc/login_functions.php';
+require_once __DIR__ . '/inc/login_functions.php';
 
 list($db_host, $db_user, $db_pass, $db_name, $stripekey) = getDBEnvVar();
 

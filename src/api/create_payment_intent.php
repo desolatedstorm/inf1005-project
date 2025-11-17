@@ -1,7 +1,8 @@
 <?php
 header('Content-Type: application/json');
 
-require_once "../inc/login_functions.php";
+require_once __DIR__ . "/../vendor/autoload.php";
+require_once __DIR__ . "/../inc/login_functions.php";
 
 list($db_host, $db_user, $db_pass, $db_name, $stripekey) = getDBEnvVar();
 
@@ -46,7 +47,7 @@ try {
 } catch (Exception $e) {
     http_response_code(500);
     echo json_encode([
-        'error' . $stripekey => $e->getMessage()
+        'error' => $e->getMessage()
     ]);
 }
 ?>

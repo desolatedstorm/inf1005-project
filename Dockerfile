@@ -1,44 +1,34 @@
-# Use official PHP image with Apache
 FROM php:8.2-apache
 
-# Install system dependencies
+# Install system dependencies + PHP extensions
 RUN apt-get update && apt-get install -y \
     git \
     curl \
     libzip-dev \
     unzip \
+    && docker-php-ext-install pdo pdo_mysql mysqli zip \
     && rm -rf /var/lib/apt/lists/*
 
-# Install PHP extensions
-RUN docker-php-ext-install pdo pdo_mysql mysqli zip
+# Enable Apache rewrite
+RUN a2enmod rewrite
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Enable Apache mod_rewrite
-RUN a2enmod rewrite
-
-# Set working directory
 WORKDIR /var/www/html
 
-# Copy application files
+# Copy ONLY composer.json + lock first (better layer caching)
+COPY ./src/composer.json ./src/composer.lock* ./
+
+# Install composer packages (creates vendor/ INSIDE the container)
+RUN composer install --no-interaction --optimize-autoloader
+
+# Now copy the rest of your source files
 COPY ./src /var/www/html
 
-# Install PHP dependencies (if composer.json exists)
-RUN if [ -f composer.json ]; then composer install --no-interaction --optimize-autoloader; fi
-
-# Install phpdotenv package
-RUN composer require vlucas/phpdotenv
-
-# Install stripe payment library
-RUN composer require stripe/stripe-php
-
-# Set permissions
+# Permissions
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html
 
-# Expose port 80
 EXPOSE 80
-
-# Start Apache
 CMD ["apache2-foreground"]

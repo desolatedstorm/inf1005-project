@@ -6,7 +6,6 @@ header('Content-Type: application/json');
 require_once '../inc/login_functions.php';
 
 list($db_host, $db_user, $db_pass, $db_name, $stripekey) = getDBEnvVar();
-// $stripekey = getenv('STRIPESECRETKEY');
 
 // Define all available timeslots (24-hour format for database)
 $all_timeslots = array(

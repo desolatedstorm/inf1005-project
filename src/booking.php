@@ -1,14 +1,14 @@
 <?php 
 session_start();
 
-// Prevent direct access
-if (!isset($_SESSION['allow_booking']) || $_SESSION['allow_booking'] !== true) {
-    header('HTTP/1.0 403 Forbidden');
-    die('Direct access not permitted. Please access through the main page.');
-    header('Location: http://localhost:3000/index.php');
+$token = $_GET['token'] ?? null;
+$rtn_dest = "http://localhost:3000/index.php"; // edit on prod server
+
+if (!$token || !$_SESSION['allow_booking'] || !hash_equals($_SESSION['allow_booking'], $token)) {
+    http_response_code(403);
+    header("Location: " . $rtn_dest);
 }
 
-// one time use
 unset($_SESSION['allow_booking']);
 ?>
 <!-- Floating Window Booking -->

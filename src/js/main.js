@@ -109,13 +109,17 @@ function activateMenu()
 
 function popUp()
 {
-    var popUpURL = "booking.php";
+    var popUpURL = "booking.php?token=";
     var modal = document.getElementById("modal");
     var iframe = document.getElementById("popupFrame");
     
     modal.style.display = "block";
 
-    iframe.src = popUpURL;
+    fetch("api/api_generate_token.php")
+    .then(response => response.text())
+    .then(token => {
+        iframe.src = popUpURL + token;
+    })
 
 }
 
