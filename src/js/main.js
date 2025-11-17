@@ -84,3 +84,11 @@ fearRadios.forEach(radio => {
 });
 // Initial room count update
 updateRoomCount();
+
+function changeHeroImage(src) {
+            document.querySelector('.room-hero').src = src;
+            document.querySelectorAll('.thumbnail-gallery img').forEach(img => {
+                img.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }

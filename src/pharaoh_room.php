@@ -42,7 +42,7 @@
                         <span class="badge bg-danger">Mildly Scary</span>
                         <span class="badge bg-warning text-dark">Difficulty 3/5</span>
                         <span class="badge bg-light text-dark">adventure</span>
-                        <span class="badge bg-light text-dark">mystery</span>
+                        <span class="badge bg-light text-dark">murder mystery</span>
                     </div>
 
                     <h3>About This Room</h3>
