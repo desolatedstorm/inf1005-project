@@ -77,8 +77,9 @@
                         <li>2-6 players</li>
                         <li>Difficulty: 3/5</li>
                     </ul>
-
-                    <a href="booking.php?room=pharaoh" class="book-btn">Book Now</a>
+                    <!-- leave this as it is for now there is a js function that opens this -->
+                    <!-- also copy this to the other pages -->
+                    <button type="button" id="openPopup" name="openPopup" class="book-btn">Book Now</Button>
 
                     <p class="cancellation-note">Free cancellation up to 24 hours before</p>
                 </div>
