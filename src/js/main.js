@@ -61,33 +61,53 @@ function activateMenu() {
   })
 }
 
-const fearRadios = document.querySelectorAll('input[name="fear"]');
-const rooms = document.querySelectorAll('.room-card');
-const roomCountText = document.querySelector('.text-center.my-4 p');
 
-function updateRoomCount() {
-  const visibleRooms = Array.from(rooms).filter(room => room.style.display !== 'none');
-  const count = visibleRooms.length;
-  
-  if (roomCountText) {
-    roomCountText.textContent = `Showing ${count} room${count !== 1 ? 's' : ''}`;
-  }
+
+//function to find all filter inputs on the page
+function registerFilterListeners() {
+    const searchInput = document.querySelector('input[type="search"]');
+    const fearRadios = document.querySelectorAll('input[name="fear"]');
+    const actorRadios = document.querySelectorAll('input[name="actor"]');
+    const genreCheckboxes = document.querySelectorAll('input[type="checkbox"]');
+
+    //runs filterrooms functions 
+    if (searchInput) {
+        searchInput.addEventListener('keyup', filterRooms);
+    }
+    
+    fearRadios.forEach(radio => {
+        radio.addEventListener('change', filterRooms);
+    });
+    
+    actorRadios.forEach(radio => {
+        radio.addEventListener('change', filterRooms);
+    });
+    
+    genreCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', filterRooms);
+    });
 }
 
-fearRadios.forEach(radio => {
-  radio.addEventListener('change', () => {
-    const value = radio.value;
-    rooms.forEach(room => {
-      if (value === 'all' || room.dataset.fear === value) {
-        room.style.display = 'block';
-      } else {
-        room.style.display = 'none';
-      }
+
+// the main filter function.
+function filterRooms() {
+
+    //basically finds if the room matches all the filter values and only shows it if it does else it wont show
+    //also updates the room number with a counter
+    const searchText = document.querySelector('input[type="search"]').value.toLowerCase();
+    const fearValue = document.querySelector('input[name="fear"]:checked').value;
+    const actorValue = document.querySelector('input[name="actor"]:checked').value;
+    //css selector ':checked' searches for the radio button pressed
+
+    //checkbox: first generates an empty array and pushes values of checked checkbox into the array
+    const checkedGenres = [];
+    document.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
+        checkedGenres.push(checkbox.value);
     });
     //update room count after filtering
     updateRoomCount();
-  });
-});
+  };
+
 // Initial room count update
 updateRoomCount();
 
@@ -147,7 +167,8 @@ function filterRooms() {
         const cardFear = card.dataset.fear;
         const cardActor = card.dataset.actor;
         const cardGenre = card.dataset.genre;
-//does card title include text from the search bar
+
+        //does card title include text from the search bar
         const titleMatch = cardTitle.includes(searchText);
         //radio and checkbox logic
         const fearMatch = (fearValue === 'all' || fearValue === cardFear);
