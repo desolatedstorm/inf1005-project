@@ -49,10 +49,7 @@ function slugify($text)
 
 <!DOCTYPE html>
 <html lang="en">
-<<<<<<< HEAD
 
-=======
->>>>>>> 9ae6cb3 (db.inc.php main.js index.php)
 <head>
     <title>Esacpe Quest</title>
     <?php include "inc/head.inc.php" ?>
@@ -106,12 +103,9 @@ function slugify($text)
                         <label class="form-check-label" for="fearNotScary">Not Scary</label>
                     </div>
                 </div>
-<<<<<<< HEAD
-=======
 
 
 
->>>>>>> 9ae6cb3 (db.inc.php main.js index.php)
                 <div class="mb-3">
                     <h6>Experience Type</h6>
                     <div class="form-check form-check-inline">
@@ -160,7 +154,6 @@ function slugify($text)
                 <h5 class="mb-3" style="padding-top: 40px;">Rooms</h5>
                 <div class="text-center my-4">
                     <p class="text-muted">Showing <?php echo $roomCount; ?> rooms</p>
-<<<<<<< HEAD
                 </div>
 
                 <div class="row g-4" id="roomContainer">
@@ -209,15 +202,6 @@ function slugify($text)
                 <!-- if filter derives no results -->
                 <div class="row g-4" id="roomContainer">
 
-=======
-                </div>
-
-
-                <!-- rooms (no mroe hard coding) -->
-                <!-- if filter derives no results -->
-                <div class="row g-4" id="roomContainer">
-                    
->>>>>>> 9ae6cb3 (db.inc.php main.js index.php)
                     <?php if (empty($rooms)): ?>
                         <div class="col-12">
                             <p class="text-center h5">No rooms matching your criteria were found.</p>
@@ -230,10 +214,7 @@ function slugify($text)
                             $dataActor = slugify($room['roomExperienceType']);
                             $dataGenre = slugify($room['roomGenre']);
                         ?>
-<<<<<<< HEAD
-=======
 
->>>>>>> 9ae6cb3 (db.inc.php main.js index.php)
                             <!-- in built data to make filter easier -->
                             <div class="col-md-4 room-card"
                                 data-fear="<?php echo $dataFear; ?>"
@@ -244,11 +225,8 @@ function slugify($text)
                                 <div class="card">
                                     <img src="<?php echo htmlspecialchars($room['imagePath'] ?? '/images/placeholder.png'); ?>"
                                         class="card-img-top" alt="<?php echo htmlspecialchars($room['roomName']); ?>">
-<<<<<<< HEAD
 
-=======
                                         
->>>>>>> 9ae6cb3 (db.inc.php main.js index.php)
                                     <div class="card-body">
                                         <span class="badge <?php echo getBadgeColor($room['roomFearLevel']); ?>">
                                             <?php echo htmlspecialchars($room['roomFearLevel']); ?>
