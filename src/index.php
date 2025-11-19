@@ -114,12 +114,12 @@ function slugify($text)
                     </div>
 
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="actor" value="live" id="actorLive">
+                        <input class="form-check-input" type="radio" name="actor" value="live-actor" id="actorLive">
                         <label class="form-check-label" for="actorLive">Live Actor</label>
                     </div>
 
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="actor" value="no-live" id="actorNoLive">
+                        <input class="form-check-input" type="radio" name="actor" value="no-live-actor" id="actorNoLive">
                         <label class="form-check-label" for="actorNoLive">No Live Actor</label>
                     </div>
                 </div>
@@ -171,36 +171,9 @@ function slugify($text)
                         </div>
                     </div>
 
-                    <div class="col-md-4 room-card" data-fear="very-scary">
-                        <div class="card" href="/haunt_room.php">
-                            <img src="/images/Haunt.jpg"
-                                class="card-img-top" alt="Haunted Mansion">
-                            <div class="card-body">
-                                <span class="badge bg-danger">Very Scary</span>
-                                <h5 class="card-title mt-2">Haunted Mansion</h5>
-                                <p class="text-muted mb-0">Rating: ★4.9</p>
-                                <a href="/metro_room.php" class="stretched-link"></a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-4 room-card" data-fear="not-scary">
-                        <div class="card">
-                            <img src="/images/metro.png"
-                                class="card-img-top" alt="Metro">
-                            <div class="card-body">
-                                <span class="badge bg-secondary">Not Scary</span>
-                                <h5 class="card-title mt-2">Metro</h5>
-                                <p class="text-muted mb-0">Rating: ★4.6</p>
-                                <a href="/metro_room.php" class="stretched-link"></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
                 <!-- rooms (no mroe hard coding) -->
                 <!-- if filter derives no results -->
-                <div class="row g-4" id="roomContainer">
 
                     <?php if (empty($rooms)): ?>
                         <div class="col-12">
@@ -243,7 +216,9 @@ function slugify($text)
                             </div>
                         <?php endforeach; ?>
                     <?php endif; ?>
+                </div> 
                 </div>
+                
             </section>
         </div>
     </main>

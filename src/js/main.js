@@ -89,30 +89,6 @@ function registerFilterListeners() {
 }
 
 
-// the main filter function.
-function filterRooms() {
-
-    //basically finds if the room matches all the filter values and only shows it if it does else it wont show
-    //also updates the room number with a counter
-    const searchText = document.querySelector('input[type="search"]').value.toLowerCase();
-    const fearValue = document.querySelector('input[name="fear"]:checked').value;
-    const actorValue = document.querySelector('input[name="actor"]:checked').value;
-    //css selector ':checked' searches for the radio button pressed
-
-    //checkbox: first generates an empty array and pushes values of checked checkbox into the array
-    const checkedGenres = [];
-    document.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
-        checkedGenres.push(checkbox.value);
-    });
-    //update room count after filtering
-    updateRoomCount();
-  };
-
-// Initial room count update
-updateRoomCount();
-
-
-
 //function to find all filter inputs on the page
 function registerFilterListeners() {
     const searchInput = document.querySelector('input[type="search"]');
