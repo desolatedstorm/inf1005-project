@@ -56,7 +56,8 @@ INSERT INTO `Rooms` (
     roomDifficulty, roomLocation, roomFearLevel, roomExperienceType, 
     roomGenre, roomPricePeak, roomPriceOffpeak, imagePath
 )
-VALUES (1,'The Cursed Cabin','A cabin in the woods. Nothing can go wrong.',6,2,60,'Hard','Main Street','Very Scary','Live Actor','Horror',50.00,40.00,'images/test.png'),(2,'Asylum','A creepy asylum.',8,4,90,'Medium','Uptown','Scary','No Live Actor','Thriller',60.00,50.00,'images/test.png');
+VALUES (1,'The Cursed Cabin','A cabin in the woods. Nothing can go wrong.',6,2,60,'Hard','Main Street','Very Scary','Live Actor','Horror',50.00,40.00,'images/test.png'),
+        (2,'Asylum','A creepy asylum.',8,4,90,'Medium','Uptown','Scary','No Live Actor','Thriller',60.00,50.00,'images/test.png');
 /*!40000 ALTER TABLE `Rooms` ENABLE KEYS */;
 UNLOCK TABLES;
 
