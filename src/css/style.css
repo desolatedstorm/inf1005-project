@@ -5,6 +5,16 @@ body {
   color: #fff;
 }
 
+header.jumbotron {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 a:hover {
   color: red;
   background-color: transparent;
@@ -69,32 +79,69 @@ footer {
   max-height: 90%;
 }
 
-.custom-nav {
-  background-color: #010057;
-  
+.navbar-nav .nav-item .active {
+  color: #ffff;
+  background-color: #001b38;
+  border-radius: 5px;
+  font-weight: bold;
+  position: fixed;
+  top: 0;
+  right: 0;
+
 }
 
-/* Logo size and alignment */
-.logo {
-  height: 40px;
-  width: auto;
+.search-bar {
+  max-width: 420px;
+  margin: 0 auto;
+  width: 100%;
 }
 
-/* Smaller logo on mobile */
-@media (max-width: 768px) {
-  .logo {
-    height: 30px;
-  }
+.filter-box {
+  background: white;
+  border-radius: 12px;
+  padding: 25px 30px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 40px;
+  color: #000;
 }
 
-/* Adjust login icon size */
-.login-icon {
-  height: 32px;
-  width: auto;
+.room-card {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  transition: transform 280ms cubic-bezier(.2,.9,.3,1), box-shadow 280ms cubic-bezier(.2,.9,.3,1);
+  will-change: transform;
 }
 
-/* spacing tweak for navbar items */
-.navbar-nav .nav-link {
-  padding-right: 1rem;
-  padding-left: 1rem;
+.room-card:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 14px 28px rgba(3, 10, 18, 0.18);
+}
+
+.room-card .card-img-top {
+  transition: transform 420ms cubic-bezier(.2,.9,.3,1);
+  transform-origin: center center;
+}
+.room-card:hover .card-img-top {
+  transform: scale(1.06);
+}
+
+.room-card {
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+}
+.room-card:hover {
+  text-decoration: none;
+  color: inherit;
+}
+
+.badge {
+  font-size: 0.8rem;
+}
+
+.text-center.my-4 p {
+  color: #fff !important;
 }

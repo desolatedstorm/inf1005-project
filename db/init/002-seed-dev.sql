@@ -21,6 +21,7 @@
 
 LOCK TABLES `BookingHolding` WRITE;
 /*!40000 ALTER TABLE `BookingHolding` DISABLE KEYS */;
+INSERT INTO `BookingHolding` VALUES (1,'2025-12-31','20:00:00','sess_sample_id_123','2025-11-16 23:59:59',2);
 /*!40000 ALTER TABLE `BookingHolding` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -30,6 +31,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `Bookings` WRITE;
 /*!40000 ALTER TABLE `Bookings` DISABLE KEYS */;
+INSERT INTO `Bookings` VALUES (1,'2025-12-25','18:00:00',50.00,'Confirmed','2025-11-16 12:00:00',1,1);
 /*!40000 ALTER TABLE `Bookings` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -39,6 +41,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `Reviews` WRITE;
 /*!40000 ALTER TABLE `Reviews` DISABLE KEYS */;
+INSERT INTO `Reviews` VALUES (1,5,'Love this! Me and my wife had a great time!','2025-11-16 16:56:51',1,1);
 /*!40000 ALTER TABLE `Reviews` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -48,7 +51,15 @@ UNLOCK TABLES;
 
 LOCK TABLES `Rooms` WRITE;
 /*!40000 ALTER TABLE `Rooms` DISABLE KEYS */;
-INSERT INTO `Rooms` VALUES (1,'The Cursed Cabin','A cabin in the woods. Nothing can go wrong.',6,2,60,'Hard','Main Street','Very Scary','Live Actor','Horror',50.00,40.00),(2,'Asylum','A creepy asylum.',8,4,90,'Medium','Uptown','Scary','No Live Actor','Thriller',60.00,50.00);
+INSERT INTO `Rooms` 
+(
+    roomID, roomName, roomDescription, roomMax, roomMin, roomDuration, 
+    roomDifficulty, roomLocation, roomFearLevel, roomExperienceType, 
+    roomGenre, roomPricePeak, roomPriceOffpeak, imagePath
+)
+VALUES 
+(1,'The Cursed Cabin','A cabin in the woods. Nothing can go wrong.',6,2,60,'Hard','Main Street','Very Scary','Live Actor','Horror',50.00,40.00,'images/test.png'),
+(2,'Asylum','A creepy asylum.',8,4,90,'Medium','Uptown','Scary','No Live Actor','Thriller',60.00,50.00,'images/test.png');
 /*!40000 ALTER TABLE `Rooms` ENABLE KEYS */;
 UNLOCK TABLES;
 

@@ -106,13 +106,14 @@ CREATE TABLE `Rooms` (
   `roomMax` tinyint unsigned NOT NULL,
   `roomMin` tinyint unsigned NOT NULL,
   `roomDuration` tinyint unsigned NOT NULL,
-  `roomDifficulty` enum('Easy','Medium','Hard') NOT NULL,
+  `roomDifficulty` enum('Easy','Medium','Hard','Very Hard') NOT NULL,
   `roomLocation` varchar(45) NOT NULL,
   `roomFearLevel` enum('Not Scary','Mildly Scary','Scary','Very Scary') NOT NULL,
   `roomExperienceType` enum('No Live Actor','Live Actor') NOT NULL,
   `roomGenre` enum('Horror','Thriller','Fantasy','Adventure','Mystery') NOT NULL,
   `roomPricePeak` decimal(10,2) NOT NULL,
   `roomPriceOffpeak` decimal(10,2) NOT NULL,
+  `imagePath` varchar(255) NULL DEFAULT 'images/placeholder.png',
   PRIMARY KEY (`roomID`),
   UNIQUE KEY `roomID_UNIQUE` (`roomID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
