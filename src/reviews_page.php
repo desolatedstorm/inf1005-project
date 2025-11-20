@@ -14,66 +14,90 @@
     <link href="css/style.css" rel="stylesheet" />
 </head>
 
+<html>
+
+
 <body>
     <?php
     include "inc/nav.inc.php";
     ?>
     <main>
 
-        <section style="background-color: #d94125;">
-  <div class="container my-5 py-5 text-body">
-    <div class="row d-flex justify-content-center">
-      <div class="col-md-10 col-lg-8 col-xl-6">
-        <div class="card">
-          <div class="card-body p-4">
-            <div class="d-flex flex-start w-100">
-              <img class="rounded-circle shadow-1-strong me-3"
-                src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(21).webp" alt="avatar" width="65"
-                height="65" />
-              <div class="w-100">
-                <h5>Add a comment</h5>
-                <ul data-mdb-rating-init class="rating mb-3" data-mdb-toggle="rating">
-                  <li>
-                    <i class="far fa-star fa-sm text-danger" title="Bad"></i>
-                  </li>
-                  <li>
-                    <i class="far fa-star fa-sm text-danger" title="Poor"></i>
-                  </li>
-                  <li>
-                    <i class="far fa-star fa-sm text-danger" title="OK"></i>
-                  </li>
-                  <li>
-                    <i class="far fa-star fa-sm text-danger" title="Good"></i>
-                  </li>
-                  <li>
-                    <i class="far fa-star fa-sm text-danger" title="Excellent"></i>
-                  </li>
-                </ul>
-                <div data-mdb-input-init class="form-outline">
-                  <textarea class="form-control" id="textAreaExample" rows="4"></textarea>
-                  <label class="form-label" for="textAreaExample">What is your view?</label>
+        <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <link href="css/bootstrap.css" rel="stylesheet" type="text/css" />
+            <link href="css/rating.css" rel="stylesheet" type="text/css" />
+            <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+            <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+            <title>Comment Box</title>
+        </head>
+
+        <body>
+            <!------------container------->
+
+            <div class="container">
+
+                <h1>Ratings Page:</h1>
+                <!-------Wrap------------>
+                <div id="wrap">
+                    <div id="main">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <h3 class="heading">Comments and Responses</h3>
+                            </div>
+                            <div class="col-md-7">
+                                <div id="upper_blank"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p>Your email address will not be published. Required fields are marked *</p>
+
+                    <input type="radio" id="star1" name="rating" value="1" /><input type="radio" id="star2"
+                        name="rating" value="2" /><input type="radio" id="star3" name="rating" value="3" /><input
+                        type="radio" id="star4" name="rating" value="4" /><input type="radio" id="star5" name="rating"
+                        value="5" />
+
+                    <label for="star1" aria-label="Banana">1 star</label><label for="star2">2 stars</label><label
+                        for="star3">3
+                        stars</label><label for="star4">4 stars</label><label for="star5">5 stars</label>
                 </div>
-                <div class="d-flex justify-content-between mt-3">
-                  <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-success">Danger</button>
-                  <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-danger">
-                    Send <i class="fas fa-long-arrow-alt-right ms-1"></i>
-                  </button>
+
+                <div id='form'>
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <form action="" method="POST" id="commentform">
+
+                                <div id="comment-name" class="form-row">
+                                    <input type="text" placeholder="Name (required)" name="dname" id="name">
+                                </div>
+                                <div id="comment-email" class="form-row">
+                                    <input type="text" placeholder="Mail (will not be published) (required)"
+                                        name="demail" id="email">
+                                </div>
+                                <div id="comment-message" class="form-row">
+                                    <textarea name="comment" placeholder="Message" id="comment"></textarea>
+                                </div>
+                                <a href="#"><input type="submit" name="dsubmit" id="commentSubmit"
+                                        value="Submit Comment"></a>
+                            </form>
+
+                        </div>
+                    </div>
                 </div>
-              </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+            </div>
+        </body>
 
+</html>
 
-        </div>
-        <?php
-        include "inc/footer.inc.php";
-        ?>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</div>
+<?php
+include "inc/footer.inc.php";
+?>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
