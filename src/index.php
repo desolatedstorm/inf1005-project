@@ -107,7 +107,7 @@ $conn->close();
                     </div>
 
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="difficulty" value="easy" id="easy-difficulty" checked>
+                        <input class="form-check-input" type="radio" name="difficulty" value="easy" id="easy-difficulty">
                         <label class="form-check-label" for="easy-difficulty">Easy</label>
                     </div>
 

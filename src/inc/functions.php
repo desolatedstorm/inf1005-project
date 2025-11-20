@@ -196,7 +196,6 @@ function getExperienceColor($roomExperienceType)
     }
 }
 
-
 //helper function to slugify text
 function slugify($text)
 {
@@ -205,5 +204,3 @@ function slugify($text)
     //and converts to lowercase
     return strtolower($text);
 }
-
-?>

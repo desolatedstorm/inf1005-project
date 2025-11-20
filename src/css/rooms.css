@@ -243,6 +243,7 @@ body {
      }
 
 
-#roomContainer {
+#Rooms {
     min-height: 800px; 
+    transition: min-height 0.3s ease; 
 }

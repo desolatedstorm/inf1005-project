@@ -91,14 +91,14 @@ if (isset($_GET['id'])) {
 
                 <div class="pricing-card">
                     <div class="price-label">From</div>
-                    <div class="price">$35</div>
+                    <div class="price"> $<?php echo $room['roomPriceOffPeak']?></div>
                     <div style="color: #666; font-size: 0.9rem; margin-bottom: 1rem;">/person</div>
 
                     <ul class="price-details">
-                        <li>60 minutes</li>
-                        <li>2-6 players</li>
-                        <li>Difficulty: 3/5</li>
+                        <li><?php echo $room['roomDuration']?> minutes </li>
+                        <li><?php echo $room['roomMin'] . '-' . $room['roomMax']; ?> players</li>
                     </ul>
+
                     <!-- leave this as it is for now there is a js function that opens this -->
                     <!-- also copy this to the other pages -->
                     <button type="button" id="openPopup" name="openPopup" class="book-btn">Book Now</Button>
