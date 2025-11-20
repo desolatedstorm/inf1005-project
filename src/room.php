@@ -1,4 +1,5 @@
 <?php
+session_start();
 
 include "inc/functions.php";
 $conn = getDbConnection();
@@ -18,6 +19,17 @@ if (isset($_GET['id'])) {
     
     if ($result->num_rows > 0) {
         $room = $result->fetch_assoc();
+        
+        // Get average rating for this room
+        $rating_stmt = $conn->prepare("SELECT AVG(rating) as avg_rating, COUNT(*) as review_count FROM Reviews WHERE Rooms_roomID = ?");
+        $rating_stmt->bind_param("i", $room_id);
+        $rating_stmt->execute();
+        $rating_result = $rating_stmt->get_result();
+        $rating_data = $rating_result->fetch_assoc();
+        $avg_rating = round($rating_data['avg_rating'] ?? 0, 1);
+        $review_count = $rating_data['review_count'] ?? 0;
+        $rating_stmt->close();
+        
     } else {
         echo "Room is not found.";
     }
@@ -94,11 +106,16 @@ if (isset($_GET['id'])) {
                     <ul class="price-details">
                         <li><?php echo $room['roomDuration']?> minutes </li>
                         <li><?php echo $room['roomMin'] . '-' . $room['roomMax']; ?> players</li>
+                        <li>Rating: ★<?php echo $avg_rating; ?> (<?php echo $review_count; ?> reviews)</li>
                     </ul>
 
                     <!-- leave this as it is for now there is a js function that opens this -->
                     <!-- also copy this to the other pages -->
-                    <button type="button" id="openPopup" name="openPopup" class="book-btn">Book Now</Button>
+                    <button type="button" id="openPopup" name="openPopup" class="book-btn">Book Now</button>
+
+                    <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true): ?>
+                    <a href="reviews_page.php?room_id=<?php echo $room_id; ?>" class="rating-btn" style="text-decoration: none; display: block; text-align: center;">Rate Our Services</a>
+                    <?php endif; ?>
 
                     <p class="cancellation-note">Free cancellation up to 24 hours before</p>
                 </div>

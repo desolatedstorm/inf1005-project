@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once "inc/db.inc.php";
+require_once "inc/functions.php";
 
 // Check if user is logged in
 if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
@@ -47,7 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     if ($success) {
         try {
-            $conn = getDbConnection();
+            $conn = getDBconnection();
             
             // Check if user already reviewed this room
             $check_stmt = $conn->prepare("SELECT reviewID FROM Reviews WHERE Users_userID = ? AND Rooms_roomID = ?");
