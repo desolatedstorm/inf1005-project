@@ -1,6 +1,3 @@
-<!doctype html>
-<html lang="en">
-<link rel="icon" type="image/x-icon" href="../images/home.ico">
 <?php
 
 include "inc/functions.php";
