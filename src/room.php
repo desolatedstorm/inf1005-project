@@ -2,104 +2,75 @@
 <html lang="en">
 <link rel="icon" type="image/x-icon" href="../images/home.ico">
 <?php
-session_start();
-include "inc/db.inc.php";
+
+include "inc/functions.php";
 $conn = getDbConnection();
 
-// Check for id in the url (e.g room.php?id=1)
-if (!isset($_GET['id'])) {
-    header("Location: index.php");
-    exit();
-}
-
-// Get the id from the url
-$room_id = (int)$_GET['id'];
-
-// Safe query for the room
-$stmt = $conn->prepare("SELECT * FROM Rooms WHERE roomID = ?");
-$stmt->bind_param("i", $room_id);
-$stmt->execute();
-
-$result = $stmt->get_result();
-
-if ($result->num_rows === 0) {
-    header("Location: index.php");
-    exit();
-}
-
-$room = $result->fetch_assoc();
-$conn->close();
-
-//get badge color based on fear level
-function getFearBadgeColor($fearLevel) {
-    switch ($fearLevel) {
-        case 'Very Scary':
-            return 'bg-danger';
-        case 'Scary':
-            return 'bg-warning text-dark';
-        case 'Mildly Scary':
-            return 'bg-info';
-        case 'Not Scary':
-            return 'bg-secondary';
-        default:
-            return 'bg-light text-dark';
+//check for id in the url (e.g php?id=22)
+if (isset($_GET['id'])) {
+    
+    //get the id from the url
+    $room_id = (int)$_GET['id'];
+    
+    //safe query for the room
+    $stmt = $conn->prepare("SELECT * FROM Rooms WHERE roomID = ?");
+    $stmt->bind_param("i", $room_id);
+    $stmt->execute();
+    
+    $result = $stmt->get_result();
+    
+    if ($result->num_rows > 0) {
+        $room = $result->fetch_assoc();
+    } else {
+        echo "Room is not found.";
     }
-}
-//get difficulty display
-function getDifficultyDisplay($difficulty) {
-    $levels = ['Easy' => '2/5', 'Medium' => '3/5', 'Hard' => '4/5'];
-    return $levels[$difficulty] ?? '3/5';
-}
-
-// Default image mapping (you can update this or add imagePath to database)
-function getRoomImage($roomName) {
-    $imageMap = [
-        //insert whatever here placeholder
-    ];
-    return $imageMap[$roomName] ?? "/images/placeholder.png";
+} else {
+    echo "No room specified.";
 }
 ?>
+
+<!doctype html>
+<html lang="en">
+<link rel="icon" type="image/x-icon" href="../images/home.ico">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="<?php echo htmlspecialchars($room['roomName']); ?> - Escape Room Experience" />
+    <meta name="description" content="The Pharaoh's Curse - Escape Room Experience" />
 
-    <title><?php echo htmlspecialchars($room['roomName']); ?> - Escape Room</title>
-    <?php include "inc/head.inc.php"; ?>
+    <title><?php echo htmlspecialchars($room['roomName']) ?></title>
+    <?php include "inc/head.inc.php" ?>
     <link rel="stylesheet" href="css/rooms.css">
 </head>
 
 <body>
-    <?php include "inc/nav.inc.php"; ?>
+    <?php include "inc/nav.inc.php" ?>
 
     <main class="page-content">
         <div class="container">
             <a href="index.php" class="back-link">← Back to Rooms</a>
 
-            <img src="<?php echo getRoomImage($room['roomName']); ?>" alt="<?php echo htmlspecialchars($room['roomName']); ?>" class="room-hero" />
+            <img src="<?php echo htmlspecialchars($room['imagePath'] ?? '/images/placeholder.png'); ?>" 
+            alt=<?php echo htmlspecialchars($room['roomName']) ?> class="room-hero" />
 
             <div class="thumbnail-gallery">
-                <img src="<?php echo getRoomImage($room['roomName']); ?>" alt="Thumbnail 1" class="active" onclick="changeHeroImage(this.src)" />
+                <img src="<?php echo htmlspecialchars($room['imagePath'] ?? '/images/placeholder.png'); ?>" alt="Thumbnail 1" class="active" onclick="changeHeroImage(this.src)" />
             </div>
 
             <div class="room-content">
+
                 <div class="room-details">
-                    <h1 class="room-title"><?php echo htmlspecialchars($room['roomName']); ?></h1>
+                    <h1 class="room-title"><?php echo htmlspecialchars($room['roomName']) ?></h1>
 
                     <div class="room-badges">
-                        <span class="badge <?php echo getFearBadgeColor($room['roomFearLevel']); ?>">
-                            <?php echo htmlspecialchars($room['roomFearLevel']); ?>
-                        </span>
-                        <span class="badge bg-warning text-dark">
-                            Difficulty <?php echo getDifficultyDisplay($room['roomDifficulty']); ?>
-                        </span>
-                        <span class="badge bg-light text-dark"><?php echo strtolower($room['roomGenre']); ?></span>
-                        <span class="badge bg-light text-dark"><?php echo strtolower($room['roomExperienceType']); ?></span>
+                        <span class="badge <?php echo getBadgeColor($room['roomFearLevel']); ?>"><?php echo htmlspecialchars($room['roomFearLevel']); ?></span>
+                        <span class="badge <?php echo getDifficultyColor($room['roomDifficulty']); ?>"><?php echo htmlspecialchars($room['roomDifficulty']); ?></span>
+                        <span class="badge bg-light text-dark"><?php echo htmlspecialchars($room['roomGenre'])?></span>
                     </div>
 
                     <h3>About This Room</h3>
-                    <p><?php echo nl2br(htmlspecialchars($room['roomDescription'])); ?></p>
-
+                    <p><?php echo htmlspecialchars($room['roomDescription'])?></p>
+                    <hr>
                     <h4>What to Expect</h4>
                     <ul>
                         <li>Immersive storyline and detailed set design</li>
@@ -117,23 +88,20 @@ function getRoomImage($roomName) {
                     </ul>
                 </div>
 
+
                 <div class="pricing-card">
                     <div class="price-label">From</div>
-                    <div class="price">$<?php echo number_format($room['roomPriceOffpeak'], 0); ?></div>
+                    <div class="price">$35</div>
                     <div style="color: #666; font-size: 0.9rem; margin-bottom: 1rem;">/person</div>
 
                     <ul class="price-details">
-                        <li><?php echo $room['roomDuration']; ?> minutes</li>
-                        <li><?php echo $room['roomMin']; ?>-<?php echo $room['roomMax']; ?> players</li>
-                        <li>Difficulty: <?php echo getDifficultyDisplay($room['roomDifficulty']); ?></li>
+                        <li>60 minutes</li>
+                        <li>2-6 players</li>
+                        <li>Difficulty: 3/5</li>
                     </ul>
-
                     <!-- leave this as it is for now there is a js function that opens this -->
-                    <button type="button" id="openPopup" name="openPopup" class="book-btn">Book Now</button>
-
-                    <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true): ?>
-                    <button type="button" id="openRatingPopup" name="openRatingPopup" class="rating-btn">Rate Our Services</button>
-                    <?php endif; ?>
+                    <!-- also copy this to the other pages -->
+                    <button type="button" id="openPopup" name="openPopup" class="book-btn">Book Now</Button>
 
                     <p class="cancellation-note">Free cancellation up to 24 hours before</p>
                 </div>
@@ -141,8 +109,9 @@ function getRoomImage($roomName) {
         </div>
     </main>
 
-    <script src="js/main.js"></script>
-    <?php include "inc/footer.inc.php"; ?>
+    <?php
+    include "inc/footer.inc.php";
+    ?>
 </body>
 
 </html>

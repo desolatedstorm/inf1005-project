@@ -26,13 +26,15 @@ CREATE TABLE `BookingHolding` (
   `holdID` int NOT NULL AUTO_INCREMENT,
   `holdDate` date NOT NULL,
   `holdTimeslot` time NOT NULL,
-  `sessionID` varchar(225) NOT NULL,
   `expires_at` timestamp NOT NULL,
   `Rooms_roomID` int unsigned NOT NULL,
+  `Users_userID` int unsigned NOT NULL,
   PRIMARY KEY (`holdID`),
   UNIQUE KEY `UK_slot_lock` (`Rooms_roomID`,`holdDate`,`holdTimeslot`),
   KEY `fk_BookingHolding_Rooms1_idx` (`Rooms_roomID`),
-  CONSTRAINT `fk_BookingHolding_Rooms1` FOREIGN KEY (`Rooms_roomID`) REFERENCES `Rooms` (`roomID`) ON DELETE CASCADE
+  KEY `fk_BookingHolding_Users1_idx` (`Users_userID`),
+  CONSTRAINT `fk_BookingHolding_Rooms1` FOREIGN KEY (`Rooms_roomID`) REFERENCES `Rooms` (`roomID`) ON DELETE CASCADE,
+  CONSTRAINT `fk_BookingHolding_Users1` FOREIGN KEY (`Users_userID`) REFERENCES `Users` (`userID`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -47,9 +49,15 @@ CREATE TABLE `Bookings` (
   `bookingID` int unsigned NOT NULL AUTO_INCREMENT,
   `bookingDate` date NOT NULL,
   `bookingTimeslot` time NOT NULL,
+  `numPlayers` int unsigned NOT NULL,
   `totalPrice` decimal(10,2) NOT NULL,
-  `bookingStatus` enum('Confirmed','Cancelled','Completed') DEFAULT 'Confirmed',
+  `bookingStatus` enum('Confirmed','Cancelled') DEFAULT 'Confirmed',
+  `billing_address` varchar(255),
+  `billing_city` varchar(100),
+  `billing_postal` varchar(20),
+  `billing_country` varchar(2),
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `Rooms_roomID` int unsigned NOT NULL,
   `Users_userID` int unsigned NOT NULL,
   PRIMARY KEY (`bookingID`),
@@ -99,13 +107,14 @@ CREATE TABLE `Rooms` (
   `roomMax` tinyint unsigned NOT NULL,
   `roomMin` tinyint unsigned NOT NULL,
   `roomDuration` tinyint unsigned NOT NULL,
-  `roomDifficulty` enum('Easy','Medium','Hard') NOT NULL,
+  `roomDifficulty` enum('Easy','Medium','Hard','Very Hard') NOT NULL,
   `roomLocation` varchar(45) NOT NULL,
   `roomFearLevel` enum('Not Scary','Mildly Scary','Scary','Very Scary') NOT NULL,
   `roomExperienceType` enum('No Live Actor','Live Actor') NOT NULL,
   `roomGenre` enum('Horror','Thriller','Fantasy','Adventure','Mystery') NOT NULL,
   `roomPricePeak` decimal(10,2) NOT NULL,
   `roomPriceOffpeak` decimal(10,2) NOT NULL,
+  `imagePath` varchar(255) NULL DEFAULT 'images/placeholder.png',
   PRIMARY KEY (`roomID`),
   UNIQUE KEY `roomID_UNIQUE` (`roomID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

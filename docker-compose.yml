@@ -16,6 +16,7 @@ services:
       - DB_USER=${DB_USER:-root}
       - DB_PASS=${DB_PASSWORD:-secret}
       - DB_NAME=${DB_NAME:-myapp_db}
+      - STRIPESECRETKEY=${STRIPESECRETKEY}
     networks:
       - app-network
 

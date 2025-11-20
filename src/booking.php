@@ -1,3 +1,16 @@
+<?php 
+session_start();
+
+$token = $_GET['token'] ?? null;
+$rtn_dest = "http://localhost:3000/index.php"; // edit on prod server
+
+if (!$token || !$_SESSION['allow_booking'] || !hash_equals($_SESSION['allow_booking'], $token)) {
+    http_response_code(403);
+    header("Location: " . $rtn_dest);
+}
+
+unset($_SESSION['allow_booking']);
+?>
 <!-- Floating Window Booking -->
 <!DOCTYPE html>
 <html lang="en">
@@ -10,6 +23,7 @@
         ?>
         <link rel="stylesheet" href="css/calendar.css"> 
         <script defer src="js/calendar.js"></script>
+        <script src="https://js.stripe.com/v3/"></script>
     </head>
     <body>
         <main class="container container-fluid">
