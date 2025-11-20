@@ -2,6 +2,8 @@
 ob_start();
 include "inc/functions.php";
 
+//csrf protection
+
 //placeholder for admin again..
 // session_start();
 // if (!isset($_SESSION['user_id']) || $_SESSION['is_admin'] !== 1) {
@@ -10,7 +12,7 @@ include "inc/functions.php";
 
 // check if form is submitted or not 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    
+
     $conn = getDbConnection();
     $success = true;
     $errorMsg = "";
@@ -19,28 +21,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = sanitize_input($_POST['roomName']);
     $desc = sanitize_input($_POST['roomDescription']);
     $location = sanitize_input($_POST['roomLocation']);
-    
+
     // int
     $duration = (int)$_POST['roomDuration'];
     $min = (int)$_POST['roomMin'];
     $max = (int)$_POST['roomMax'];
-    
+
     // float
     $priceOff = (float)$_POST['roomPriceOffpeak'];
     $pricePeak = (float)$_POST['roomPricePeak'];
-    
+
     // drop down menu so can select from these 
     $difficulty = $_POST['roomDifficulty'];
     $fear = $_POST['roomFearLevel'];
     $genre = $_POST['roomGenre'];
     $expType = $_POST['roomExperienceType'];
-    
+
     // image upload
     $target_dir = "images/";
     $imagePath = "images/placeholder.png"; // Default fallback
 
+    if ($min > $max) {
+        $errorMsg = "Minimum players cannot be greater than maximum players.";
+        $success = false;
+    }
+
+    // Logic Check: Prices cannot be negative
+    if ($priceOff < 0 || $pricePeak < 0) {
+        $errorMsg = "Prices cannot be negative.";
+        $success = false;
+    }
+
     if (isset($_FILES["roomImage"]) && $_FILES["roomImage"]["error"] == 0) {
-        
+
         $fileName = basename($_FILES["roomImage"]["name"]);
         // Create unique filename to avoid overwrites (e.g., room_timestamp_filename.jpg)
         $newFileName = "room_" . time() . "_" . $fileName;
@@ -84,14 +97,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($success) {
         $sql = "INSERT INTO Rooms (roomName, roomDescription, roomMax, roomMin, roomDuration, roomDifficulty, roomLocation, roomFearLevel, roomExperienceType, roomGenre, roomPricePeak, roomPriceOffpeak, imagePath) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        
+
         $stmt = $conn->prepare($sql);
-        
+
         if ($stmt) {
-            $stmt->bind_param("ssiiisssssdds", 
-                $name, $desc, $max, $min, $duration, 
-                $difficulty, $location, $fear, $expType, $genre, 
-                $pricePeak, $priceOff, $imagePath
+            $stmt->bind_param(
+                "ssiiisssssdds",
+                $name,
+                $desc,
+                $max,
+                $min,
+                $duration,
+                $difficulty,
+                $location,
+                $fear,
+                $expType,
+                $genre,
+                $pricePeak,
+                $priceOff,
+                $imagePath
             );
 
             if ($stmt->execute()) {
@@ -109,17 +133,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     $conn->close();
-    
+
     // If we reached here, there was an error
     echo "<div style='background-color: #333; color: white; padding: 20px; text-align: center;'>";
     echo "<h3>Error Creating Room</h3>";
     echo "<p>$errorMsg</p>";
     echo "<a href='create_room.php' style='color: #f59f00;'>Go Back</a>";
     echo "</div>";
-
 } else {
     // Not a POST request
     header("Location: create_room.php");
     exit();
 }
-?>
+ob_end_flush();

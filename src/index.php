@@ -8,7 +8,7 @@ $rooms = [];
 $roomCount = 0;
 
 //to-do: implement a variable imagePath and also add data into the DB
-$sql = "SELECT roomID, roomName, roomFearLevel, roomDifficulty, roomExperienceType, roomGenre FROM Rooms";
+$sql = "SELECT roomID, roomName, roomFearLevel, roomDifficulty, roomExperienceType, roomGenre, imagePath FROM Rooms";
 $result = $conn->query($sql);
 
 //check for results
@@ -169,7 +169,6 @@ $conn->close();
                                 <span class="badge bg-warning text-dark">Mildly Scary</span>
 
                                 <h5 class="card-title mt-2">The Pharaoh's Curse</h5>
-                                <p class="text-muted mb-0">Rating: ★4.8</p>
                                 <a href="/pharaoh_room.php" class="stretched-link"></a>
                             </div>
                         </div>
@@ -219,9 +218,6 @@ $conn->close();
                                         </span>
 
                                         <h5 class="card-title mt-2"><?php echo htmlspecialchars($room['roomName']); ?></h5>
-
-                                        <!-- to-do: somehow make rating more dynamic -->
-                                        <p class="text-muted mb-0">Rating: ★4.8</p>
 
                                         <a href="room.php?id=<?php echo $room['roomID']; ?>" class="stretched-link"></a>
                                     </div>

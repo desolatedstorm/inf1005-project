@@ -145,6 +145,8 @@ function filterRooms() {
     const roomContainer = document.getElementById('roomContainer');
     const noResultsDiv = document.getElementById('noResultsMessage');
 
+    // attempting to make it so that the page wont abruptly move upwards when no matches found with the filter
+    // not really working
     if (visibleCount === 0) {
         // Hide the room cards (in case they were not fully filtered out) and show the message
         if (roomContainer) {
