@@ -1,6 +1,6 @@
 <?php
 
-include "inc/db.inc.php";
+include "inc/functions.php";
 $conn = getDbConnection();
 
 //check for id in the url (e.g php?id=22)
@@ -24,39 +24,6 @@ if (isset($_GET['id'])) {
 } else {
     echo "No room specified.";
 }
-//helper function to get the right css color for fear factor
-function getFearColor($fearLevel)
-{
-    switch ($fearLevel) {
-        case 'Very Scary':
-            return 'bg-danger';
-        case 'Scary':
-            return 'bg-warning text-dark';
-        case 'Mildly Scary':
-            return 'bg-info text-dark';
-        case 'Not Scary':
-            return 'bg-secondary';
-        default:
-            return 'bg-light text-dark';
-    }
-}
-
-function getDifficultyColor($roomDifficulty)
-{
-    switch ($roomDifficulty) {
-        case 'Very Hard':
-            return 'bg-danger';
-        case 'Hard':
-            return 'bg-warning text-dark';
-        case 'Medium':
-            return 'bg-info text-dark';
-        case 'Easy':
-            return 'bg-secondary';
-        default:
-            return 'bg-light text-dark';
-    }
-}
-
 ?>
 
 <!doctype html>
@@ -93,7 +60,7 @@ function getDifficultyColor($roomDifficulty)
                     <h1 class="room-title"><?php echo htmlspecialchars($room['roomName']) ?></h1>
 
                     <div class="room-badges">
-                        <span class="badge <?php echo getFearColor($room['roomFearLevel']); ?>"><?php echo htmlspecialchars($room['roomFearLevel']); ?></span>
+                        <span class="badge <?php echo getBadgeColor($room['roomFearLevel']); ?>"><?php echo htmlspecialchars($room['roomFearLevel']); ?></span>
                         <span class="badge <?php echo getDifficultyColor($room['roomDifficulty']); ?>"><?php echo htmlspecialchars($room['roomDifficulty']); ?></span>
                         <span class="badge bg-light text-dark"><?php echo htmlspecialchars($room['roomGenre'])?></span>
                     </div>
