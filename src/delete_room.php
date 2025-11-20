@@ -34,6 +34,12 @@ $conn->close();
 
     <main class="page-content section-gap">
         <div class="container">
+            <?php if (isset($_GET['msg']) && $_GET['msg'] == 'deleted'): ?>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <strong>Success!</strong> The room and its image have been deleted.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <?php endif; ?>2
             <h2 class="text-center mb-5 text-warning">Manage Rooms</h2>
 
             <div class="table-responsive">

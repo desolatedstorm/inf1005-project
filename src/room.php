@@ -121,6 +121,12 @@ if (isset($_GET['id'])) {
                 </div>
             </div>
         </div>
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <iframe id="popupFrame" src=""><iframe>
+            </div>
+        </div>
     </main>
 
     <?php
