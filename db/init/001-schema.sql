@@ -80,7 +80,8 @@ CREATE TABLE `Reviews` (
   KEY `fk_Reviews_Users1_idx` (`Users_userID`),
   KEY `fk_Reviews_Rooms1_idx` (`Rooms_roomID`),
   CONSTRAINT `fk_Reviews_Rooms1` FOREIGN KEY (`Rooms_roomID`) REFERENCES `Rooms` (`roomID`) ON DELETE CASCADE,
-  CONSTRAINT `fk_Reviews_Users1` FOREIGN KEY (`Users_userID`) REFERENCES `Users` (`userID`) ON DELETE CASCADE
+  CONSTRAINT `fk_Reviews_Users1` FOREIGN KEY (`Users_userID`) REFERENCES `Users` (`userID`) ON DELETE CASCADE,
+  CONSTRAINT `chk_rating_range` CHECK (`rating` >= 1 AND `rating` <= 5)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

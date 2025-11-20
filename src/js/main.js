@@ -169,3 +169,64 @@ function filterRooms() {
         roomCountText.textContent = `Showing ${visibleCount} room${visibleCount !== 1 ? 's' : ''}`;
     }
 }
+
+//rooms dyanmic add from database?
+
+<?php
+session_start();
+include "inc/db.inc.php";
+$conn = getDbConnection();
+
+// Check for id in the url (e.g room.php?id=1)
+if (!isset($_GET['id'])) {
+    header("Location: index.php");
+    exit();
+}
+
+// Get the id from the url
+$room_id = (int)$_GET['id'];
+
+// Safe query for the room
+$stmt = $conn->prepare("SELECT * FROM Rooms WHERE roomID = ?");
+$stmt->bind_param("i", $room_id);
+$stmt->execute();
+
+$result = $stmt->get_result();
+
+if ($result->num_rows === 0) {
+    header("Location: index.php");
+    exit();
+}
+
+$room = $result->fetch_assoc();
+$conn->close();
+
+//get badge color based on fear level
+function getFearBadgeColor($fearLevel) {
+    switch ($fearLevel) {
+        case 'Very Scary':
+            return 'bg-danger';
+        case 'Scary':
+            return 'bg-warning text-dark';
+        case 'Mildly Scary':
+            return 'bg-info';
+        case 'Not Scary':
+            return 'bg-secondary';
+        default:
+            return 'bg-light text-dark';
+    }
+}
+//get difficulty display
+function getDifficultyDisplay($difficulty) {
+    $levels = ['Easy' => '2/5', 'Medium' => '3/5', 'Hard' => '4/5'];
+    return $levels[$difficulty] ?? '3/5';
+}
+
+// Default image mapping (you can update this or add imagePath to database)
+function getRoomImage($roomName) {
+    $imageMap = [
+        //insert whatever here placeholder
+    ];
+    return $imageMap[$roomName] ?? "/images/placeholder.png";
+}
+?>

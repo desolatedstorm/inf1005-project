@@ -219,3 +219,25 @@
              margin-bottom: 2rem;
          }
      }
+     
+     .rating-btn {
+         background: #ffffff;
+         color: #0b1a2b;
+         border: none;
+         padding: 0.9rem 2rem;
+         font-size: 1.1rem;
+         border-radius: 6px;
+         width: 100%;
+         cursor: pointer;
+         font-weight: 600;
+         transition: background 200ms ease, box-shadow 200ms ease;
+         margin-top: 1rem;
+         box-shadow: 0 4px 12px rgba(245, 159, 0, 0.3);
+     }
+
+     .rating-btn:hover {
+         background: #ffffff;
+         color: #06121b;
+         box-shadow: 0 6px 16px rgba(245, 159, 0, 0.5);
+         text-decoration: none;
+     }

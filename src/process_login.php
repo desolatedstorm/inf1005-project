@@ -3,6 +3,7 @@
     <head>
         <title>Login Results</title>
         <?php
+        session_start();
         include "inc/head.inc.php";
         ?>
     </head>
@@ -45,6 +46,12 @@
 
         if ($success)
         {
+            // Store user information in session
+            $_SESSION['logged_in'] = true;
+            $_SESSION['user_fname'] = $fname;
+            $_SESSION['user_lname'] = $lname;
+            $_SESSION['user_email'] = $email;
+            
             echo "<div class=container justify-content-center mb-3>";
             echo "<h2>Login sucessful!</h2>";
             echo "<h4>Welcome back, " . $fname . " " . $lname . ".</h4><br>";
