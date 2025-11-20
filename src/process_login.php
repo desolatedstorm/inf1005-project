@@ -48,6 +48,7 @@
         {
             // Store user information in session
             $_SESSION['logged_in'] = true;
+            $_SESSION['user_id'] = $user_id ?? null;
             $_SESSION['user_fname'] = $fname;
             $_SESSION['user_lname'] = $lname;
             $_SESSION['user_email'] = $email;
