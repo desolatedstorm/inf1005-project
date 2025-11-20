@@ -1,4 +1,5 @@
 <?php 
+session_start();
 header('Content-Type: application/json');
 
 require_once __DIR__ . "/../vendor/autoload.php";
@@ -51,12 +52,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $messages .= 'Invalid total amount. ';
     }
 
-    // Billing address (optional fields for this endpoint)
-    $billing_address = isset($_POST['billing_address']) ? $_POST['billing_address'] : '';
-    $billing_city = isset($_POST['billing_city']) ? $_POST['billing_city'] : '';
-    $billing_postal = isset($_POST['billing_postal']) ? $_POST['billing_postal'] : '';
-    $billing_country = isset($_POST['billing_country']) ? $_POST['billing_country'] : '';
+    $user_name = isset($_POST['user_name']) ? $_POST['user_name'] : null;
 
+    $room_name = isset($_POST['room_name']) ? $_POST['room_name'] : null;
+
+        // Generate Booking Reference
+    $ref = generateBookingRef();
+    
+    if (!$ref) { // validate booking ref
+        $success = false;
+        $messages .= "Invalid booking reference. ";
+    }
+        
     if (!$success) {
         echo json_encode(array(
             'success' => false,
@@ -75,6 +82,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         if ($conn->connect_error) {
             throw new Exception("Connection failed: " . $conn->connect_error);
+        }
+
+        // query room and user name from DB if not set
+        if ($room_name == null) {
+            $roomName = $conn->prepare("
+                SELECT roomName FROM Rooms where RoomID = ?
+            ");
+            $roomName->bind_param("i", $room_id);
+            $roomName->execute();
+            $room_result = $roomName->get_result()->fetch_assoc();
+            $roomName->close();
+            // check    
+        }
+
+        if ($user_name == null) {
+            $user = $conn->prepare("
+                SELECT username, email FROM Users where userID = ?
+            ");
+            $user->bind_param("i", $user_id);
+            $user->execute();
+            $user_result = $user->get_result()->fetch_assoc();
+            $user->close();
+            //check
         }
 
         // Check if slot is still available
@@ -104,23 +134,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         $stmt = $conn->prepare("
             INSERT INTO Bookings 
-            (bookingDate, bookingTimeslot, numPlayers, totalPrice, bookingStatus, 
-            billing_address, billing_city, billing_postal, billing_country,
+            (bookingRef, bookingDate, bookingTimeslot, numPlayers, totalPrice, bookingStatus, 
             created_at, Rooms_roomID, Users_userID) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         ");
 
         $stmt->bind_param(
-            "ssidssssssii", 
+            "sssidssii", 
+            $ref,
             $date, 
             $time, 
             $pax,
             $subtotal, 
             $booking_status,
-            $billing_address,
-            $billing_city,
-            $billing_postal,
-            $billing_country,
             $created_at, 
             $room_id, 
             $user_id
@@ -139,10 +165,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // 3. SEND SUCCESS RESPONSE
         // ===========================
         
+        // Set Sessions
+        //$_SESSION['bookingRef'] = $ref;
+        $_SESSION['date'] = $date;
+        $_SESSION['time'] = $time;
+        $_SESSION['username'] = $user_result['username'];
+        $_SESSION['email'] = $user_result['email'];
+        $_SESSION['room_name'] = $room_result['roomName'];
+        $_SESSION['pax'] = $pax;
+        $_SESSION['total'] = $subtotal;
+        $_SESSION['bookingSuccess'] = true;
+
         echo json_encode(array(
             'success' => true,
             'message' => 'Booking confirmed successfully',
-            'booking_id' => $booking_id
+            'booking_ref' => $ref
         ));
 
         // TODO: Send confirmation email
@@ -171,5 +208,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'success' => false,
         'message' => 'Only POST requests are allowed'
     ));
+}
+
+function generateBookingRef() {
+    return strtoupper(substr(base_convert(bin2hex(random_bytes(4)), 16, 36), 0, 8));
 }
 ?>

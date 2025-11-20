@@ -10,7 +10,7 @@ $stripe_publishable_key = 'pk_test_your_publishable_key_here';
 
 <div class="row">
     <div class="content w-100">
-        <div class="calendar-container">
+        <section class="calendar-container">
             <div class="calendar table-responsive">
                 <!-- TODO: FIGURE OUT WHERE TO PLACE SMALL YEAR --> 
                 <div class="month-header"> 
@@ -36,15 +36,15 @@ $stripe_publishable_key = 'pk_test_your_publishable_key_here';
                     </table>
                 </div> 
             </div>
-        </div>
+        </section>
 
         <!-- Right Panel: Contains timeslots, booking form, and checkout form -->
-        <div class="right-panel">
-            <div class="timeslots-container">
+        <section class="right-panel">
+            <section class="timeslots-container">
                 <!-- JS populates here -->    
-            </div>
+            </section>
             
-            <div class="booking-container booking-form text-dark border-top my-4" style="display:none; margin-top:20px;">
+            <section class="booking-container booking-form text-dark border-top my-4" style="display:none; margin-top:20px;">
                 <div class="row align-items-center mb-3">
                     <div class="col-auto">
                         <img src="images/persons.png" class="logo me-2" alt="person icon">
@@ -90,11 +90,11 @@ $stripe_publishable_key = 'pk_test_your_publishable_key_here';
                         </button>
                     </div>
                 </div>
-            </div>
+            </section>
             <!-- Checkout Form -->
             <?php 
             include 'payment.php'
             ?>
-        </div>
+        </section>
     </div>
 </div>

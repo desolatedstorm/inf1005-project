@@ -291,11 +291,13 @@
                     }); 
                 } else {
                     alert(response.message || "Unable to hold this time slot. Please try another slot.");
+                    location.reload();
                 }
             },
             error: function(xhr, status, error) {
                 console.error("Error holding slot:", error);
                 alert("Unable to hold this time slot. Please try again.");
+                location.reload();
             }
         });
     }
@@ -315,7 +317,7 @@
         if ($('#hold-timer').length === 0) {
             $('.checkout-form .section-title').after(
                 '<div id="hold-timer" class="alert alert-warning mt-3" role="alert">' +
-                '<strong>⏱️ Time remaining: <span id="timer-display">5:00</span></strong><br>' +
+                '<strong>&#128337 Time remaining: <span id="timer-display">5:00</span></strong><br>' +
                 'Please complete payment before time expires.' +
                 '</div>'
             );
@@ -338,7 +340,7 @@
             if (timeRemaining <= 0) {
                 clearInterval(holdTimerInterval);
                 $('#hold-timer').html(
-                    '<strong>⏰ Time expired!</strong><br>' +
+                    '<strong>&#9200 Time expired!</strong><br>' +
                     'Your hold on this time slot has expired. Please select the slot again.'
                 );
                 
@@ -352,6 +354,7 @@
                     $(".checkout-form").hide(250);
                     $(".timeslots-container").show(250);
                     $(".booking-form").show(250);
+                    location.reload();
                 }, 1000);
             }
         }, 1000);
@@ -382,14 +385,16 @@
                 if (response.success) {
                     console.log("Booking saved successfully");
                     // Redirect to success page or show confirmation
-                    window.location.href = 'booking_success.php?booking_id=' + response.booking_id;
+                    window.location.href = 'booking_success.php?booking_ref=' + response.booking_ref;
                 } else {
                     alert("Payment processed but booking save failed: " + response.message);
+                    location.reload();
                 }
             },
             error: function(xhr, status, error) {
                 console.error("Error saving booking:", error);
                 alert("Payment processed but booking save failed. Please contact support.");
+                location.reload();
             }
         });
     };

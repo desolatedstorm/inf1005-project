@@ -145,3 +145,16 @@ footer {
 .text-center.my-4 p {
   color: #fff !important;
 }
+
+/* Logo size and alignment */
+.logo {
+  height: 40px;
+  width: auto;
+}
+
+/* Smaller logo on mobile */
+@media (max-width: 768px) {
+  .logo {
+    height: 30px;
+  }
+}

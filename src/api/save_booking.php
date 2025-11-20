@@ -1,4 +1,4 @@
-<?php 
+<?php
 header('Content-Type: application/json');
 
 require_once __DIR__ . '/inc/login_functions.php';
@@ -51,10 +51,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Billing address
-    $billing_address = isset($_POST['billing_address']) ? $_POST['billing_address'] : '';
-    $billing_city = isset($_POST['billing_city']) ? $_POST['billing_city'] : '';
-    $billing_postal = isset($_POST['billing_postal']) ? $_POST['billing_postal'] : '';
-    $billing_country = isset($_POST['billing_country']) ? $_POST['billing_country'] : '';
+//     $billing_address = isset($_POST['billing_address']) ? $_POST['billing_address'] : '';
+//     $billing_city = isset($_POST['billing_city']) ? $_POST['billing_city'] : '';
+//     $billing_postal = isset($_POST['billing_postal']) ? $_POST['billing_postal'] : '';
+    // $billing_country = isset($_POST['billing_country']) ? $_POST['billing_country'] : '';
 
     if (!$success) {
         echo json_encode(array(
@@ -131,22 +131,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $conn->prepare("
             INSERT INTO Bookings 
             (bookingDate, bookingTimeslot, numPlayers, totalPrice, bookingStatus, 
-            billing_address, billing_city, billing_postal, billing_country,
             created_at, Rooms_roomID, Users_userID) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         ");
 
         $stmt->bind_param(
-            "ssifsssssiii", 
+            "ssidsiii", 
             $date, 
             $time, 
             $pax,
             $subtotal, 
             $booking_status,
-            $billing_address,
-            $billing_city,
-            $billing_postal,
-            $billing_country,
             $created_at, 
             $room_id, 
             $user_id
@@ -182,7 +177,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode(array(
             'success' => true,
             'message' => 'Booking confirmed successfully',
-            'booking_id' => $booking_id
+            'booking_ref' => $ref
         ));
 
         // TODO: Send confirmation email

@@ -47,15 +47,12 @@ DROP TABLE IF EXISTS `Bookings`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `Bookings` (
   `bookingID` int unsigned NOT NULL AUTO_INCREMENT,
+  `bookingRef` varchar(20) UNIQUE NOT NULL,
   `bookingDate` date NOT NULL,
   `bookingTimeslot` time NOT NULL,
   `numPlayers` int unsigned NOT NULL,
   `totalPrice` decimal(10,2) NOT NULL,
   `bookingStatus` enum('Confirmed','Cancelled') DEFAULT 'Confirmed',
-  `billing_address` varchar(255),
-  `billing_city` varchar(100),
-  `billing_postal` varchar(20),
-  `billing_country` varchar(2),
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `Rooms_roomID` int unsigned NOT NULL,
