@@ -166,13 +166,9 @@
     /*         BOOKING FORM         */
     /* ---------------------------- */
 
-    //temp value - get final values from actual page
     var price = 25;
     var selectedTime;
     var default_pax = 2;
-    var min = 2;
-    var max = 8;
-
     // Global booking data to be used after payment
     var bookingData = {};
 
@@ -183,8 +179,8 @@
         $(".event-name").removeClass("active-name");
         event.data.name.addClass("active-name");
         
-        $("#min-players").text(min);
-        $("#max-players").text(max);
+        // $("#min-players").text(min);
+        // $("#max-players").text(max);
 
         $("#player-count").text(default_pax);
 

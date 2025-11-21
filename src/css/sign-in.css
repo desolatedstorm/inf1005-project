@@ -3,9 +3,19 @@ body {
   height: 100%;
 }
 
+main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 200px);
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
 .form-signin {
   max-width: 330px;
   padding: 1rem;
+  margin: 0 auto;
 }
 
 .form-signin .form-floating:focus-within {
