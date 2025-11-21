@@ -84,7 +84,7 @@ function saveMemeberToDB()
 <?php
 function authenticateUser()
 {
-    global $fname, $lname, $email, $pwd, $errorMsg, $success;
+    global $fname, $lname, $email, $pwd, $user_id, $errorMsg, $success;
     // Create database connection.
 
     list($db_host, $db_user, $db_pass, $db_name) = getDBEnvVar();
@@ -117,6 +117,7 @@ function authenticateUser()
             {
                 // Note that email field is unique, so should only have one row.
                 $row = $result->fetch_assoc();
+                $user_id = $row["id"] ?? $row["userID"] ?? null;
                 $fname = $row["fname"];
                 $lname = $row["lname"];
                 $pwd = $row["password"];

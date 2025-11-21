@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!doctype html>
 <html lang="en">
 <link rel="icon" type="image/x-icon" href="../images/home.ico">
@@ -80,6 +83,11 @@
                     <!-- leave this as it is for now there is a js function that opens this -->
                     <!-- also copy this to the other pages -->
                     <button type="button" id="openPopup" name="openPopup" class="book-btn">Book Now</Button>
+
+                    <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true): ?>
+                        <button type="button" id="openRatingPopup" name="openRatingPopup" class="rating-btn">Rate Our
+                            Services</Button>
+                    <?php endif; ?>
 
                     <p class="cancellation-note">Free cancellation up to 24 hours before</p>
                 </div>
