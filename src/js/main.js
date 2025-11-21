@@ -18,7 +18,8 @@ function registerEventListeners() {
   // else {
   //   console.log("No imgs found")
   // }
-  // open popup
+
+  /* open popup */
     var popup = document.getElementById("openPopup")
     console.log(popup)
     if (popup !== null)
@@ -205,7 +206,9 @@ function filterRooms() {
 function popUp()
 {
     console.log("Opening bookig");
-    var popUpURL = "booking.php?token=";
+    var popUpURL = "booking.php?";
+    var token_name = "token=";
+    var room = "room_id=";
     var modal = document.getElementById("modal");
     var iframe = document.getElementById("popupFrame");
     
@@ -214,7 +217,7 @@ function popUp()
     fetch("api/api_generate_token.php")
     .then(response => response.text())
     .then(token => {
-        iframe.src = popUpURL + token;
+        iframe.src = popUpURL + token_name + token + "room_id=";
     })
 
 }

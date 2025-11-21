@@ -10,8 +10,7 @@
         ?>
         <link rel="stylesheet" href="css/calendar.css"> 
         <script defer src="js/calendar.js"></script>
-        <script defer src="js/payment.js"></script>
-        <script src="https://js.stripe.com/v3/"></script>
+        <script src="https://js.stripe.com/v3/"></script> <!-- TODO: add integrity/CSRF -->
     </head>
     <body>
         <main class="container container-fluid">

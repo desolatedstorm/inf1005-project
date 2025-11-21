@@ -77,7 +77,7 @@ unset($_SESSION['total']);
             </div>
         </div>
         
-        <a href="index.php" class="btn btn-primary">Back to Home</a>
+        <!--<button class="btn btn-primary">Back to Home</button> -->
         
         <p class="email-notice">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">

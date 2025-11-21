@@ -1,4 +1,7 @@
 <?php
+// set session to access booking.php
+session_start();
+$_SESSION['allow_booking'] = true;
 
 include "inc/db.inc.php";
 $conn = getDbConnection();
@@ -137,6 +140,13 @@ function getDifficultyColor($roomDifficulty)
                 </div>
             </div>
         </div>
+        <!-- booking pop up -->
+        <section id="modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <iframe id="popupFrame" src=""><iframe>
+            </div>
+        </section>
     </main>
 
     <?php
