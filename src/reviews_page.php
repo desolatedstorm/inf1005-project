@@ -3,10 +3,11 @@ session_start();
 
 $_SESSION['logged_in'] = true; // TODO: remove aft tes
 // Check if user is logged in
-if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
-    header("Location: login.php");
-    exit();
+/* if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
+header("Location: login.php");
+exit();
 }
+ */
 
 // Get room ID from URL
 if (!isset($_GET['room_id'])) {
