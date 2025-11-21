@@ -1,5 +1,8 @@
 <?php
 session_start();
+
+// Set a flag to allow booking.php to load
+$_SESSION['allow_booking'] = true;
 ?>
 <!doctype html>
 <html lang="en">
@@ -93,6 +96,14 @@ session_start();
                 </div>
             </div>
         </div>
+        <!-- booking pop up -->
+        <section id="modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <iframe id="popupFrame" src=""><iframe>
+            </div>
+        </section>
+
     </main>
 
     <?php

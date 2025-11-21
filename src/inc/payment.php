@@ -1,18 +1,18 @@
-<!-- Payment Form Section (Add this to calendar.inc.php inside right-panel) -->
-<div class="checkout-form" style="display:none;">
+<!-- Checkout Form Section -->
+<section class="checkout-form" style="display:none;">
     <?php
     // Get user details from session
     $user_name = $_SESSION['user_name'] ?? 'Guest User';
     $user_email = $_SESSION['user_email'] ?? 'guest@guest.com';
     
-    // Stripe publishable key (replace with your actual key)
+    // Stripe publishable key
     $stripe_publishable_key = 'pk_test_51STfLcAksjEcZwsYPOGI0xqUKScqT1AS4GFHnubNNqd3e0YVWomPXk9cABvxKyuOc4yokyT8VtlvzXd6LkWHQiTG0003O6qTzj';
     ?>
     
-    <div class="payment-section">
+    <section class="payment-section">
         <h2 class="section-title">Checkout</h2>
         
-        <!-- Booking Summary - Read Only -->
+        <!-- Booking Summary -->
         <div class="checkout-summary mb-4">
             <h5 class="mb-3 fw-bold">Booking Details</h5>
             
@@ -73,9 +73,6 @@
                 <label for="billing-country" class="form-label">Country</label>
                 <select class="form-control" id="billing-country" required>
                     <option value="SG" selected>Singapore</option>
-                    <option value="US">United States</option>
-                    <option value="GB">United Kingdom</option>
-                    <option value="AU">Australia</option>
                     <option value="MY">Malaysia</option>
                 </select>
             </div>
@@ -116,33 +113,33 @@
                 Secured by Stripe
             </div>
         </form>
-    </div>
-    
+    </section>
     <script>
+        // FIX: alert does not go away after booking has expired
         // Stripe configuration
         const stripeKey = '<?php echo $stripe_publishable_key; ?>';
         const stripe = Stripe(stripeKey);
-        
+
         let elements;
         let paymentRequest;
         let clientSecret;
-        
+
         // Initialize payment when checkout form is shown
         function initializePayment() {
-            const amount = parseFloat($("#checkout-total").text()) * 100; // Convert to cents
-            
+            const amount = parseFloat($("#checkout-total").text()) * 100; // Stripe takes amt in cents
+
             if (amount <= 0) {
                 showPaymentError('Invalid amount');
                 return;
             }
-            
+
             // Create Payment Intent
             fetch('api/create_payment_intent.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     amount: amount,
-                    currency: 'sgd' // Singapore Dollars
+                    currency: 'sgd'
                 })
             })
             .then(response => response.json())
@@ -158,7 +155,7 @@
                 showPaymentError('Failed to initialize payment. Please try again.');
             });
         }
-        
+
         function setupStripeElements(clientSecret, amount) {
             // Create Payment Element
             const appearance = {
@@ -171,15 +168,15 @@
                     fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
                 }
             };
-            
+
             elements = stripe.elements({ clientSecret, appearance });
             const paymentElement = elements.create('payment');
             paymentElement.mount('#payment-element');
-            
+
             // Setup Apple Pay / Google Pay
             setupPaymentRequest(amount);
         }
-        
+
         function setupPaymentRequest(amount) {
             paymentRequest = stripe.paymentRequest({
                 country: 'SG',
@@ -191,11 +188,11 @@
                 requestPayerName: true,
                 requestPayerEmail: true,
             });
-            
+
             const prButton = elements.create('paymentRequestButton', {
                 paymentRequest: paymentRequest,
             });
-            
+
             // Check if Apple Pay / Google Pay is available
             paymentRequest.canMakePayment().then(function(result) {
                 if (result) {
@@ -203,10 +200,10 @@
                     document.getElementById('payment-divider').style.display = 'block';
                 }
             });
-            
+
             paymentRequest.on('paymentmethod', async (ev) => {
                 const billingDetails = getBillingDetails();
-                
+
                 const {error: confirmError} = await stripe.confirmCardPayment(
                     clientSecret,
                     {
@@ -219,7 +216,7 @@
                     },
                     {handleActions: false}
                 );
-                
+
                 if (confirmError) {
                     ev.complete('fail');
                     showPaymentError(confirmError.message);
@@ -229,20 +226,20 @@
                 }
             });
         }
-        
+
         // Handle form submission
         document.getElementById('payment-form').addEventListener('submit', async (event) => {
             event.preventDefault();
-            
+
             // Validate billing address
             if (!validateBillingAddress()) {
                 return;
             }
-            
+
             setPaymentLoading(true);
-            
+
             const billingDetails = getBillingDetails();
-            
+
             const {error} = await stripe.confirmPayment({
                 elements,
                 confirmParams: {
@@ -253,7 +250,7 @@
                 },
                 redirect: 'if_required'
             });
-            
+
             if (error) {
                 showPaymentError(error.message);
                 setPaymentLoading(false);
@@ -261,7 +258,7 @@
                 handlePaymentSuccess();
             }
         });
-        
+
         function getBillingDetails() {
             return {
                 name: '<?php echo addslashes($user_name); ?>',
@@ -274,19 +271,19 @@
                 }
             };
         }
-        
+
         function validateBillingAddress() {
             const address = document.getElementById('billing-address').value.trim();
             const city = document.getElementById('billing-city').value.trim();
             const postal = document.getElementById('billing-postal').value.trim();
-            
+
             if (!address || !city || !postal) {
                 showPaymentError('Please fill in all billing address fields');
                 return false;
             }
             return true;
         }
-        
+
         function handlePaymentSuccess() {
             // Save booking to database
             const bookingData = {
@@ -295,12 +292,12 @@
                 room: $("#checkout-room").text(),
                 players: $("#checkout-players").text(),
                 total: $("#checkout-total").text(),
-                billing_address: document.getElementById('billing-address').value,
-                billing_city: document.getElementById('billing-city').value,
-                billing_postal: document.getElementById('billing-postal').value,
-                billing_country: document.getElementById('billing-country').value
+//                 billing_address: document.getElementById('billing-address').value,
+//                 billing_city: document.getElementById('billing-city').value,
+//                 billing_postal: document.getElementById('billing-postal').value,
+                // billing_country: document.getElementById('billing-country').value
             };
-            
+
             $.ajax({
                 type: 'POST',
                 url: 'api/save_booking.php',
@@ -319,12 +316,12 @@
                 }
             });
         }
-        
+
         function setPaymentLoading(isLoading) {
             const button = document.getElementById('payment-submit-button');
             const buttonText = document.getElementById('payment-button-text');
             const spinner = document.getElementById('payment-spinner');
-            
+
             if (isLoading) {
                 button.disabled = true;
                 buttonText.style.display = 'none';
@@ -335,22 +332,23 @@
                 spinner.style.display = 'none';
             }
         }
-        
+
         function showPaymentError(message) {
             const errorDiv = document.getElementById('payment-error-message');
             errorDiv.textContent = message;
             errorDiv.style.display = 'block';
-            
+
             setTimeout(() => {
                 errorDiv.style.display = 'none';
             }, 5000);
         }
-        
+
         // Back button
-        $("#back-to-booking-btn").click(function() {
+        document.getElementById("back-to-booking-btn").addEventListener("click", function() {
             $(".checkout-form").hide(250);
             $(".booking-form").show(250);
             $(".timeslots-container").show(250);
         });
+              
     </script>
-</div>
+</section>

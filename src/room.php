@@ -1,5 +1,6 @@
 <?php
-session_start();
+// set session to access booking.php
+include "api/api_generate_token.php";
 
 include "inc/functions.php";
 $conn = getDbConnection();
@@ -19,6 +20,14 @@ if (isset($_GET['id'])) {
     
     if ($result->num_rows > 0) {
         $room = $result->fetch_assoc();
+
+        // store in session for booking page
+        $_SESSION['room_id'] = $room_id;
+        $_SESSION['room_name'] = $room['roomName'];
+        $_SESSION['desc'] = $room['roomDescription'];
+        $_SESSION['min'] = $room['roomMin'];
+        $_SESSION['max'] = $room['roomMax'];
+        $_SESSION['price'] = $room['roomPriceOffPeak'];
         
         // Get average rating for this room
         $rating_stmt = $conn->prepare("SELECT AVG(rating) as avg_rating, COUNT(*) as review_count FROM Reviews WHERE Rooms_roomID = ?");
@@ -121,12 +130,13 @@ if (isset($_GET['id'])) {
                 </div>
             </div>
         </div>
-        <div id="modal" class="modal">
+        <!-- booking pop up -->
+        <section id="modal" class="modal">
             <div class="modal-content">
                 <span class="close">&times;</span>
                 <iframe id="popupFrame" src=""><iframe>
             </div>
-        </div>
+        </section>
     </main>
 
     <?php

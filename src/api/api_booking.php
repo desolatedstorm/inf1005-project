@@ -1,5 +1,5 @@
 <?php
-session_start(); // ADD THIS!
+session_start();
 
 header('Content-Type: application/json');
 
@@ -13,7 +13,7 @@ $all_timeslots = array(
     "13:30:00", "15:00:00", "16:30:00", 
     "18:00:00", "19:30:00", "21:00:00"
 );
-
+// TODO: remove past time from avail slots
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $date = isset($_POST['date']) ? $_POST['date'] : null;
@@ -54,6 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $booked_slots[] = $row['bookingTimeslot'];
             }
             $stmt->close();
+            // FIX: get slots after current time also
 
             // Get held slots (by other users)
             $current_user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 0;

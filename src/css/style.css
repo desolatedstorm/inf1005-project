@@ -146,7 +146,20 @@ footer {
   color: #fff !important;
 }
 
-$star-size: 60px;
+/* Logo size and alignment */
+.logo {
+  height: 40px;
+  width: auto;
+}
+
+/* Smaller logo on mobile */
+@media (max-width: 768px) {
+  .logo {
+    height: 30px;
+  }
+}
+
+/* $star-size: 60px;
 $color: slategray;
 
 @mixin set-star($border: $color, $fill: transparent) {
@@ -175,4 +188,4 @@ $color: slategray;
 .stars input:nth-child(4):checked ~ label:nth-of-type(-n + 4),
 .stars input:nth-child(5):checked ~ label:nth-of-type(-n + 5) {
   @include set-star($color, $color);
-}
+} */

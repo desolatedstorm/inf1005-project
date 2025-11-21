@@ -47,6 +47,7 @@ DROP TABLE IF EXISTS `Bookings`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `Bookings` (
   `bookingID` int unsigned NOT NULL AUTO_INCREMENT,
+  `bookingRef` varchar(20) UNIQUE NOT NULL,
   `bookingDate` date NOT NULL,
   `bookingTimeslot` time NOT NULL,
   `numPlayers` int unsigned NOT NULL,
