@@ -7,22 +7,38 @@ require_once '../inc/login_functions.php';
 
 list($db_host, $db_user, $db_pass, $db_name, $stripekey) = getDBEnvVar();
 
+date_default_timezone_set('Asia/Singapore');
+
 // Define all available timeslots (24-hour format for database)
 $all_timeslots = array(
     "09:00:00", "10:30:00", "12:00:00", 
     "13:30:00", "15:00:00", "16:30:00", 
     "18:00:00", "19:30:00", "21:00:00"
 );
-// TODO: remove past time from avail slots
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $date = isset($_POST['date']) ? $_POST['date'] : null;
-    $room_id = isset($_POST['room']) ? $_POST['room'] : 1;
+    $room_id = $_SESSION['room_id'] ?? null;
 
     // Validate date format (YYYY-MM-DD)
     if ($date && preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
 
+        // remove past timings if date is current date
+        if ($date === date("Y-m-d")) {
+            $current_time = date("H:i:s");
+
+            $all_timeslots = array_filter($all_timeslots, function($slot) use ($current_time) {
+                return $slot > $current_time;
+            });
+        }
+
         try {
+
+            if (!$room_id) {
+                throw new Exception("No room ID provided.");
+            }
+
             $conn = new mysqli($db_host, $db_user, $db_pass, $db_name);
 
             if ($conn->connect_error) {
@@ -54,10 +70,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $booked_slots[] = $row['bookingTimeslot'];
             }
             $stmt->close();
-            // FIX: get slots after current time also
 
             // Get held slots (by other users)
-            $current_user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 0;
+            $current_user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 1;
+            if (!$current_user_id) {
+                throw new Exception("User not logged in.");
+            }
             
             $held_stmt = $conn->prepare("
                 SELECT holdTimeslot 

@@ -47,18 +47,17 @@ if (isset($_GET['id'])) {
 }
 ?>
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <link rel="icon" type="image/x-icon" href="../images/home.ico">
 
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="The Pharaoh's Curse - Escape Room Experience" />
-
     <title><?php echo htmlspecialchars($room['roomName']) ?></title>
     <?php include "inc/head.inc.php" ?>
     <link rel="stylesheet" href="css/rooms.css">
+    <link rel="preload" href="css/popup.css" as="style">
+    <link rel="stylesheet" href="css/popup.css">
+    <script defer src="js/popup.js"></script>
 </head>
 
 <body>

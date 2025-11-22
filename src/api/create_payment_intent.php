@@ -1,4 +1,5 @@
 <?php
+session_start();
 header('Content-Type: application/json');
 
 require_once __DIR__ . "/../vendor/autoload.php";
@@ -37,6 +38,8 @@ try {
         ],
     ]);
     
+    $_SESSION['stripe_payment_intent_id'] = $paymentIntent->id;
+
     // Return the client secret
     // The frontend will use this to complete the payment
     echo json_encode([

@@ -28,6 +28,7 @@ $conn->close();
 <head>
     <title>Esacpe Quest</title>
     <?php include "inc/head.inc.php" ?>
+    <script defer src="js/index.js"></script>
 </head>
 
 <body>

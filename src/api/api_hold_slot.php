@@ -1,4 +1,8 @@
 <?php 
+session_start();
+
+$user_id = $_SESSION['user_id'] ?? 1;
+$room_id = $_SESSION['room_id'] ?? '';
 header('Content-Type: application/json');
 
 require_once __DIR__ . "/../vendor/autoload.php";
@@ -8,6 +12,16 @@ list($db_host, $db_user, $db_pass, $db_name, $stripekey) = getDBEnvVar();
 
 $success = true;
 $messages = '';
+
+if (!$user_id || $user_id <= 0) {
+    $success = false;
+    $messages .= 'Invalid user ID. ';
+}
+
+if (!$room_id || $room_id <= 0) {
+    $success = false;
+    $messages .= "Invalid room ID. ";
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
@@ -25,18 +39,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!$time || !preg_match('/^\d{2}:\d{2}:\d{2}$/', $time)) {
         $success = false;
         $messages .= 'Invalid time format. ';
-    }
-
-    $user_id = isset($_POST['user_id']) ? intval($_POST['user_id']) : null;
-    if (!$user_id || $user_id <= 0) {
-        $success = false;
-        $messages .= 'Invalid user ID. ';
-    }
-
-    $room_id = isset($_POST['room_id']) ? intval($_POST['room_id']) : null;
-    if (!$room_id || $room_id <= 0) {
-        $success = false;
-        $messages .= "Invalid room ID. ";
     }
 
     if (!$success) {
@@ -61,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Start transaction
         $conn->begin_transaction();
 
-        // Clean up expired holds (older than 5 minutes)
+        // Clean up expired holds
         $cleanup_stmt = $conn->prepare("
             DELETE FROM BookingHolding
             WHERE expires_at < NOW()
@@ -92,22 +94,58 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit();
         }
 
+        // Check if this user already holds THIS specific slot
+        $check_own_hold = $conn->prepare("
+            SELECT holdID, expires_at 
+            FROM BookingHolding 
+            WHERE holdDate = ? 
+            AND holdTimeslot = ? 
+            AND Rooms_roomID = ? 
+            AND Users_userID = ?
+            AND expires_at > NOW()
+        ");
+        $check_own_hold->bind_param("ssii", $date, $time, $room_id, $user_id);
+        $check_own_hold->execute();
+        $own_hold_result = $check_own_hold->get_result();
+        $own_hold = $own_hold_result->fetch_assoc();
+        $check_own_hold->close();
+
+        // If user already holds this slot, return remaining time without refreshing
+        if ($own_hold) {
+            $conn->commit();
+            $conn->close();
+
+            $expires_at = new DateTime($own_hold['expires_at']);
+            $now = new DateTime();
+            $remaining_seconds = max(0, $expires_at->getTimestamp() - $now->getTimestamp());
+
+            echo json_encode(array(
+                'success' => true,
+                'message' => 'You already hold this slot',
+                'hold_id' => $own_hold['holdID'],
+                'expires_at' => $own_hold['expires_at'],
+                'expires_in_seconds' => $remaining_seconds,
+                'is_existing_hold' => true
+            ));
+            exit();
+        }
+
         // Check if slot is currently held by another user
         $check_hold = $conn->prepare("
-            SELECT COUNT(*) as count, Users_userID FROM BookingHolding 
+            SELECT COUNT(*) as count FROM BookingHolding 
             WHERE holdDate = ? 
             AND holdTimeslot = ? 
             AND Rooms_roomID = ? 
             AND expires_at > NOW()
-            GROUP BY Users_userID
+            AND Users_userID != ?
         ");
-        $check_hold->bind_param("ssi", $date, $time, $room_id);
+        $check_hold->bind_param("ssii", $date, $time, $room_id, $user_id);
         $check_hold->execute();
         $hold_result = $check_hold->get_result();
         $hold_row = $hold_result->fetch_assoc();
         $check_hold->close();
         
-        if ($hold_row && $hold_row['count'] > 0 && $hold_row['Users_userID'] != $user_id) {
+        if ($hold_row && $hold_row['count'] > 0) {
             $conn->rollback();
             echo json_encode(array(
                 'success' => false,
@@ -116,7 +154,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit();
         }
 
-        // Delete any existing holds by this user (in case they're rebooking)
+        // Delete any existing holds by this user (for OTHER slots)
         $delete_old_hold = $conn->prepare("
             DELETE FROM BookingHolding 
             WHERE Users_userID = ?
@@ -127,13 +165,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Create new hold (expires in 5 minutes)
         $hold_expires_at = date('Y-m-d H:i:s', strtotime('+5 minutes'));
-        // $created_at = date('Y-m-d H:i:s');
         
         $insert_hold = $conn->prepare("
             INSERT INTO BookingHolding
             (holdDate, holdTimeslot, expires_at, Rooms_roomID, Users_userID) 
             VALUES (?, ?, ?, ?, ?)
-        "); //created_at, $created_at
+        ");
         $insert_hold->bind_param("sssii", $date, $time, $hold_expires_at, $room_id, $user_id);
         
         if (!$insert_hold->execute()) {
@@ -156,7 +193,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'message' => 'Slot held successfully for 5 minutes',
             'hold_id' => $hold_id,
             'expires_at' => $hold_expires_at,
-            'expires_in_seconds' => 300 // 5 minutes
+            'expires_in_seconds' => 300,
+            'is_existing_hold' => false
         ));
 
     } catch (Exception $e) {

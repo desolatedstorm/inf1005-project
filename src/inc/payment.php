@@ -73,7 +73,6 @@
                 <label for="billing-country" class="form-label">Country</label>
                 <select class="form-control" id="billing-country" required>
                     <option value="SG" selected>Singapore</option>
-                    <option value="MY">Malaysia</option>
                 </select>
             </div>
             
@@ -91,7 +90,7 @@
             
             <!-- Stripe Payment Element (Credit Card) -->
             <div id="payment-element" class="mb-3">
-                <!-- Stripe.js injects the Payment Element here -->
+                <!-- Stripe injects the Payment Element here -->
             </div>
             
             <div id="payment-error-message" class="error-message" style="display: none;"></div>
@@ -115,7 +114,6 @@
         </form>
     </section>
     <script>
-        // FIX: alert does not go away after booking has expired
         // Stripe configuration
         const stripeKey = '<?php echo $stripe_publishable_key; ?>';
         const stripe = Stripe(stripeKey);
@@ -173,6 +171,16 @@
             const paymentElement = elements.create('payment');
             paymentElement.mount('#payment-element');
 
+            paymentElement.on('change', function(event) {
+                const type = event.value.type;
+
+                if (type === "card") {
+                    enableBillingRequired(true);
+                } else {
+                    enableBillingRequired(false);
+                }
+            });
+
             // Setup Apple Pay / Google Pay
             setupPaymentRequest(amount);
         }
@@ -227,6 +235,27 @@
             });
         }
 
+        function enableBillingRequired(required) {
+            const fields = [
+                'billing-address',
+                'billing-city',
+                'billing-postal',
+                'billing-country'
+            ];
+        
+            fields.forEach(id => {
+                const field = document.getElementById(id);
+                if (required) {
+                    field.setAttribute("required", "");
+                } else {
+                    field.removeAttribute("required");
+                }
+            });
+        }
+
+        //TODO: ADD LOADING SPINNING FOR STRIPE PAYMENT
+        //FIXME: Closing paynow button also gets successful payment
+
         // Handle form submission
         document.getElementById('payment-form').addEventListener('submit', async (event) => {
             event.preventDefault();
@@ -273,6 +302,12 @@
         }
 
         function validateBillingAddress() {
+            const isRequired = document.getElementById('billing-address').hasAttribute('required');
+
+            if (!isRequired) {
+                return true; // Skip validation for Apple Pay / Google Pay
+            }
+
             const address = document.getElementById('billing-address').value.trim();
             const city = document.getElementById('billing-city').value.trim();
             const postal = document.getElementById('billing-postal').value.trim();
@@ -292,29 +327,25 @@
                 room: $("#checkout-room").text(),
                 players: $("#checkout-players").text(),
                 total: $("#checkout-total").text(),
-//                 billing_address: document.getElementById('billing-address').value,
-//                 billing_city: document.getElementById('billing-city').value,
-//                 billing_postal: document.getElementById('billing-postal').value,
-                // billing_country: document.getElementById('billing-country').value
             };
 
-            $.ajax({
-                type: 'POST',
-                url: 'api/save_booking.php',
-                data: bookingData,
-                dataType: 'json',
-                success: function(response) {
-                    if (response.success) {
-                        // Redirect to success page or show success message
-                        window.location.href = 'inc/booking_success.php';
-                    } else {
-                        showPaymentError('Payment processed but booking save failed. Please contact support.');
-                    }
-                },
-                error: function() {
-                    showPaymentError('Payment processed but booking save failed. Please contact support.');
-                }
-            });
+            // $.ajax({
+            //     type: 'POST',
+            //     url: 'api/save_booking.php',
+            //     data: bookingData,
+            //     dataType: 'json',
+            //     success: function(response) {
+            //         if (response.success) {
+            //             // Redirect to success page or show success message
+            //             window.location.href = 'inc/booking_success.php';
+            //         } else {
+            //             showPaymentError('Payment processed but booking save failed. Please contact support.');
+            //         }
+            //     },
+            //     error: function() {
+            //         showPaymentError('Payment processed but booking save failed. Please contact support.');
+            //     }
+            // });
         }
 
         function setPaymentLoading(isLoading) {
