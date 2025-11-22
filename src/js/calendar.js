@@ -117,7 +117,7 @@
 
         bookingPost(formattedDate).done(function(response) {
             if (!response.success) {
-                console.log("failed");
+                console.log(response.message);
                 $(".timeslots-container").append(
                     $("<div class='event-card'><div class='event-name'>No Available Slots.</div></div>")
                 );
@@ -153,7 +153,6 @@
     }
 
     function bookingPost(date) {
-        console.log("hi");
         return $.ajax({
             type: 'POST',
             url: 'api/api_booking.php',
@@ -166,9 +165,11 @@
     /*         BOOKING FORM         */
     /* ---------------------------- */
 
-    var price = 25;
     var selectedTime;
-    var default_pax = 2;
+    var price = $("#price").text();
+    var min_players = $("#min-players").text();
+    var max_players = $("#max-players").text();
+    var default_pax = min_players;
     // Global booking data to be used after payment
     var bookingData = {};
 
@@ -178,9 +179,6 @@
 
         $(".event-name").removeClass("active-name");
         event.data.name.addClass("active-name");
-        
-        // $("#min-players").text(min);
-        // $("#max-players").text(max);
 
         $("#player-count").text(default_pax);
 
@@ -192,11 +190,11 @@
 
     function onMinusclick() {
         var pax = parseInt($("#player-count").text());
-        if (pax > 2) {
+        if (pax > min_players) {
             pax = pax - 1
         }
         else {
-            pax = 2
+            pax = min_players
         }
         $("#player-count").text(pax);
         updateSubtotal(pax, price);
@@ -204,11 +202,11 @@
 
     function onPlusClick() {
         var pax = parseInt($("#player-count").text());
-        if (pax < 8) {
+        if (pax < max_players) {
             pax = pax + 1
         }
         else {
-            pax = 8
+            pax = max_players
         }
         $("#player-count").text(pax);
         updateSubtotal(pax, price);
@@ -217,7 +215,7 @@
     function updateSubtotal() {
         var subtotal = 0;
         var pax = parseInt($("#player-count").text());
-        if (pax >= 2 && pax <= 8) {
+        if (pax >= min_players && pax <= max_players) {
             var subtotal = pax * price;
         }
         $(".pax").text(pax);
@@ -227,9 +225,8 @@
 
     function onCheckoutclick(event) {
         // Get booking details
-        var room_id = 1; // TODO: Get from actual page
-        var user_id = 1; // TODO: Get from session/cookies
-        
+        var room_name = $("#room_name").text(); // doesn't matter if DOM is edited, backend does not use this value
+
         var selectedDay = $(".active-date").attr("id");
         var month = months.indexOf($(".month").text());
         var year = event.data.date.getFullYear();
@@ -245,8 +242,6 @@
             type: 'POST',
             url: 'api/api_hold_slot.php',
             data: {
-                user_id: user_id,
-                room_id: room_id,
                 date: formattedDate,
                 time: time
             },
@@ -257,8 +252,6 @@
                     
                     // Store booking data globally
                     bookingData = {
-                        user_id: user_id,
-                        room_id: room_id,
                         date: formattedDate,
                         time: time,
                         pax: pax,
@@ -267,7 +260,7 @@
                     };
 
                     // Populate checkout form display
-                    $("#checkout-room").text("Room " + room_id);
+                    $("#checkout-room").text(room_name);
                     $("#checkout-date").text(formattedDate);
                     $("#checkout-time").text(selectedTime);
                     $("#checkout-players").text(pax);
@@ -287,13 +280,13 @@
                     }); 
                 } else {
                     alert(response.message || "Unable to hold this time slot. Please try another slot.");
-                    location.reload();
+                    window.location.reload();
                 }
             },
             error: function(xhr, status, error) {
                 console.error("Error holding slot:", error);
                 alert("Unable to hold this time slot. Please try again.");
-                location.reload();
+                window.location.reload();
             }
         });
     }
@@ -308,12 +301,14 @@
         }
 
         var timeRemaining = seconds;
+        var minutes = Math.floor(timeRemaining / 60);
+        var seconds = timeRemaining % 60;
         
         // Create timer display if it doesn't exist
         if ($('#hold-timer').length === 0) {
             $('.checkout-form .section-title').after(
                 '<div id="hold-timer" class="alert alert-warning mt-3" role="alert">' +
-                '<strong>&#128337 Time remaining: <span id="timer-display">5:00</span></strong><br>' +
+                '<strong>&#128337 Time remaining: <span id="timer-display">'+ minutes + ':' + (seconds < 10 ? '0' : '') + seconds +'</span></strong><br>' +
                 'Please complete payment before time expires.' +
                 '</div>'
             );
@@ -346,11 +341,13 @@
                 // Show alert
                 setTimeout(function() {
                     alert("Your hold on this time slot has expired. Please go back and select the slot again.");
-                    // Go back to booking form
-                    $(".checkout-form").hide(250);
-                    $(".timeslots-container").show(250);
-                    $(".booking-form").show(250);
-                    location.reload();
+                    
+                    fetch("api/api_generate_token.php")
+                    .then(response => {
+                        if (!response.ok) throw new Error("Unable to get token");
+                        location.reload();
+                    })
+                    .catch(err => console.log(err));
                 }, 1000);
             }
         }, 1000);
@@ -375,7 +372,7 @@
         $.ajax({
             type: 'POST',
             url: 'api/api_checkout.php',
-            data: finalData,
+            data: bookingData,
             dataType: 'json',
             success: function(response) {
                 if (response.success) {
@@ -383,14 +380,14 @@
                     // Redirect to success page or show confirmation
                     window.location.href = 'booking_success.php?booking_ref=' + response.booking_ref;
                 } else {
-                    alert("Payment processed but booking save failed: " + response.message);
-                    location.reload();
+                    alert("Error saving booking: " + response.message);
+                    window.parent.location.reload();
                 }
             },
             error: function(xhr, status, error) {
                 console.error("Error saving booking:", error);
                 alert("Payment processed but booking save failed. Please contact support.");
-                location.reload();
+                window.parent.location.reload(true);
             }
         });
     };

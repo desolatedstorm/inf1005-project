@@ -8,8 +8,6 @@ $min = $_SESSION['min'] ?? '';
 $max = $_SESSION['max'] ?? '';
 $price = $_SESSION['price'] ?? '';
 
-// Stripe publishable key (replace with your actual key)
-$stripe_publishable_key = 'pk_test_your_publishable_key_here';
 ?>
 
 <div class="row">
@@ -73,7 +71,7 @@ $stripe_publishable_key = 'pk_test_your_publishable_key_here';
                 </div>
                 <div class="row mb-3">
                     <div class="col-6">
-                        Base Price &times; <span class=""><?php echo htmlspecialchars($price, ENT_QUOTES | ENT_HTML5, 'UTF-8') ?></span> players
+                        Base Price &times; <span id="price"><?php echo htmlspecialchars($price, ENT_QUOTES | ENT_HTML5, 'UTF-8') ?></span> players
                     </div>
                     <div class="col-6 text-end">
                         $<span class="ticket-price"></span> &times; <span class="pax"></span>
