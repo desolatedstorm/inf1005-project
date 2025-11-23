@@ -1,6 +1,8 @@
 <?php
 
-include "inc/functions.php";
+include "inc/secure_session_start.php";
+
+include "inc/db.inc.php";
 $conn = getDbConnection();
 
 //variable to hold list of rooms and number of rooms
@@ -8,7 +10,7 @@ $rooms = [];
 $roomCount = 0;
 
 //to-do: implement a variable imagePath and also add data into the DB
-$sql = "SELECT roomID, roomName, roomFearLevel, roomDifficulty, roomExperienceType, roomGenre, imagePath FROM Rooms";
+$sql = "SELECT roomID, roomName, roomFearLevel, roomExperienceType, roomGenre FROM Rooms";
 $result = $conn->query($sql);
 
 //check for results
@@ -20,6 +22,31 @@ if ($result && $result->num_rows > 0) {
 //close connection
 $conn->close();
 
+//helper function to get the right css color for fear factor
+function getBadgeColor($fearLevel)
+{
+    switch ($fearLevel) {
+        case 'Very Scary':
+            return 'bg-danger';
+        case 'Scary':
+            return 'bg-warning text-dark';
+        case 'Mildly Scary':
+            return 'bg-info text-dark';
+        case 'Not Scary':
+            return 'bg-secondary';
+        default:
+            return 'bg-light text-dark';
+    }
+}
+
+//helper function to slugify text
+function slugify($text)
+{
+    //replaces all spaces with hyphens
+    $text = str_replace(' ', '-', $text);
+    //and converts to lowercase
+    return strtolower($text);
+}
 ?>
 
 <!DOCTYPE html>
@@ -28,7 +55,6 @@ $conn->close();
 <head>
     <title>Esacpe Quest</title>
     <?php include "inc/head.inc.php" ?>
-    <script defer src="js/index.js"></script>
 </head>
 
 <body>
@@ -42,7 +68,7 @@ $conn->close();
                 aria-describedby="search-addon" />
             <button type="button" class="btn btn-outline-primary" id="search-addon">Search</button>
         </div>
-    </section>
+    </section>  
 
     <main class="page-content section-gap">
         <div class="container">
@@ -101,34 +127,6 @@ $conn->close();
                 </div>
 
                 <div class="mb-3">
-                    <h6>Difficulty</h6>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="difficulty" value="all" id="all-difficulty" checked>
-                        <label class="form-check-label" for="all-difficulty">All</label>
-                    </div>
-
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="difficulty" value="easy" id="easy-difficulty">
-                        <label class="form-check-label" for="easy-difficulty">Easy</label>
-                    </div>
-
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="difficulty" value="medium" id="medium-difficulty">
-                        <label class="form-check-label" for="medium-difficulty">Medium</label>
-                    </div>
-
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="difficulty" value="hard" id="hard-difficulty">
-                        <label class="form-check-label" for="hard-difficulty">Hard</label>
-                    </div>
-
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="difficulty" value="very-hard" id="very-hard-difficulty">
-                        <label class="form-check-label" for="very-hard-difficulty">Very-Hard</label>
-                    </div>
-                </div>
-
-                <div class="mb-3">
                     <h6>Genre</h6>
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="checkbox" value="horror" id="genreHorror">
@@ -141,7 +139,7 @@ $conn->close();
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="checkbox" value="fantasy" id="genreFantasy">
                         <label class="form-check-label" for="genreFantasy">Fantasy</label>
-                    </div>
+                    </div>       
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="checkbox" value="adventure" id="genreAdventure">
                         <label class="form-check-label" for="genreAdventure">Adventure</label>
@@ -161,7 +159,6 @@ $conn->close();
                 </div>
 
                 <div class="row g-4" id="roomContainer">
-
                     <div class="col-md-4 room-card" data-fear="mildly-scary">
                         <div class="card" href="/pharaoh_room.php">
                             <img src="/images/P_Curse.jpg"
@@ -170,22 +167,27 @@ $conn->close();
                                 <span class="badge bg-warning text-dark">Mildly Scary</span>
 
                                 <h5 class="card-title mt-2">The Pharaoh's Curse</h5>
+                                <p class="text-muted mb-0">Rating: ★4.8</p>
                                 <a href="/pharaoh_room.php" class="stretched-link"></a>
                             </div>
                         </div>
                     </div>
 
-                    <!-- rooms (no mroe hard coding) -->
-                    <!-- if filter derives no results -->
 
-                    <?php if (!empty($rooms)): ?>
-                
+                <!-- rooms (no mroe hard coding) -->
+                <!-- if filter derives no results -->
+
+                    <?php if (empty($rooms)): ?>
+                        <div class="col-12">
+                            <p class="text-center h5">No rooms matching your criteria were found.</p>
+                        </div>
+                    <?php else: ?>
+
                         <?php foreach ($rooms as $room):
                             //sanitise data attributes for filter script
                             $dataFear = slugify($room['roomFearLevel']);
                             $dataActor = slugify($room['roomExperienceType']);
                             $dataGenre = slugify($room['roomGenre']);
-                            $dataDifficulty = slugify($room['roomDifficulty']);
                         ?>
 
                             <!-- in built data to make filter easier -->
@@ -193,32 +195,22 @@ $conn->close();
                                 data-fear="<?php echo $dataFear; ?>"
                                 data-actor="<?php echo $dataActor; ?>"
                                 data-genre="<?php echo $dataGenre; ?>"
-                                data-difficulty="<?php echo $dataDifficulty ?>"
                                 data-title="<?php echo htmlspecialchars($room['roomName']); ?>">
 
                                 <div class="card">
                                     <img src="<?php echo htmlspecialchars($room['imagePath'] ?? '/images/placeholder.png'); ?>"
                                         class="card-img-top" alt="<?php echo htmlspecialchars($room['roomName']); ?>">
 
-
+                                        
                                     <div class="card-body">
                                         <span class="badge <?php echo getBadgeColor($room['roomFearLevel']); ?>">
                                             <?php echo htmlspecialchars($room['roomFearLevel']); ?>
                                         </span>
 
-                                        <span class="badge <?php echo getDifficultyColor($room['roomDifficulty']); ?>">
-                                            <?php echo htmlspecialchars($room['roomDifficulty']); ?>
-                                        </span>
-
-                                        <span class="badge <?php echo getExperienceColor($room['roomExperienceType']); ?>">
-                                            <?php echo htmlspecialchars($room['roomExperienceType']); ?>
-                                        </span>
-
-                                        <span class="badge bg-secondary">
-                                            <?php echo htmlspecialchars($room['roomGenre']); ?>
-                                        </span>
-
                                         <h5 class="card-title mt-2"><?php echo htmlspecialchars($room['roomName']); ?></h5>
+
+                                        <!-- to-do: somehow make rating more dynamic -->
+                                        <p class="text-muted mb-0">Rating: ★4.8</p>
 
                                         <a href="room.php?id=<?php echo $room['roomID']; ?>" class="stretched-link"></a>
                                     </div>
@@ -226,10 +218,9 @@ $conn->close();
                             </div>
                         <?php endforeach; ?>
                     <?php endif; ?>
+                </div> 
                 </div>
-                <div id="noResultsMessage" class="col-12 text-center" style="display: none; padding-top: 50px; padding-bottom: 50px;">
-                    <p class="h5">No rooms matching your criteria were found.</p>
-                </div>
+                
             </section>
         </div>
     </main>
