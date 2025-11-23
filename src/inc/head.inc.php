@@ -1,3 +1,4 @@
+<link rel="icon" type="image/x-icon" href="../images/home.ico">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Content-Security-Policy" 
