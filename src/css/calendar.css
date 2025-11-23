@@ -178,23 +178,53 @@
 
 /* Calendar Header */
 
-.month-header {
+.calendar-container .month-header {
   background: #fff;
   height: 40px;
   text-align: center;
   position: relative;
-  color: #000;
+  color: #000 !important;
   border-top-left-radius: 3px;
-  margin-top: 20px; }
+ }
 
-.month-header span {
+.calendar-container .month-header span {
   /* display: inline-block; */
   font-size: 20px;
   line-height: 40px;
  }
 
-.month {
+.calendar-month {
   pointer-events: none;
+}
+
+.calendar-container .year-display {
+    text-align: center;
+}
+
+.calendar-container .calendar-year {
+    font-size: 25px;
+    color: #000;
+    font-weight: 500;
+}
+
+/* Tablet and smaller */
+@media (max-width: 768px) {
+    .year-display {
+        margin-top: 8px;
+    }
+    .year {
+        font-size: 12px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    .year-display {
+        margin-top: 6px;
+    }
+    .year {
+        font-size: 11px;
+    }
 }
 
 .left-button, .right-button {
