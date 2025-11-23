@@ -95,8 +95,6 @@
             row.append(cell);
         }
 
-        // calendar_days.append(row);
-        // console.log("year" +year);
     }
 
     function days_in_month(month, year) {
@@ -120,7 +118,7 @@
     function show_timings(date) {
         console.log(date);
         var formattedDate = formatDate(date);
-        console.log(formattedDate);
+        console.log("format: " + formattedDate);
         $(".timeslots-container").empty();
         $(".booking-form").hide();
         $(".checkout-form").hide(); // Also hide checkout
@@ -238,7 +236,7 @@
         var room_name = $("#room_name").text(); // doesn't matter if DOM is edited, backend does not use this value
 
         var selectedDay = $(".active-date").attr("id");
-        var month = months.indexOf($(".month").text());
+        var month = months.indexOf($(".calendar-month").text());
         var year = event.data.date.getFullYear();
         var selectedDate = new Date(year, month, selectedDay);
         var formattedDate = formatDate(selectedDate);
@@ -290,13 +288,13 @@
                     }); 
                 } else {
                     alert(response.message || "Unable to hold this time slot. Please try another slot.");
-                    window.location.reload();
+                    window.parent.location.reload();
                 }
             },
             error: function(xhr, status, error) {
                 console.error("Error holding slot:", error);
                 alert("Unable to hold this time slot. Please try again.");
-                window.location.reload();
+                window.parent.location.reload();
             }
         });
     }

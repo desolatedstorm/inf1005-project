@@ -154,10 +154,13 @@ if (!$token || !preg_match('/^[a-f0-9]{64}$/', $token)) {
                 $error = "This booking has already been " . strtolower($booking['bookingStatus']) . ".";
                 $booking = null;
             } else {
+                date_default_timezone_set('Asia/Singapore');
                 // Calculate potential refund for display
                 $booking_datetime = $booking['bookingDate'] . ' ' . $booking['bookingTimeslot'];
-                $booking_timestamp = strtotime($booking_datetime);
-                $hours_until_booking = ($booking_timestamp - time()) / 3600;
+                $booking_timestamp = new DateTime($booking_datetime);
+                $now = new DateTime();
+                $interval = $booking_timestamp->diff($now);
+                $hours_until_booking = $interval->days * 24 + $interval->h + ($interval->i / 60) + ($interval->s / 3600); 
 
                 if ($hours_until_booking >= 24) {
                     $booking['refund_percentage'] = 100;
