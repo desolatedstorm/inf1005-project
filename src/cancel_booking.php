@@ -28,8 +28,8 @@ if (!$token || !preg_match('/^[a-f0-9]{64}$/', $token)) {
             
             // Get booking and verify it can be cancelled
             $stmt = $conn->prepare("
-                SELECT b.bookingID, b.bookingDate, b.bookingTimeslot, b.bookingStatus,
-                       b.stripe_payment_id, b.cancel_token,
+                SELECT b.bookingRef, b.bookingDate, b.bookingTimeslot, b.bookingStatus,
+                       b.stripe_payment_id, b.cancel_token, b.totalPrice,
                        r.roomName,
                        u.userID, u.email, u.username
                 FROM Bookings b
@@ -47,30 +47,31 @@ if (!$token || !preg_match('/^[a-f0-9]{64}$/', $token)) {
             if (!$booking) {
                 $error = "This booking cannot be cancelled or has already been cancelled.";
             } else {
-                // Check if booking is in the future
+                // Check if booking time has passed
                 $booking_datetime = $booking['bookingDate'] . ' ' . $booking['bookingTimeslot'];
                 $booking_timestamp = strtotime($booking_datetime);
                 
                 if ($booking_timestamp <= time()) {
-                    $error = "Cannot cancel past bookings.";
+                    $error = "Cannot cancel past or ongoing bookings.";
                 } else {
                     // Calculate refund based on notice period
                     $hours_until_booking = ($booking_timestamp - time()) / 3600;
                     
                     if ($hours_until_booking >= 24) {
-                        $refund_percentage = 100; // Full refund
+                        $refund_percentage = 100;
+                        $refund_amt = $booking['totalPrice'];
                     } else {
-                        $refund_percentage = 0; // No refund
+                        $refund_percentage = 0;
+                        $refund_amt = 0;
                     }
 
                     $conn->begin_transaction();
 
                     try {
-                        // Process Stripe refund if applicable
                         $refund_id = null;
-                        if ($refund_percentage > 0 && !empty($booking['stripe_payment_id'])) {
-                            $refund_amt = ($booking['totalPrice'] * $refund_percentage) / 100;
-                            
+                        
+                        // Only process Stripe refund if refund amount > 0
+                        if ($refund_amt > 0 && !empty($booking['stripe_payment_id'])) {
                             $refund = \Stripe\Refund::create([
                                 'payment_intent' => $booking['stripe_payment_id'],
                                 'amount' => (int)($refund_amt * 100), // Convert to cents
@@ -78,7 +79,7 @@ if (!$token || !preg_match('/^[a-f0-9]{64}$/', $token)) {
                             $refund_id = $refund->id;
                         }
 
-                        // Update booking status
+                        // Update booking status (regardless of refund)
                         $update = $conn->prepare("
                             UPDATE Bookings 
                             SET bookingStatus = 'Cancelled', 
@@ -108,18 +109,21 @@ if (!$token || !preg_match('/^[a-f0-9]{64}$/', $token)) {
                             $refund_percentage
                         );
 
+                        // Set success message
                         $message = "Your booking has been successfully cancelled.";
                         if ($refund_amt > 0) {
                             $message .= " A refund of $" . number_format($refund_amt, 2) . " will be processed within 5-10 business days.";
+                        } else {
+                            $message .= " As per our cancellation policy, no refund will be issued for cancellations within 24 hours of the booking time.";
                         }
 
                     } catch (\Stripe\Exception\ApiErrorException $e) {
                         $conn->rollback();
-                        $error = "Failed to process refund. Please contact support." . $e->getMessage();
+                        $error = "Failed to process refund. Please contact support.";
                         error_log("Stripe refund error: " . $e->getMessage());
                     } catch (Exception $e) {
                         $conn->rollback();
-                        $error = "Failed to cancel booking. Please try again." . $e->getMessage();
+                        $error = "Failed to cancel booking. Please try again.";
                         error_log("Cancellation error: " . $e->getMessage());
                     }
                 }
@@ -127,7 +131,7 @@ if (!$token || !preg_match('/^[a-f0-9]{64}$/', $token)) {
         } else {
             // Display booking details for confirmation
             $stmt = $conn->prepare("
-                SELECT b.bookingID, b.bookingDate, b.bookingTimeslot, b.bookingStatus, b.totalPrice,
+                SELECT b.bookingRef, b.bookingDate, b.bookingTimeslot, b.bookingStatus, b.totalPrice,
                        r.roomName
                 FROM Bookings b
                 JOIN Rooms r ON b.Rooms_roomID = r.roomID
@@ -136,6 +140,11 @@ if (!$token || !preg_match('/^[a-f0-9]{64}$/', $token)) {
             $stmt->bind_param("s", $token);
             $stmt->execute();
             $result = $stmt->get_result();
+            
+            if (!$result) {
+                throw new Exception("Failed to fetch booking details");
+            }
+            
             $booking = $result->fetch_assoc();
             $stmt->close();
 
@@ -145,10 +154,13 @@ if (!$token || !preg_match('/^[a-f0-9]{64}$/', $token)) {
                 $error = "This booking has already been " . strtolower($booking['bookingStatus']) . ".";
                 $booking = null;
             } else {
+                date_default_timezone_set('Asia/Singapore');
                 // Calculate potential refund for display
                 $booking_datetime = $booking['bookingDate'] . ' ' . $booking['bookingTimeslot'];
-                $booking_timestamp = strtotime($booking_datetime);
-                $hours_until_booking = ($booking_timestamp - time()) / 3600;
+                $booking_timestamp = new DateTime($booking_datetime);
+                $now = new DateTime();
+                $interval = $booking_timestamp->diff($now);
+                $hours_until_booking = $interval->days * 24 + $interval->h + ($interval->i / 60) + ($interval->s / 3600); 
 
                 if ($hours_until_booking >= 24) {
                     $booking['refund_percentage'] = 100;
@@ -162,7 +174,7 @@ if (!$token || !preg_match('/^[a-f0-9]{64}$/', $token)) {
         $conn->close();
 
     } catch (Exception $e) {
-        $error = "An error occurred. Please try again later." . $e->getMessage();
+        $error = "An error occurred. Please try again later.";
         error_log("Cancel booking error: " . $e->getMessage());
     }
 }
@@ -184,7 +196,7 @@ function sendCancellationEmail($email, $name, $room, $date, $time, $refund_amt, 
     $refund_text = "";
     if ($refund_amt > 0) {
         $refund_text = "
-        <p><strong>Refund Amount:</strong> $" . number_format($refund_amt, 2) . " ({$refund_percentage}% refund)</p>
+        <p><strong>Refund Amount:</strong> $" . number_format($refund_amt, 2) . " (Full refund)</p>
         <p>Your refund will be processed within 5-10 business days and credited to your original payment method.</p>
         ";
     } else {
@@ -286,6 +298,7 @@ function sendCancellationEmail($email, $name, $room, $date, $time, $refund_amt, 
                     </div>
 
                     <div class="mb-3">
+                        <p class="mb-2"><strong>Booking Reference:</strong> <?= htmlspecialchars($booking['bookingRef']) ?></p>
                         <p class="mb-2"><strong>Room:</strong> <?= htmlspecialchars($booking['roomName']) ?></p>
                         <p class="mb-2"><strong>Date:</strong> <?= htmlspecialchars($booking['bookingDate']) ?></p>
                         <p class="mb-2"><strong>Time:</strong> <?= formatTime($booking['bookingTimeslot']) ?></p>
@@ -300,7 +313,7 @@ function sendCancellationEmail($email, $name, $room, $date, $time, $refund_amt, 
                     <?php else: ?>
                         <div class="refund-info no-refund mb-4">
                             <strong>No refund available</strong>
-                            <small class="d-block">Cancellations within 24 hours are non-refundable.</small>
+                            <small class="d-block">Cancellations within 24 hours are non-refundable, but you can still cancel to free up the slot.</small>
                         </div>
                     <?php endif; ?>
 
@@ -317,7 +330,7 @@ function sendCancellationEmail($email, $name, $room, $date, $time, $refund_amt, 
                         <small class="text-muted">
                             <strong>Cancellation Policy:</strong><br>
                             • 24+ hours before: Full refund<br>
-                            • Less than 24 hours: No refund
+                            • Less than 24 hours: No refund (can still cancel)
                         </small>
                     </div>
 

@@ -3,6 +3,11 @@
 
     "use strict";
 
+    const months = [ 
+        "January","February","March","April","May","June",
+        "July","August","September","October","November","December"
+    ];
+
     $(document).ready(function(){
         var date = new Date();
         // calendar
@@ -29,6 +34,11 @@
         var year = date.getFullYear();
         var day_count = days_in_month(month, year);
         var row = $("<tr class='table-row'></tr>");
+
+        console.log(year, months[month]);
+        $(".calendar-year").text(year);
+        $(".calendar-month").text(months[month]);
+
 
         var today = new Date();
         today.setHours(0,0,0,0);
@@ -85,8 +95,6 @@
             row.append(cell);
         }
 
-        calendar_days.append(row);
-        $(".month").text(months[month]);
     }
 
     function days_in_month(month, year) {
@@ -110,7 +118,7 @@
     function show_timings(date) {
         console.log(date);
         var formattedDate = formatDate(date);
-        console.log(formattedDate);
+        console.log("format: " + formattedDate);
         $(".timeslots-container").empty();
         $(".booking-form").hide();
         $(".checkout-form").hide(); // Also hide checkout
@@ -228,7 +236,7 @@
         var room_name = $("#room_name").text(); // doesn't matter if DOM is edited, backend does not use this value
 
         var selectedDay = $(".active-date").attr("id");
-        var month = months.indexOf($(".month").text());
+        var month = months.indexOf($(".calendar-month").text());
         var year = event.data.date.getFullYear();
         var selectedDate = new Date(year, month, selectedDay);
         var formattedDate = formatDate(selectedDate);
@@ -280,13 +288,13 @@
                     }); 
                 } else {
                     alert(response.message || "Unable to hold this time slot. Please try another slot.");
-                    window.location.reload();
+                    window.parent.location.reload();
                 }
             },
             error: function(xhr, status, error) {
                 console.error("Error holding slot:", error);
                 alert("Unable to hold this time slot. Please try again.");
-                window.location.reload();
+                window.parent.location.reload();
             }
         });
     }
@@ -302,13 +310,13 @@
 
         var timeRemaining = seconds;
         var minutes = Math.floor(timeRemaining / 60);
-        var seconds = timeRemaining % 60;
+        var sec = timeRemaining % 60;
         
         // Create timer display if it doesn't exist
         if ($('#hold-timer').length === 0) {
             $('.checkout-form .section-title').after(
                 '<div id="hold-timer" class="alert alert-warning mt-3" role="alert">' +
-                '<strong>&#128337 Time remaining: <span id="timer-display">'+ minutes + ':' + (seconds < 10 ? '0' : '') + seconds +'</span></strong><br>' +
+                '<strong>&#128337 Time remaining: <span id="timer-display">'+ minutes + ':' + (sec < 10 ? '0' : '') + seconds +'</span></strong><br>' +
                 'Please complete payment before time expires.' +
                 '</div>'
             );
@@ -398,10 +406,5 @@
                             String(date.getDate()).padStart(2, '0');
         return formattedDate;
     }
-
-    const months = [ 
-        "January","February","March","April","May","June",
-        "July","August","September","October","November","December"
-    ];
 
 })(jQuery);
