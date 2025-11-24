@@ -316,7 +316,7 @@
         if ($('#hold-timer').length === 0) {
             $('.checkout-form .section-title').after(
                 '<div id="hold-timer" class="alert alert-warning mt-3" role="alert">' +
-                '<strong>&#128337 Time remaining: <span id="timer-display">'+ minutes + ':' + (sec < 10 ? '0' : '') + seconds +'</span></strong><br>' +
+                '<strong>&#128337 Time remaining: <span id="timer-display">'+ minutes + ':' + (sec < 10 ? '0' : '') + sec +'</span></strong><br>' +
                 'Please complete payment before time expires.' +
                 '</div>'
             );
