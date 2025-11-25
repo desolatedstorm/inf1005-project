@@ -26,7 +26,7 @@ $conn->close();
 <html lang="en">
 
 <head>
-    <title>Esacpe Quest</title>
+    <title>Escapify</title>
     <?php include "inc/head.inc.php" ?>
     <script defer src="js/index.js"></script>
 </head>

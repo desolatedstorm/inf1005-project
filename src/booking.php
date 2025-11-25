@@ -1,11 +1,11 @@
 <?php 
 session_start();
 
-$_SESSION['user_id'] = 1; //remove
-$token = $_SESSION['allow_booking'] ?? '';
-$room_id = $_SESSION['room_id'] ?? '';
-$room_name = $_SESSION['room_name'] ?? '';
-$desc = $_SESSION['desc'] ?? '';
+$_SESSION['user_id'] = 1; //TODO: remove
+$token = $_SESSION['allow_booking'];
+$room_id = $_SESSION['room_id'];
+$room_name = $_SESSION['room_name'];
+$desc = $_SESSION['desc'];
 $rtn_dest = "index.php";
 
 if (!$token || !$_SESSION['allow_booking'] || !hash_equals($_SESSION['allow_booking'], $token)) {
@@ -19,13 +19,6 @@ if (!$token || !$_SESSION['allow_booking'] || !hash_equals($_SESSION['allow_book
             }</script>";
     exit();
 }
-
-if (!$room_id) {
-    //do smth
-}
-// else if (!$room_name || !$min || !$max || !$desc || !$price) {
-//     //query from db
-// }
 
 unset($_SESSION['allow_booking']);
 ?>
