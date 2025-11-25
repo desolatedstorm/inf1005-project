@@ -1,6 +1,7 @@
 <?php
 session_start();
 
+$_SESSION['logged_in'] = true; // TODO: remove aft tes
 // Check if user is logged in
 if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
     header("Location: login.php");
@@ -55,7 +56,7 @@ $room_id = (int)$_GET['room_id'];
     
     <main class="container mt-5 mb-5">
         <h1>Leave a Review</h1>
-        <p class="text-muted">Your email address will not be published. Required fields are marked *</p>
+        <p class="text-white">Your email address will not be published. Required fields are marked *</p>
 
         <form action="process_review.php" method="POST" class="mt-4">
             <input type="hidden" name="room_id" value="<?php echo $room_id; ?>">

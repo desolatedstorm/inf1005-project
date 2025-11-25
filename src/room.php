@@ -49,7 +49,6 @@ if (isset($_GET['id'])) {
 
 <!DOCTYPE html>
 <html lang="en">
-<link rel="icon" type="image/x-icon" href="../images/home.ico">
 
 <head>
     <title><?php echo htmlspecialchars($room['roomName']) ?></title>
