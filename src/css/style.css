@@ -79,15 +79,64 @@ footer {
   max-height: 90%;
 }
 
-.navbar-nav .nav-item .active {
-  color: #ffff;
-  background-color: #001b38;
+.navbar {
+  background-color: #000B20 !important; 
+}
+
+.navbar-nav .nav-link, .navbar-brand {
+  color: #E3C77C !important; 
+  font-weight: 500;
+}
+
+.navbar-nav .nav-link:hover {
+  color: #F3DFA2 !important; 
+}
+
+.navbar-toggler {
+  border-color: #E3C77C !important;
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='%23E3C77C' stroke-width='3' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
+.navbar .btn-primary, a.btn-primary {
+  background-color: #C19A3F;
+  border-color: #C19A3F;
+  color: #000B20;
+  font-weight: bold;
+}
+
+.navbar .btn-primary:hover, a.btn-primary:hover {
+  background-color: #E3C77C;
+  border-color: #E3C77C;
+  color: #000B20;
+}
+
+.navbar .navbar-brand img {
+    filter: brightness(0) invert(1); /* turns black icons white */
+}
+
+.navbar-nav .nav-link.active {
+  background-color: #C19A3F !important; 
+  color: #000B20 !important; 
   border-radius: 5px;
   font-weight: bold;
-  position: fixed;
-  top: 0;
-  right: 0;
+  padding: 6px 10px;
+}
 
+header.jumbotron {
+  background-color: #0A1326 !important;
+  color: #F3DFA2;
+  font-weight: 900;
+}
+
+header.jumbotron h1 {
+  color: #E3C77C;
+}
+
+header.jumbotron p {
+  color: #F3DFA2;
 }
 
 .search-bar {
