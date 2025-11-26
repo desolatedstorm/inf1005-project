@@ -110,17 +110,6 @@
   transition: all 0.2s ease;
 }
 
-.timeslots-container .error-card {
-  padding: 12px 8px;
-  margin: 0;
-  width: 100%;
-  background: #fff;
-  border-radius: 8px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
 @media (max-width: 991.98px) {
   .timeslots-container .event-card {
     width: calc(50% - 5px);
@@ -189,53 +178,23 @@
 
 /* Calendar Header */
 
-.calendar-container .month-header {
+.month-header {
   background: #fff;
   height: 40px;
   text-align: center;
   position: relative;
-  color: #000 !important;
+  color: #000;
   border-top-left-radius: 3px;
- }
+  margin-top: 20px; }
 
-.calendar-container .month-header span {
+.month-header span {
   /* display: inline-block; */
   font-size: 20px;
   line-height: 40px;
  }
 
-.calendar-month {
+.month {
   pointer-events: none;
-}
-
-.calendar-container .year-display {
-    text-align: center;
-}
-
-.calendar-container .calendar-year {
-    font-size: 25px;
-    color: #000;
-    font-weight: 500;
-}
-
-/* Tablet and smaller */
-@media (max-width: 768px) {
-    .year-display {
-        margin-top: 8px;
-    }
-    .year {
-        font-size: 12px;
-    }
-}
-
-/* Mobile */
-@media (max-width: 480px) {
-    .year-display {
-        margin-top: 6px;
-    }
-    .year {
-        font-size: 11px;
-    }
 }
 
 .left-button, .right-button {

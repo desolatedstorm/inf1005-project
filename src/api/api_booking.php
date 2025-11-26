@@ -1,13 +1,11 @@
 <?php
-session_start();
+session_start(); // ADD THIS!
 
 header('Content-Type: application/json');
 
 require_once '../inc/login_functions.php';
 
 list($db_host, $db_user, $db_pass, $db_name, $stripekey) = getDBEnvVar();
-
-date_default_timezone_set('Asia/Singapore');
 
 // Define all available timeslots (24-hour format for database)
 $all_timeslots = array(
@@ -19,26 +17,12 @@ $all_timeslots = array(
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $date = isset($_POST['date']) ? $_POST['date'] : null;
-    $room_id = $_SESSION['room_id'] ?? null;
+    $room_id = isset($_POST['room']) ? $_POST['room'] : 1;
 
     // Validate date format (YYYY-MM-DD)
     if ($date && preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
 
-        // remove past timings if date is current date
-        if ($date === date("Y-m-d")) {
-            $current_time = date("H:i:s");
-
-            $all_timeslots = array_filter($all_timeslots, function($slot) use ($current_time) {
-                return $slot > $current_time;
-            });
-        }
-
         try {
-
-            if (!$room_id) {
-                throw new Exception("No room ID provided.");
-            }
-
             $conn = new mysqli($db_host, $db_user, $db_pass, $db_name);
 
             if ($conn->connect_error) {
@@ -72,10 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->close();
 
             // Get held slots (by other users)
-            $current_user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 1;
-            if (!$current_user_id) {
-                throw new Exception("User not logged in.");
-            }
+            $current_user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 0;
             
             $held_stmt = $conn->prepare("
                 SELECT holdTimeslot 
@@ -115,14 +96,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Re-index array
             $display_slots = array_values($display_slots);
-
-            if (count($display_slots) === 0) {
-                echo json_encode(array(
-                    'success' => false,
-                    'message' => 'No Available Slots.'
-                ));
-                exit();
-            }
 
             // Return success response
             echo json_encode(array(

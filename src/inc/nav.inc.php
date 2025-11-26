@@ -27,9 +27,33 @@
           </ul>
         </li>
       </ul>
-      <div class="d-lg-flex col-lg-3 justify-content-lg-end">
-        <a class="btn btn-primary" href="login.php">Login / Sign Up</a>
+	  
+	  <!-- If user is logged in -->
+	  <?php if (isset($_SESSION['user_id'])): ?>
+	  <?php 
+	    // Check if current page is manage_account.php
+	    $current_page = basename($_SERVER['PHP_SELF']);
+	    $is_manage_account = ($current_page === 'manage_account.php');
+	  ?>
+	  
+	  <div class="d-lg-flex col-lg-3 justify-content-lg-end">
+	    <?php if ($is_manage_account): ?>
+	      <a class="btn btn-primary" href="../index.php">Home</a>
+	    <?php else: ?>
+	      <a class="btn btn-primary" href="../manage_account.php">My Account</a>
+	    <?php endif; ?>
       </div>
+	  
+	  <div class="d-lg-flex col-lg-3 justify-content-lg-end">
+        <a class="btn btn-primary" href="../logout.php">Logout</a>
+      </div>
+	  
+	  <!-- If user is not logged in -->
+	  <?php else: ?>
+	  <div class="d-lg-flex col-lg-3 justify-content-lg-end">
+        <a class="btn btn-primary" href="../login.php">Login / Sign Up</a>
+      </div>
+	  <?php endif ?>
     </div>
   </div>
 </nav>

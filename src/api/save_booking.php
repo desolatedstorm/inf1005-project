@@ -1,8 +1,7 @@
 <?php 
 header('Content-Type: application/json');
 
-require_once __DIR__ . "/../vendor/autoload.php";
-require_once __DIR__ . "/../inc/login_functions.php";
+require_once __DIR__ . '/inc/login_functions.php';
 
 list($db_host, $db_user, $db_pass, $db_name, $stripekey) = getDBEnvVar();
 
@@ -51,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $messages .= 'Invalid total amount. ';
     }
 
-    // Billing address (optional fields for this endpoint)
+    // Billing address
     $billing_address = isset($_POST['billing_address']) ? $_POST['billing_address'] : '';
     $billing_city = isset($_POST['billing_city']) ? $_POST['billing_city'] : '';
     $billing_postal = isset($_POST['billing_postal']) ? $_POST['billing_postal'] : '';
@@ -67,7 +66,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // ===========================
     // 2. INSERT BOOKING INTO DATABASE
-    // (Only AFTER payment is confirmed by Stripe)
     // ===========================
     
     try {
@@ -77,20 +75,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             throw new Exception("Connection failed: " . $conn->connect_error);
         }
 
-        // Check if slot is still available
-        $check_stmt = $conn->prepare("
+        // Start transaction
+        $conn->begin_transaction();
+
+        // Verify that this user has a valid hold on this slot
+        $check_hold = $conn->prepare("
+            SELECT holdID FROM BookingHolds 
+            WHERE bookingDate = ? 
+            AND bookingTimeslot = ? 
+            AND Rooms_roomID = ? 
+            AND Users_userID = ?
+            AND hold_expires_at > NOW()
+        ");
+        $check_hold->bind_param("ssii", $date, $time, $room_id, $user_id);
+        $check_hold->execute();
+        $hold_result = $check_hold->get_result();
+        $check_hold->close();
+        
+        if ($hold_result->num_rows === 0) {
+            $conn->rollback();
+            echo json_encode(array(
+                'success' => false,
+                'message' => 'Your hold on this time slot has expired. Please select the slot again.'
+            ));
+            exit();
+        }
+
+        // Double-check slot is still available (not booked by someone else)
+        $check_booking = $conn->prepare("
             SELECT COUNT(*) as count FROM Bookings 
             WHERE bookingDate = ? 
             AND bookingTimeslot = ? 
             AND Rooms_roomID = ? 
             AND bookingStatus IN ('Confirmed', 'Completed')
         ");
-        $check_stmt->bind_param("ssi", $date, $time, $room_id);
-        $check_stmt->execute();
-        $check_result = $check_stmt->get_result();
-        $row = $check_result->fetch_assoc();
+        $check_booking->bind_param("ssi", $date, $time, $room_id);
+        $check_booking->execute();
+        $booking_result = $check_booking->get_result();
+        $booking_row = $booking_result->fetch_assoc();
+        $check_booking->close();
         
-        if ($row['count'] > 0) {
+        if ($booking_row['count'] > 0) {
+            $conn->rollback();
             echo json_encode(array(
                 'success' => false,
                 'message' => 'This time slot is no longer available.'
@@ -98,7 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit();
         }
 
-        // Insert booking with "Confirmed" status (payment already succeeded)
+        // Insert booking with "Confirmed" status
         $booking_status = "Confirmed";
         $created_at = date('Y-m-d H:i:s');
         
@@ -111,7 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ");
 
         $stmt->bind_param(
-            "ssidssssssii", 
+            "ssifsssssiii", 
             $date, 
             $time, 
             $pax,
@@ -131,8 +157,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         $booking_id = $conn->insert_id;
-        
         $stmt->close();
+
+        // Remove the hold since booking is now confirmed
+        $delete_hold = $conn->prepare("
+            DELETE FROM BookingHolds 
+            WHERE bookingDate = ? 
+            AND bookingTimeslot = ? 
+            AND Rooms_roomID = ? 
+            AND Users_userID = ?
+        ");
+        $delete_hold->bind_param("ssii", $date, $time, $room_id, $user_id);
+        $delete_hold->execute();
+        $delete_hold->close();
+
+        // Commit transaction
+        $conn->commit();
         $conn->close();
 
         // ===========================
@@ -145,59 +185,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'booking_id' => $booking_id
         ));
 
-        // ===========================
-		// SEND CONFIRMATION EMAIL USING PHPMailer
-		// ===========================
-
-		try {
-        // Make sure $user_id exists before calling this
+        // TODO: Send confirmation email
+        /*
         $user_email = getUserEmail($user_id);
+        $subject = "Booking Confirmation #$booking_id";
+        $message = "Your booking has been confirmed!\n\n";
+        $message .= "Booking ID: $booking_id\n";
+        $message .= "Date: $date\n";
+        $message .= "Time: $time\n";
+        $message .= "Players: $pax\n";
+        $message .= "Total: $$subtotal\n";
+        
+        mail($user_email, $subject, $message);
+        */
 
-        // Load PHPMailer classes
-        $mail = new PHPMailer\PHPMailer\PHPMailer(true);
-
-        // SMTP CONFIG (PLACEHOLDERS)
-        $mail->isSMTP();
-        $mail->Host = 'SMTP_HOST';
-        $mail->SMTPAuth = true;
-        $mail->Username = 'EMAIL_ADDRESS';
-        $mail->Password = 'EMAIL_PASSWORD';
-        $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port = 587;
-
-        // FROM + TO
-        $mail->setFrom('your_email@gmail.com', 'Escape Quest Booking');
-        $mail->addAddress($user_email);
-
-        // SUBJECT
-        $mail->Subject = "Booking Confirmation #{$booking_id}";
-
-        // EMAIL BODY
-        $mail->isHTML(true);
-        $mail->Body = "
-            <h2>Your Booking Is Confirmed!</h2>
-            <p>Thank you for booking with us.</p>
-            <p><strong>Booking Details:</strong></p>
-            <ul>
-                <li><strong>Booking ID:</strong> {$booking_id}</li>
-                <li><strong>Date:</strong> {$date}</li>
-                <li><strong>Time:</strong> {$time}</li>
-                <li><strong>Players:</strong> {$pax}</li>
-                <li><strong>Total:</strong> \${$subtotal}</li>
-            </ul>
-            <p>We look forward to seeing you!</p>
-            <p>If you have any questions, reply to this email.</p>
-        ";
-
-        // Send email
-        $mail->send();
-
-        } catch (Exception $e) {
-            error_log("Email Error: " . $e->getMessage());
+    } catch (Exception $e) {
+        if (isset($conn)) {
+            $conn->rollback();
+            $conn->close();
         }
-
-}
- catch (Exception $e) {
         echo json_encode(array(
             'success' => false,
             'message' => 'Database error: ' . $e->getMessage()

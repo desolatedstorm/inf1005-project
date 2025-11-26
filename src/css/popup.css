@@ -11,8 +11,9 @@
 }
 
 .modal-content {
-    background: linear-gradient(90deg, rgba(1, 0, 87, 1) 0%, rgba(1, 50, 120, 1) 100%);
+    /* background-color: white; */
     margin: 2% auto;
+    /* padding: 20px; */
     width: 75%;
     height: 90vh;
     border-radius: 8px;
@@ -23,9 +24,8 @@
 }
 
 .close {
-    transform: scale(2);
     position: absolute;
-    right: 25px;
+    right: 15px;
     top: 10px;
     font-size: 28px;
     cursor: pointer;

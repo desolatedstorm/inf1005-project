@@ -1,9 +1,3 @@
-<?php
-session_start();
-
-// Set a flag to allow booking.php to load
-$_SESSION['allow_booking'] = true;
-?>
 <!doctype html>
 <html lang="en">
 <link rel="icon" type="image/x-icon" href="../images/home.ico">
@@ -87,23 +81,10 @@ $_SESSION['allow_booking'] = true;
                     <!-- also copy this to the other pages -->
                     <button type="button" id="openPopup" name="openPopup" class="book-btn">Book Now</Button>
 
-                    <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true): ?>
-                        <button type="button" id="openRatingPopup" name="openRatingPopup" class="rating-btn">Rate Our
-                            Services</Button>
-                    <?php endif; ?>
-
                     <p class="cancellation-note">Free cancellation up to 24 hours before</p>
                 </div>
             </div>
         </div>
-        <!-- booking pop up -->
-        <section id="modal" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <iframe id="popupFrame" src=""><iframe>
-            </div>
-        </section>
-
     </main>
 
     <?php
