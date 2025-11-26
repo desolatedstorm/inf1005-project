@@ -1,15 +1,15 @@
 <?php
 /**
  * Get average rating for a specific room
- * @param int $room_id The room ID
+ * @param string $room_name The room name
  * @return float Average rating or 0 if no reviews
  */
-function getAverageRating($room_id) {
+function getAverageRating($room_name) {
     require_once "db.inc.php";
     $conn = getDbConnection();
     
-    $stmt = $conn->prepare("SELECT AVG(rating) as avg_rating, COUNT(*) as review_count FROM Reviews WHERE Rooms_roomID = ?");
-    $stmt->bind_param("i", $room_id);
+    $stmt = $conn->prepare("SELECT AVG(rating) as avg_rating, COUNT(*) as review_count FROM Reviews R JOIN Rooms M ON R.Rooms_roomID = M.roomID WHERE M.roomName = ?");
+    $stmt->bind_param("s", $room_name);
     $stmt->execute();
     $result = $stmt->get_result();
     
@@ -27,15 +27,15 @@ function getAverageRating($room_id) {
 
 /**
  * Get number of reviews for a specific room
- * @param int $room_id The room ID
+ * @param string $room_name The room name
  * @return int Number of reviews
  */
-function getReviewCount($room_id) {
+function getReviewCount($room_name) {
     require_once "db.inc.php";
     $conn = getDbConnection();
     
-    $stmt = $conn->prepare("SELECT COUNT(*) as review_count FROM Reviews WHERE Rooms_roomID = ?");
-    $stmt->bind_param("i", $room_id);
+    $stmt = $conn->prepare("SELECT COUNT(*) as review_count FROM Reviews R JOIN Rooms M ON R.Rooms_roomID = M.roomID WHERE M.roomName = ?");
+    $stmt->bind_param("s", $room_name);
     $stmt->execute();
     $result = $stmt->get_result();
     
@@ -53,21 +53,21 @@ function getReviewCount($room_id) {
 
 /**
  * Get all reviews for a specific room
- * @param int $room_id The room ID
+ * @param string $room_name The room name
  * @return array Array of review objects
  */
-function getRoomReviews($room_id) {
+function getRoomReviews($room_name) {
     require_once "db.inc.php";
     $conn = getDbConnection();
     
-    $stmt = $conn->prepare("
-        SELECT r.*, u.username, u.email 
-        FROM Reviews r 
-        JOIN Users u ON r.Users_userID = u.userID 
-        WHERE r.Rooms_roomID = ? 
-        ORDER BY r.created_at DESC
-    ");
-    $stmt->bind_param("i", $room_id);
+    $stmt = $conn->prepare("SELECT r.*, u.username, u.email 
+            FROM Reviews r 
+            JOIN Users u ON r.Users_userID = u.userID 
+            JOIN Rooms rm ON r.Rooms_roomID = rm.roomID
+            WHERE rm.roomName = ? 
+            ORDER BY r.created_at DESC");
+
+    $stmt->bind_param("s", $room_name);
     $stmt->execute();
     $result = $stmt->get_result();
     
