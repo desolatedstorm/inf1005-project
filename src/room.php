@@ -68,10 +68,10 @@ if (isset($_GET['name'])) {
 
             <?php if ($room): ?>
                 <img src="<?php echo htmlspecialchars($room['imagePath'] ?? '/images/placeholder.png'); ?>"
-                    alt=<?php echo htmlspecialchars($room['roomName']) ?> class="room-hero" />
+                    alt="<?php echo htmlspecialchars($room['roomName']) ?>" class="room-hero">
 
                 <div class="thumbnail-gallery">
-                    <img src="<?php echo htmlspecialchars($room['imagePath'] ?? '/images/placeholder.png'); ?>" alt="Thumbnail 1" class="active" onclick="changeHeroImage(this.src)" />
+                    <img src="<?php echo htmlspecialchars($room['imagePath'] ?? '/images/placeholder.png'); ?>" alt="Thumbnail 1" class="active" onclick="changeHeroImage(this.src)">
                 </div>
 
                 <div class="room-content">
@@ -127,14 +127,13 @@ if (isset($_GET['name'])) {
                         <p class="cancellation-note">Free cancellation up to 24 hours before</p>
                     </div>
                 </div>
-            </div>
 
             <!-- Reviews Section -->
             <div class="reviews-section" style="margin-top: 3rem; background: #f8f9fa; padding: 2rem; border-radius: 8px; color: #333;">
                 <h2>What Our Customers Say</h2>
             
                 <?php
-                $reviews = getRoomReviews($room_id);
+                $reviews = getRoomReviews($room_name);
                 
                 if (count($reviews) > 0):
                 ?>
@@ -189,12 +188,12 @@ if (isset($_GET['name'])) {
             </div>
         </div>
         <!-- booking pop up -->
-        <section id="modal" class="modal">
+        <div id="modal" class="modal">
             <div class="modal-content">
                 <span class="close">&times;</span>
-                <iframe id="popupFrame" src=""><iframe>
+                <iframe id="popupFrame" src="about:blank"></iframe>
             </div>
-        </section>
+        </div>
 
     <?php else: ?>
         <!-- ERROR: room Not Found -->

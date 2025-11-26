@@ -56,7 +56,7 @@
 				$_SESSION["user_id"] = $user["userID"];
 				$_SESSION['email'] = $user['email'];
 				$_SESSION["username"] = $user["username"];
-				
+				$_SESSION["is_admin"] = $user["is_admin"];
 				// Regenerate session ID to prevent session fixation attacks
 				session_regenerate_id(true);
 

@@ -1,4 +1,5 @@
 <?php
+
 include "inc/secure_session_start.php";
 
 include "inc/functions.php";
@@ -8,7 +9,6 @@ $conn = getDbConnection();
 $rooms = [];
 $roomCount = 0;
 
-//to-do: implement a variable imagePath and also add data into the DB
 $sql = "SELECT roomID, roomName, roomFearLevel, roomDifficulty, roomExperienceType, roomGenre, imagePath FROM Rooms";
 $result = $conn->query($sql);
 
@@ -37,13 +37,13 @@ $conn->close();
     <?php include "inc/header.inc.php" ?>
 
     <!-- search bar -->
-    <section class="search-section section-gap text-center">
+    <div class="search-section section-gap text-center">
         <div class="input-group rounded mx-auto w-100 w-sm-75 w-md-50" style="max-width:480px; padding-top:20px; padding-bottom:20px;">
             <input type="search" class="form-control rounded" onkeyup="filterRooms()" placeholder="Search for rooms..." aria-label="Search"
-                aria-describedby="search-addon" />
+                aria-describedby="search-addon">
             <button type="button" class="btn btn-outline-primary" id="search-addon">Search</button>
         </div>
-    </section>
+    </div>
 
     <main class="page-content section-gap">
         <div class="container">
@@ -148,8 +148,8 @@ $conn->close();
                         <label class="form-check-label" for="genreAdventure">Adventure</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" value="mystery" id="genreMystery">
-                        <label class="form-check-label" for="genreMystery">Mystery</label>
+                        <input class="form-check-input" type="checkbox" value="mystery" id="Mystery">
+                        <label class="form-check-label" for="Mystery">Mystery</label>
                     </div>
                 </div>
             </div>
@@ -167,7 +167,7 @@ $conn->close();
                     <!-- if filter derives no results -->
 
                     <?php if (!empty($rooms)): ?>
-                
+
                         <?php foreach ($rooms as $room):
                             //sanitise data attributes for filter script
                             $dataFear = slugify($room['roomFearLevel']);
