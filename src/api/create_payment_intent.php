@@ -2,10 +2,16 @@
 session_start();
 header('Content-Type: application/json');
 
+if ($_SERVER['REQUEST_METHOD'] !== 'POST'){
+    header("Location: ../index.php");
+    die("Not allowed");
+}
+
 require_once __DIR__ . "/../vendor/autoload.php";
-require_once __DIR__ . "/../inc/login_functions.php";
+require_once __DIR__ . "/../inc/functions.php";
 
 list($db_host, $db_user, $db_pass, $db_name, $stripekey) = getDBEnvVar();
+
 
 
 try {
