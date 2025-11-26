@@ -14,10 +14,12 @@ $price = $_SESSION['price'] ?? '';
     <div class="content w-100">
         <section class="calendar-container">
             <div class="calendar table-responsive">
-                <!-- TODO: FIGURE OUT WHERE TO PLACE SMALL YEAR --> 
+                <div class="year-display text-center fs-4">
+                    <span class="calendar-year"></span>
+                </div>
                 <div class="month-header"> 
                     <img src="images/prev.png" class="left-button fa fa-chevron-left" id="prev" alt="previous button">
-                    <span class="month" id="label"></span>
+                    <span class="calendar-month" id="label"></span>
                     <img src="images/next.png" class="right-button fa fa-chevron-right" id="next" alt="next button">
                 </div>
 
