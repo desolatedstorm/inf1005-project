@@ -1,10 +1,9 @@
 <?php
-// set session to access booking.php
-include "api/api_generate_token.php";
+session_start();
 
 include "inc/functions.php";
 include "inc/review_functions.php";
-$conn = getDbConnection();
+$conn = getDBconnection();
 $room = null;
 
 //check for 'NAME' in the url
@@ -51,7 +50,7 @@ if (isset($_GET['name'])) {
 <html lang="en">
 
 <head>
-    <title><?php echo htmlspecialchars($room['roomName']) ?></title>
+    <title><?php echo $room ? htmlspecialchars($room['roomName']) : 'Room Not Found' ?></title>
     <?php include "inc/head.inc.php" ?>
     <link rel="stylesheet" href="css/rooms.css?v=<?php echo time(); ?>">
     <link rel="preload" href="css/popup.css" as="style">
@@ -121,7 +120,7 @@ if (isset($_GET['name'])) {
                         <button type="button" id="openPopup" name="openPopup" class="book-btn">Book Now</button>
 
                         <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true): ?>
-                            <a href="reviews_page.php?room_id=<?php echo $room_id; ?>" class="rating-btn" style="text-decoration: none; display: block; text-align: center;">Rate Our Services</a>
+                            <a href="reviews_page.php?name=<?php echo urlencode($room_name); ?>" class="rating-btn" style="text-decoration: none; display: block; text-align: center;">Rate Our Services</a>
                         <?php endif; ?>
 
                         <p class="cancellation-note">Free cancellation up to 24 hours before</p>
@@ -181,7 +180,7 @@ if (isset($_GET['name'])) {
                     <div class="reviews-empty">
                         <p>No reviews yet. Be the first to review this room!</p>
                         <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true): ?>
-                            <a href="reviews_page.php?room_id=<?php echo $room_id; ?>" class="btn btn-primary">Write a Review</a>
+                            <a href="reviews_page.php?name=<?php echo urlencode($room_name); ?>" class="btn btn-primary">Write a Review</a>
                         <?php endif; ?>
                     </div>
                 <?php endif; ?>
