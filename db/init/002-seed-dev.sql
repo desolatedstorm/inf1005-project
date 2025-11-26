@@ -41,7 +41,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `Reviews` WRITE;
 /*!40000 ALTER TABLE `Reviews` DISABLE KEYS */;
-INSERT INTO `Reviews` VALUES (1,5,'Love this! Me and my wife had a great time!','2025-11-16 16:56:51',1,1);
+INSERT INTO `Reviews` VALUES 
 /*!40000 ALTER TABLE `Reviews` ENABLE KEYS */;
 UNLOCK TABLES;
 

@@ -3,6 +3,7 @@
 include "api/api_generate_token.php";
 
 include "inc/functions.php";
+include "inc/review_functions.php";
 $conn = getDbConnection();
 $room = null;
 
@@ -126,6 +127,89 @@ if (isset($_GET['name'])) {
                         <p class="cancellation-note">Free cancellation up to 24 hours before</p>
                     </div>
                 </div>
+
+
+                <div class="pricing-card">
+                    <div class="price-label">From</div>
+                    <div class="price"> $<?php echo $room['roomPriceOffPeak']?></div>
+                    <div style="color: #666; font-size: 0.9rem; margin-bottom: 1rem;">/person</div>
+
+                    <ul class="price-details">
+                        <li><?php echo $room['roomDuration']?> minutes </li>
+                        <li><?php echo $room['roomMin'] . '-' . $room['roomMax']; ?> players</li>
+                        <li>Rating: ★<?php echo $avg_rating; ?> (<?php echo $review_count; ?> reviews)</li>
+                    </ul>
+
+                    <!-- leave this as it is for now there is a js function that opens this -->
+                    <!-- also copy this to the other pages -->
+                    <button type="button" id="openPopup" name="openPopup" class="book-btn">Book Now</button>
+
+                    <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true): ?>
+                    <a href="reviews_page.php?room_id=<?php echo $room_id; ?>" class="rating-btn" style="text-decoration: none; display: block; text-align: center;">Rate Our Services</a>
+                    <?php endif; ?>
+
+                    <p class="cancellation-note">Free cancellation up to 24 hours before</p>
+                </div>
+            </div>
+
+            <!-- Reviews Section -->
+            <div class="reviews-section" style="margin-top: 3rem; background: #f8f9fa; padding: 2rem; border-radius: 8px; color: #333;">
+                <h2>What Our Customers Say</h2>
+            
+                <?php
+                $reviews = getRoomReviews($room_id);
+                
+                if (count($reviews) > 0):
+                ?>
+                    <div class="reviews-summary" style="margin-bottom: 2rem; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
+                        <div style="font-size: 2rem; color: #ffc107;">
+                            <?php echo displayStarRating($avg_rating); ?>
+                        </div>
+                        <div style="font-size: 1.5rem; font-weight: bold; margin-top: 0.5rem; color: #2e2e2eff;">
+                            <?php echo $avg_rating; ?> out of 5
+                        </div>
+                        <div style="color: #666; margin-top: 0.25rem;">
+                            Based on <?php echo $review_count; ?> <?php echo $review_count == 1 ? 'review' : 'reviews'; ?>
+                        </div>
+                    </div>
+
+                    <div class="reviews-list">
+                        <?php foreach ($reviews as $review): ?>
+                            <div class="review-item" style="border-bottom: 1px solid #ddd; padding: 1.5rem 0; color: #333;">
+                                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
+                                    <div>
+                                        <div style="font-weight: bold; font-size: 1.1rem; color: #2e2e2e;">
+                                            <?php echo htmlspecialchars($review['username']); ?>
+                                        </div>
+                                        <div style="color: #ffc107; font-size: 1.2rem; margin-top: 0.25rem;">
+                                            <?php echo displayStarRating($review['rating']); ?>
+                                        </div>
+                                    </div>
+                                    <div style="color: #666; font-size: 0.9rem;">
+                                        <?php 
+                                        $date = new DateTime($review['created_at']);
+                                        echo $date->format('M j, Y'); 
+                                        ?>
+                                    </div>
+                                </div>
+                                
+                                <?php if (!empty($review['comment'])): ?>
+                                    <div style="margin-top: 1rem; line-height: 1.6; color: #555;">
+                                        <?php echo nl2br(htmlspecialchars($review['comment'])); ?>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php else: ?>
+                    <div style="padding: 2rem; text-align: center; background: #f8f9fa; border-radius: 8px;">
+                        <p style="color: #666; font-size: 1.1rem;">No reviews yet. Be the first to review this room!</p>
+                        <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true): ?>
+                            <a href="reviews_page.php?room_id=<?php echo $room_id; ?>" class="btn btn-primary" style="margin-top: 1rem;">Write a Review</a>
+                        <?php endif; ?>
+                    </div>
+                <?php endif; ?>
+            </div>
         </div>
         <!-- booking pop up -->
         <section id="modal" class="modal">

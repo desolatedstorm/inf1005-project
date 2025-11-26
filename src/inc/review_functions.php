@@ -1,9 +1,5 @@
 <?php
-/**
- * Get average rating for a specific room
- * @param string $room_name The room name
- * @return float Average rating or 0 if no reviews
- */
+// get average rating for a specific room 
 function getAverageRating($room_name) {
     require_once "db.inc.php";
     $conn = getDbConnection();
@@ -25,11 +21,7 @@ function getAverageRating($room_name) {
     return 0;
 }
 
-/**
- * Get number of reviews for a specific room
- * @param string $room_name The room name
- * @return int Number of reviews
- */
+// Get number of reviews for a specific room
 function getReviewCount($room_name) {
     require_once "db.inc.php";
     $conn = getDbConnection();
@@ -51,11 +43,7 @@ function getReviewCount($room_name) {
     return 0;
 }
 
-/**
- * Get all reviews for a specific room
- * @param string $room_name The room name
- * @return array Array of review objects
- */
+// Get all reviews for a specific room
 function getRoomReviews($room_name) {
     require_once "db.inc.php";
     $conn = getDbConnection();
@@ -81,11 +69,7 @@ function getRoomReviews($room_name) {
     return $reviews;
 }
 
-/**
- * Generate star rating HTML
- * @param float $rating The rating value (0-5)
- * @return string HTML for star display
- */
+//Generate star rating HTML
 function displayStarRating($rating) {
     $full_stars = floor($rating);
     $half_star = ($rating - $full_stars) >= 0.5 ? 1 : 0;
