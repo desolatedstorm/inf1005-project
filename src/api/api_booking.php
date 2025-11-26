@@ -116,6 +116,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Re-index array
             $display_slots = array_values($display_slots);
 
+            if (count($display_slots) === 0) {
+                echo json_encode(array(
+                    'success' => false,
+                    'message' => 'No Available Slots.'
+                ));
+                exit();
+            }
+
             // Return success response
             echo json_encode(array(
                 'success' => true,

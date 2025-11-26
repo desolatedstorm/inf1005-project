@@ -1,7 +1,7 @@
 <!-- Template from Colorlib https://colorlib.com/wp/template/calendar-04/ -->
 <?php
 // Get user details from session
-$user_name = $_SESSION['user_name'] ?? 'Guest User';
+$user_name = $_SESSION['user_name'] ?? '';
 $user_email = $_SESSION['user_email'] ?? '';
 $room_id = $_SESSION['room_id'] ?? '';
 $min = $_SESSION['min'] ?? '';
