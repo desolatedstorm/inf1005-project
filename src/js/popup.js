@@ -11,7 +11,6 @@ function registerEventListeners() {
     if (popup !== null)
     {
         popup.addEventListener("click", popUp)
-        console.log("pop up listener added")
     }
     else
     {
@@ -23,7 +22,6 @@ function registerEventListeners() {
     if (closeBtn !== null)
     {
         closeBtn.addEventListener("click", closeModal)
-        console.log("Closing modal")
     }
     else
     {
@@ -44,7 +42,6 @@ function registerEventListeners() {
 
 function popUp()
 {
-    console.log("Opening bookig");
     var popUpURL = "booking.php";
     var modal = document.getElementById("modal");
     var iframe = document.getElementById("popupFrame");
