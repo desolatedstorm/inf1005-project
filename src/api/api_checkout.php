@@ -231,7 +231,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'booking_ref' => $ref,
         ));
 
-    } catch (Exception $e) {
+        } catch (Exception $e) {
+            error_log("Email Error: " . $e->getMessage());
+        }
+
+     catch (Exception $e) {
         echo json_encode(array(
             'success' => false,
             'message' => 'Database error: ' . $e->getMessage()

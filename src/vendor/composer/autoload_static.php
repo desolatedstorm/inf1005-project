@@ -30,6 +30,7 @@ class ComposerStaticInit40aa654f2e66c20881ae0572fe987a10
         'P' =>
         array (
             'PhpOption\\' => 10,
+            'PHPMailer\\PHPMailer\\' => 20,
         ),
         'G' =>
         array (
