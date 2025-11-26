@@ -1,8 +1,8 @@
 <?php
 // get average rating for a specific room 
 function getAverageRating($room_name) {
-    require_once "db.inc.php";
-    $conn = getDbConnection();
+    require_once __DIR__ . "/functions.php";
+    $conn = getDBconnection();
     
     $stmt = $conn->prepare("SELECT AVG(rating) as avg_rating, COUNT(*) as review_count FROM Reviews R JOIN Rooms M ON R.Rooms_roomID = M.roomID WHERE M.roomName = ?");
     $stmt->bind_param("s", $room_name);
@@ -23,8 +23,8 @@ function getAverageRating($room_name) {
 
 // Get number of reviews for a specific room
 function getReviewCount($room_name) {
-    require_once "db.inc.php";
-    $conn = getDbConnection();
+    require_once __DIR__ . "/functions.php";
+    $conn = getDBconnection();
     
     $stmt = $conn->prepare("SELECT COUNT(*) as review_count FROM Reviews R JOIN Rooms M ON R.Rooms_roomID = M.roomID WHERE M.roomName = ?");
     $stmt->bind_param("s", $room_name);
@@ -45,8 +45,8 @@ function getReviewCount($room_name) {
 
 // Get all reviews for a specific room
 function getRoomReviews($room_name) {
-    require_once "db.inc.php";
-    $conn = getDbConnection();
+    require_once __DIR__ . "/functions.php";
+    $conn = getDBconnection();
     
     $stmt = $conn->prepare("SELECT r.*, u.username, u.email 
             FROM Reviews r 
