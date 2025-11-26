@@ -1,25 +1,24 @@
 <?php 
 session_start();
 
-$_SESSION['user_id'];
-$token = $_SESSION['allow_booking'];
-$room_id = $_SESSION['room_id'];
-$room_name = $_SESSION['room_name'];
-$desc = $_SESSION['desc'];
-$rtn_dest = "index.php";
+$user_id = $_SESSION['user_id'] ?? '';
+$token = $_SESSION['allow_booking'] ?? '';
+$room_id = $_SESSION['room_id'] ?? '';
+$room_name = $_SESSION['room_name'] ?? '';
+$desc = $_SESSION['desc'] ?? '';
+$rtn_dest = "";
 
-if (!$token || !$_SESSION['allow_booking'] || !hash_equals($_SESSION['allow_booking'], $token)) {
-    http_response_code(403);
+if (!$token || !$_SESSION['allow_booking'] || !hash_equals($_SESSION['allow_booking'], $token) || !$user_id) {
+    if (!$user_id) $rtn_dest = "login.php";
+    else $rtn_dest = "index.php";
     echo "<script>
             if (window.parent && window.parent.closeModal) {
                 window.parent.closeModal();
             }
-            else {
-                window.parent.location.href = " . $rtn_dest . ";
-            }</script>";
+            window.parent.location.href = ". json_encode($rtn_dest) . ";
+            </script>";
     exit();
 }
-
 unset($_SESSION['allow_booking']);
 ?>
 <!-- Floating Window Booking -->

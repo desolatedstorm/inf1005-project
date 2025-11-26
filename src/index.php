@@ -1,4 +1,5 @@
 <?php
+include "inc/secure_session_start.php";
 
 include "inc/functions.php";
 $conn = getDbConnection();

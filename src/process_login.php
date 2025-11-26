@@ -1,75 +1,94 @@
+<?php
+	require_once __DIR__ . "/inc/secure_session_start.php";
+	require_once __DIR__ . "/login_functions.php";
+	
+	$errorMsg = "";
+	$success = true;
+	
+	// Validate email
+	if (empty($_POST["email"])) {
+		$errorMsg .= "Email is required.<br>";
+		$success = false;
+	}
+	else {
+		$email = sanitize_input($_POST["email"]);
+
+		if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+			$errorMsg .= "Invalid Email format.<br>";
+			$success = false;
+		}
+	}
+
+	// Validate password
+	if (empty($_POST["password"])) {
+		$errorMsg .= "Password is required.<br>";
+		$success = false;
+	}
+	else {
+		$password = $_POST["password"];
+	}
+
+	if ($success) {
+		// Check rate limiting before attempting authentication
+		$attemptCheck = checkLoginAttempts($email);
+		
+		if (!$attemptCheck['allowed']) {
+			$errorMsg .= $attemptCheck['message'];
+			$success = false;
+		}
+		else {
+			$user = authenticateUser($email, $password);
+			
+			if ($user === false) {
+				// Record failed login attempt
+				recordFailedLogin($email);
+				
+				// Generic error message to prevent user enumeration
+				$errorMsg .= "Incorrect email or password.<br>";
+				$success = false;
+			}
+			else {
+				// Clear failed login attempts on successful login
+				clearLoginAttempts($email);
+				
+				// Login successful: start session
+				$_SESSION['logged_in'] = true;
+				$_SESSION["user_id"] = $user["userID"];
+				$_SESSION['email'] = $user['email'];
+				$_SESSION["username"] = $user["username"];
+				
+				// Regenerate session ID to prevent session fixation attacks
+				session_regenerate_id(true);
+
+				// Redirect to homepage or account page
+				header("Location: index.php");
+				exit;
+			}
+		}
+	}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>Login Results</title>
-        <?php
-        session_start();
-        include "inc/head.inc.php";
-        ?>
-    </head>
-    <body>
-        <?php
-        require_once "inc/login_functions.php";
-        $errorMsg = "";
-        $success = true;
 
-        if (empty($_POST["email"]))
-        {
-            $errorMsg .= "Email is required.<br>";
-            $success = false;
-        }
-        else
-        {
-            $email = sanitize_input($_POST["email"]);
+<head>
+    <title>Login Results</title>
+    <?php include "inc/head.inc.php"; ?>
+</head>
+	
+<body>
+	<?php include "inc/nav.inc.php"; ?>
 
-            if (!filter_var($email, FILTER_VALIDATE_EMAIL))
-            {
-                $errorMsg .= "Invalid Email format.<br>";
-                $success = false;
-            }
-        }
+	<?php if (!$success): ?>
+	<div class="container justify-content-center mb-3">
+		<h2>Oops!</h2>
+		<h4>The following errors were detected:</h4>
+		<p><?= $errorMsg ?></p>
+		<a href="login.php" class="btn btn-warning">Return to Login</a>
+	</div>
+	<?php endif; ?>
 
-        if (empty($_POST["pwd"]))
-        {
-            $errorMsg .= "Password is required.<br>";
-            $success = false;
-        }
-        else
-        {
-            $pwd = password_hash($_POST["pwd"], PASSWORD_DEFAULT);
-        }
-
-        if ($success)
-        {
-            authenticateUser();
-        }
-
-        if ($success)
-        {
-            // Store user information in session
-            $_SESSION['logged_in'] = true;
-            $_SESSION['user_id'] = $user_id;
-            $_SESSION['user_fname'] = $fname;
-            $_SESSION['user_lname'] = $lname;
-            $_SESSION['user_email'] = $email;
-            
-            echo "<div class=container justify-content-center mb-3>";
-            echo "<h2>Login sucessful!</h2>";
-            echo "<h4>Welcome back, " . $fname . " " . $lname . ".</h4><br>";
-            echo "<a href='index.php' class='btn btn-success'>Return to Home</a>";
-            echo "</div>";
-        }
-        else
-        {
-            echo "<div class='container justify-content-center mb-3'>";
-            echo "<h2>Oops!</h2>";
-            echo "<h4>The following errors were detected:</h4>";
-            echo "<p>" . $errorMsg . "</p>";
-            echo "<a href='login.php' class='btn btn-warning'>Return to Login</a>";
-            echo "</div>";
-        }
-
-        include "inc/footer.inc.php"
-        ?>
-    </body>
+	<?php include "inc/footer.inc.php"; ?>
+</body>
+	
 </html>

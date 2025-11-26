@@ -83,7 +83,7 @@ function displayStarRating($rating) {
     
     // Half star
     if ($half_star) {
-        $html .= '⯨';
+        $html .= '<span style="position:relative;display:inline-block;"><span style="position:absolute;overflow:hidden;width:50%;">★</span>☆</span>';
     }
     
     // Empty stars

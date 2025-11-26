@@ -49,6 +49,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         try {
             $conn = getDBconnection();
             
+            // Get room name for redirect
+            $room_stmt = $conn->prepare("SELECT roomName FROM Rooms WHERE roomID = ?");
+            $room_stmt->bind_param("i", $room_id);
+            $room_stmt->execute();
+            $room_result = $room_stmt->get_result();
+            $room_data = $room_result->fetch_assoc();
+            $room_name = $room_data['roomName'] ?? '';
+            $room_stmt->close();
+            
             // Check if user already reviewed this room
             $check_stmt = $conn->prepare("SELECT reviewID FROM Reviews WHERE Users_userID = ? AND Rooms_roomID = ?");
             $check_stmt->bind_param("ii", $user_id, $room_id);
@@ -95,7 +104,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="alert alert-success">
                 <h2>Thank you for your review!</h2>
                 <p>Your review has been successfully submitted.</p>
-                <a href="room.php?id=<?php echo $room_id; ?>" class="btn btn-primary">Back to Room</a>
+                <a href="room.php?name=<?php echo urlencode($room_name); ?>" class="btn btn-primary">Back to Room</a>
                 <a href="index.php" class="btn btn-secondary">Back to Home</a>
             </div>
         <?php else: ?>
