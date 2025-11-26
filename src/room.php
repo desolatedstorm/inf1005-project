@@ -134,7 +134,7 @@ if (isset($_GET['name'])) {
                 <h2>What Our Customers Say</h2>
             
                 <?php
-                $reviews = getRoomReviews($room_id);
+                $reviews = getRoomReviews($room_name);
                 
                 if (count($reviews) > 0):
                 ?>
@@ -192,7 +192,7 @@ if (isset($_GET['name'])) {
         <section id="modal" class="modal">
             <div class="modal-content">
                 <span class="close">&times;</span>
-                <iframe id="popupFrame" src=""><iframe>
+                <iframe id="popupFrame" src=""></iframe>
             </div>
         </section>
 

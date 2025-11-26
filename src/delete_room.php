@@ -1,12 +1,20 @@
 <?php
+
+// 1. Start the session (if not already started)
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 include "inc/functions.php";
 
-// Placeholder for Admin Check
-// session_start();
-// if (!isset($_SESSION['user_id']) || $_SESSION['is_admin'] !== 1) {
-//     header("Location: login.php");
-//     exit();
-// }
+// 2. SECURITY CHECK
+// If user is NOT logged in OR user is NOT an admin
+if (!isset($_SESSION['user_id']) || !isset($_SESSION['is_admin']) || $_SESSION['is_admin'] != 1) {
+    // Redirect them to login page
+    header("Location: login.php");
+    exit(); // Stop the script immediately
+}
+
 
 $conn = getDbConnection();
 $rooms = [];

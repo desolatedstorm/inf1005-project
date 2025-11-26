@@ -89,9 +89,6 @@ function saveMemeberToDB()
 	}
 }
 
-?>
-
-<?php
 function authenticateUser()
 {
     global $fname, $lname, $email, $pwd, $errorMsg, $success;

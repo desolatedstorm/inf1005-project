@@ -1,14 +1,20 @@
 <?php
 ob_start();
+// 1. Start the session (if not already started)
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 include "inc/functions.php";
 
-//csrf protection
+// 2. SECURITY CHECK
+// If user is NOT logged in OR user is NOT an admin
+if (!isset($_SESSION['user_id']) || !isset($_SESSION['is_admin']) || $_SESSION['is_admin'] != 1) {
+    // Redirect them to login page
+    header("Location: login.php");
+    exit(); // Stop the script immediately
+}
 
-//placeholder for admin again..
-// session_start();
-// if (!isset($_SESSION['user_id']) || $_SESSION['is_admin'] !== 1) {
-//     die("Unauthorized access.");
-// }
 
 // check if form is submitted or not 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -121,7 +127,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if ($stmt->execute()) {
                 // Redirect to the newly created room or index
                 $newID = $stmt->insert_id;
-                header("Location: room.php?id=" . $newID);
+                header("Location: room.php?name=" . urlencode($name));
                 exit();
             } else {
                 $errorMsg = "Database execute failed: " . $stmt->error;
