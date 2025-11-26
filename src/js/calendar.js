@@ -127,7 +127,7 @@
             if (!response.success) {
                 console.log(response.message);
                 $(".timeslots-container").append(
-                    $("<div class='event-card'><div class='event-name'>No Available Slots.</div></div>")
+                    $("<div class='error-card'><div class='event-name'>No Available Slots.</div></div>")
                 );
                 return;
             }
