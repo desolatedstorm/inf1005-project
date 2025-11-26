@@ -64,7 +64,7 @@ if (isset($_GET['name'])) {
 
     <main class="page-content">
         <div class="container">
-            <a href="index.php" class="back-link">← Back to Rooms</a>
+            <a href="index.php" class="back-link">← Back to Home</a>
 
             <?php if ($room): ?>
                 <img src="<?php echo htmlspecialchars($room['imagePath'] ?? '/images/placeholder.png'); ?>"
