@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary rounded" aria-label="Thirteenth navbar example">
   <div class="container-fluid">
     <a class="navbar-brand d-flex align-items-center me-auto" href="index.php">
-      <img src="../images/home.png" alt="Logo" height="30" class="me-2" />
+      <img src="../images/home.png" alt="Logo" height="30" class="me-2">
       Escapify
     </a>
     
