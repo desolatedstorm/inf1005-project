@@ -35,7 +35,6 @@
         var day_count = days_in_month(month, year);
         var row = $("<tr class='table-row'></tr>");
 
-        console.log(year, months[month]);
         $(".calendar-year").text(year);
         $(".calendar-month").text(months[month]);
 
@@ -116,22 +115,18 @@
     }
 
     function show_timings(date) {
-        console.log(date);
         var formattedDate = formatDate(date);
-        console.log("format: " + formattedDate);
         $(".timeslots-container").empty();
         $(".booking-form").hide();
         $(".checkout-form").hide(); // Also hide checkout
 
         bookingPost(formattedDate).done(function(response) {
             if (!response.success) {
-                console.log(response.message);
                 $(".timeslots-container").append(
-                    $("<div class='event-card'><div class='event-name'>No Available Slots.</div></div>")
+                    $("<div class='error-card'><div class='event-name'>No Available Slots.</div></div>")
                 );
                 return;
             }
-            console.log(response);
 
             var available_slots = response.available_slots;
             

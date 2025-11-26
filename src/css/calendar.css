@@ -110,6 +110,17 @@
   transition: all 0.2s ease;
 }
 
+.timeslots-container .error-card {
+  padding: 12px 8px;
+  margin: 0;
+  width: 100%;
+  background: #fff;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
 @media (max-width: 991.98px) {
   .timeslots-container .event-card {
     width: calc(50% - 5px);

@@ -2,6 +2,7 @@
 <?php
 // Get user details from session
 $user_name = $_SESSION['username'] ?? '';
+$user_email = $_SESSION['user_email'] ?? '';
 $room_id = $_SESSION['room_id'] ?? '';
 $min = $_SESSION['min'] ?? '';
 $max = $_SESSION['max'] ?? '';

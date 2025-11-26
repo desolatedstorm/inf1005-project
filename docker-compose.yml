@@ -17,6 +17,7 @@ services:
       - DB_PASS=${DB_PASSWORD:-secret}
       - DB_NAME=${DB_NAME:-myapp_db}
       - STRIPESECRETKEY=${STRIPESECRETKEY}
+      - SENDGRIDKEY=${SENDGRIDKEY}
     networks:
       - app-network
 

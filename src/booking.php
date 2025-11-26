@@ -15,7 +15,7 @@ if (!$token || !$_SESSION['allow_booking'] || !hash_equals($_SESSION['allow_book
                 window.parent.closeModal();
             }
             else {
-                window.parent.location.href = 'index.php';
+                window.parent.location.href = " . $rtn_dest . ";
             }</script>";
     exit();
 }

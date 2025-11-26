@@ -1,8 +1,8 @@
 <?php 
 session_start();
 
-$user_id = $_SESSION['user_id'] ?? 1;
-$room_id = $_SESSION['room_id'] ?? '';
+$user_id = $_SESSION['user_id'];
+$room_id = $_SESSION['room_id'];
 header('Content-Type: application/json');
 
 require_once __DIR__ . "/../vendor/autoload.php";

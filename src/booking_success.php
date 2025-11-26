@@ -11,7 +11,7 @@ if (!$booking) {
 }
 
 $username = $_SESSION['username'] ?? '';
-$email = $_SESSION['email'] ?? '';
+$email = $_SESSION['user_email'] ?? '';
 $ref = $_GET['booking_ref'] ?? '';
 $date = $_SESSION['date'] ?? '';
 $time = $_SESSION['time'] ?? '';

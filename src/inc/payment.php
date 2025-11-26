@@ -2,8 +2,8 @@
 <section class="checkout-form" style="display:none;">
     <?php
     // Get user details from session
-    $user_name = $_SESSION['user_name'] ?? 'Guest User';
-    $user_email = $_SESSION['user_email'] ?? 'guest@guest.com';
+    $user_name = $_SESSION['user_name'] ?? '7'; //TODO: REMOVE
+    $user_email = $_SESSION['user_email'] ?? 'tester@test.com';
     
     // Stripe publishable key
     $stripe_publishable_key = 'pk_test_51STfLcAksjEcZwsYPOGI0xqUKScqT1AS4GFHnubNNqd3e0YVWomPXk9cABvxKyuOc4yokyT8VtlvzXd6LkWHQiTG0003O6qTzj';
