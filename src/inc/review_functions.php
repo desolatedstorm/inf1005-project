@@ -1,12 +1,8 @@
 <?php
-/**
- * Get average rating for a specific room
- * @param int $room_id The room ID
- * @return float Average rating or 0 if no reviews
- */
+// get average rating for a specific room 
 function getAverageRating($room_id) {
-    require_once "db.inc.php";
-    $conn = getDbConnection();
+    require_once __DIR__ . "/functions.php";
+    $conn = getDBconnection();
     
     $stmt = $conn->prepare("SELECT AVG(rating) as avg_rating, COUNT(*) as review_count FROM Reviews WHERE Rooms_roomID = ?");
     $stmt->bind_param("i", $room_id);
@@ -25,14 +21,10 @@ function getAverageRating($room_id) {
     return 0;
 }
 
-/**
- * Get number of reviews for a specific room
- * @param int $room_id The room ID
- * @return int Number of reviews
- */
+// Get number of reviews for a specific room
 function getReviewCount($room_id) {
-    require_once "db.inc.php";
-    $conn = getDbConnection();
+    require_once __DIR__ . "/functions.php";
+    $conn = getDBconnection();
     
     $stmt = $conn->prepare("SELECT COUNT(*) as review_count FROM Reviews WHERE Rooms_roomID = ?");
     $stmt->bind_param("i", $room_id);
@@ -51,22 +43,17 @@ function getReviewCount($room_id) {
     return 0;
 }
 
-/**
- * Get all reviews for a specific room
- * @param int $room_id The room ID
- * @return array Array of review objects
- */
+// Get all reviews for a specific room
 function getRoomReviews($room_id) {
-    require_once "db.inc.php";
-    $conn = getDbConnection();
+    require_once __DIR__ . "/functions.php";
+    $conn = getDBconnection();
     
-    $stmt = $conn->prepare("
-        SELECT r.*, u.username, u.email 
-        FROM Reviews r 
-        JOIN Users u ON r.Users_userID = u.userID 
-        WHERE r.Rooms_roomID = ? 
-        ORDER BY r.created_at DESC
-    ");
+    $stmt = $conn->prepare("SELECT r.*, u.username, u.email 
+            FROM Reviews r 
+            JOIN Users u ON r.Users_userID = u.userID 
+            WHERE r.Rooms_roomID = ? 
+            ORDER BY r.created_at DESC");
+
     $stmt->bind_param("i", $room_id);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -81,11 +68,7 @@ function getRoomReviews($room_id) {
     return $reviews;
 }
 
-/**
- * Generate star rating HTML
- * @param float $rating The rating value (0-5)
- * @return string HTML for star display
- */
+//Generate star rating HTML
 function displayStarRating($rating) {
     $full_stars = floor($rating);
     $half_star = ($rating - $full_stars) >= 0.5 ? 1 : 0;

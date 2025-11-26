@@ -26,7 +26,7 @@ $conn->close();
 <html lang="en">
 
 <head>
-    <title>Esacpe Quest</title>
+    <title>Escapify</title>
     <?php include "inc/head.inc.php" ?>
     <script defer src="js/index.js"></script>
 </head>
@@ -147,8 +147,8 @@ $conn->close();
                         <label class="form-check-label" for="genreAdventure">Adventure</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" value="murder-mystery" id="genreMurderMystery">
-                        <label class="form-check-label" for="genreMurderMystery">Murder Mystery</label>
+                        <input class="form-check-input" type="checkbox" value="mystery" id="genreMystery">
+                        <label class="form-check-label" for="genreMystery">Mystery</label>
                     </div>
                 </div>
             </div>
@@ -161,19 +161,6 @@ $conn->close();
                 </div>
 
                 <div class="row g-4" id="roomContainer">
-
-                    <div class="col-md-4 room-card" data-fear="mildly-scary">
-                        <div class="card" href="/pharaoh_room.php">
-                            <img src="/images/P_Curse.jpg"
-                                class="card-img-top" alt="Pharaoh's Curse">
-                            <div class="card-body">
-                                <span class="badge bg-warning text-dark">Mildly Scary</span>
-
-                                <h5 class="card-title mt-2">The Pharaoh's Curse</h5>
-                                <a href="/pharaoh_room.php" class="stretched-link"></a>
-                            </div>
-                        </div>
-                    </div>
 
                     <!-- rooms (no mroe hard coding) -->
                     <!-- if filter derives no results -->
@@ -220,7 +207,7 @@ $conn->close();
 
                                         <h5 class="card-title mt-2"><?php echo htmlspecialchars($room['roomName']); ?></h5>
 
-                                        <a href="room.php?id=<?php echo $room['roomID']; ?>" class="stretched-link"></a>
+                                        <a href="room.php?name=<?php echo urlencode($room['roomName']); ?>" class="stretched-link"></a>
                                     </div>
                                 </div>
                             </div>

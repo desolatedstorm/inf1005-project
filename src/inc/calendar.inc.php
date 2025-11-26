@@ -1,12 +1,17 @@
 <!-- Template from Colorlib https://colorlib.com/wp/template/calendar-04/ -->
 <?php
 // Get user details from session
-$user_name = $_SESSION['user_name'] ?? '';
+$user_name = $_SESSION['username'] ?? '';
 $user_email = $_SESSION['user_email'] ?? '';
 $room_id = $_SESSION['room_id'] ?? '';
 $min = $_SESSION['min'] ?? '';
 $max = $_SESSION['max'] ?? '';
 $price = $_SESSION['price'] ?? '';
+
+if (!$user_name) {
+    http_response_code(403);
+       
+}
 
 ?>
 
@@ -23,14 +28,14 @@ $price = $_SESSION['price'] ?? '';
                     <img src="images/next.png" class="right-button fa fa-chevron-right" id="next" alt="next button">
                 </div>
 
-                <table class="table table-bordered table-dark text-center"> 
-                    <td class="table-primary">Sun</td> 
-                    <td class="table-primary">Mon</td> 
-                    <td class="table-primary">Tue</td> 
-                    <td class="table-primary">Wed</td> 
-                    <td class="table-primary">Thu</td> 
-                    <td class="table-primary">Fri</td> 
-                    <td class="table-primary">Sat</td>
+                <table class="table table-bordered table-dark text-center days-header"> 
+                    <td>Sun</td> 
+                    <td>Mon</td> 
+                    <td>Tue</td> 
+                    <td>Wed</td> 
+                    <td>Thu</td> 
+                    <td>Fri</td> 
+                    <td>Sat</td>
                 </table> 
                 
                 <div class="frame"> 
