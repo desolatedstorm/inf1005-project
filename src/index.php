@@ -37,13 +37,13 @@ $conn->close();
     <?php include "inc/header.inc.php" ?>
 
     <!-- search bar -->
-    <section class="search-section section-gap text-center">
+    <div class="search-section section-gap text-center">
         <div class="input-group rounded mx-auto w-100 w-sm-75 w-md-50" style="max-width:480px; padding-top:20px; padding-bottom:20px;">
             <input type="search" class="form-control rounded" onkeyup="filterRooms()" placeholder="Search for rooms..." aria-label="Search"
-                aria-describedby="search-addon" />
+                aria-describedby="search-addon">
             <button type="button" class="btn btn-outline-primary" id="search-addon">Search</button>
         </div>
-    </section>
+    </div>
 
     <main class="page-content section-gap">
         <div class="container">
