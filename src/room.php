@@ -130,9 +130,9 @@ if (isset($_GET['id'])) {
             </div>
 
             <!-- Reviews Section -->
-            <div class="reviews-section" style="margin-top: 3rem;">
-                <h2>Customer Reviews</h2>
-                
+            <div class="reviews-section" style="margin-top: 3rem; background: #f8f9fa; padding: 2rem; border-radius: 8px; color: #333;">
+                <h2>What Our Customers Say</h2>
+            
                 <?php
                 $reviews = getRoomReviews($room_id);
                 
@@ -152,10 +152,10 @@ if (isset($_GET['id'])) {
 
                     <div class="reviews-list">
                         <?php foreach ($reviews as $review): ?>
-                            <div class="review-item" style="border-bottom: 1px solid #ddd; padding: 1.5rem 0;">
+                            <div class="review-item" style="border-bottom: 1px solid #ddd; padding: 1.5rem 0; color: #333;">
                                 <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
                                     <div>
-                                        <div style="font-weight: bold; font-size: 1.1rem;">
+                                        <div style="font-weight: bold; font-size: 1.1rem; color: #2e2e2e;">
                                             <?php echo htmlspecialchars($review['username']); ?>
                                         </div>
                                         <div style="color: #ffc107; font-size: 1.2rem; margin-top: 0.25rem;">
@@ -171,7 +171,7 @@ if (isset($_GET['id'])) {
                                 </div>
                                 
                                 <?php if (!empty($review['comment'])): ?>
-                                    <div style="margin-top: 1rem; line-height: 1.6;">
+                                    <div style="margin-top: 1rem; line-height: 1.6; color: #555;">
                                         <?php echo nl2br(htmlspecialchars($review['comment'])); ?>
                                     </div>
                                 <?php endif; ?>
