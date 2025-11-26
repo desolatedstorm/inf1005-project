@@ -1,7 +1,7 @@
 <?php 
 session_start();
 
-$_SESSION['user_id'] = 1; //TODO: remove
+$_SESSION['user_id'];
 $token = $_SESSION['allow_booking'];
 $room_id = $_SESSION['room_id'];
 $room_name = $_SESSION['room_name'];

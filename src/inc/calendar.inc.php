@@ -1,11 +1,16 @@
 <!-- Template from Colorlib https://colorlib.com/wp/template/calendar-04/ -->
 <?php
 // Get user details from session
-$user_name = $_SESSION['user_name'] ?? 'Guest User';
+$user_name = $_SESSION['username'] ?? '';
 $room_id = $_SESSION['room_id'] ?? '';
 $min = $_SESSION['min'] ?? '';
 $max = $_SESSION['max'] ?? '';
 $price = $_SESSION['price'] ?? '';
+
+if (!$user_name) {
+    http_response_code(403);
+       
+}
 
 ?>
 
