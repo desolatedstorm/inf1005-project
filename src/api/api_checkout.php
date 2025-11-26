@@ -145,21 +145,59 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'booking_id' => $booking_id
         ));
 
-        // TODO: Send confirmation email
-        /*
-        $user_email = getUserEmail($user_id); // Implement this function
-        $subject = "Booking Confirmation";
-        $message = "Your booking has been confirmed!\n\n";
-        $message .= "Booking ID: $booking_id\n";
-        $message .= "Date: $date\n";
-        $message .= "Time: $time\n";
-        $message .= "Players: $pax\n";
-        $message .= "Total: $$subtotal\n";
-        
-        mail($user_email, $subject, $message);
-        */
+        // ===========================
+		// SEND CONFIRMATION EMAIL USING PHPMailer
+		// ===========================
 
-    } catch (Exception $e) {
+		try {
+        // Make sure $user_id exists before calling this
+        $user_email = getUserEmail($user_id);
+
+        // Load PHPMailer classes
+        $mail = new PHPMailer\PHPMailer\PHPMailer(true);
+
+        // SMTP CONFIG (PLACEHOLDERS)
+        $mail->isSMTP();
+        $mail->Host = 'SMTP_HOST';
+        $mail->SMTPAuth = true;
+        $mail->Username = 'EMAIL_ADDRESS';
+        $mail->Password = 'EMAIL_PASSWORD';
+        $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port = 587;
+
+        // FROM + TO
+        $mail->setFrom('your_email@gmail.com', 'Escape Quest Booking');
+        $mail->addAddress($user_email);
+
+        // SUBJECT
+        $mail->Subject = "Booking Confirmation #{$booking_id}";
+
+        // EMAIL BODY
+        $mail->isHTML(true);
+        $mail->Body = "
+            <h2>Your Booking Is Confirmed!</h2>
+            <p>Thank you for booking with us.</p>
+            <p><strong>Booking Details:</strong></p>
+            <ul>
+                <li><strong>Booking ID:</strong> {$booking_id}</li>
+                <li><strong>Date:</strong> {$date}</li>
+                <li><strong>Time:</strong> {$time}</li>
+                <li><strong>Players:</strong> {$pax}</li>
+                <li><strong>Total:</strong> \${$subtotal}</li>
+            </ul>
+            <p>We look forward to seeing you!</p>
+            <p>If you have any questions, reply to this email.</p>
+        ";
+
+        // Send email
+        $mail->send();
+
+        } catch (Exception $e) {
+            error_log("Email Error: " . $e->getMessage());
+        }
+
+}
+ catch (Exception $e) {
         echo json_encode(array(
             'success' => false,
             'message' => 'Database error: ' . $e->getMessage()
