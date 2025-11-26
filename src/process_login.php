@@ -1,6 +1,6 @@
 <?php
-	require_once "inc/secure_session_start.php";
-	require_once "login_functions.php";
+	require_once __DIR__ . "/inc/secure_session_start.php";
+	require_once __DIR__ . "/login_functions.php";
 	
 	$errorMsg = "";
 	$success = true;

@@ -2,6 +2,7 @@
 session_start();
 require_once __DIR__ . "/inc/login_functions.php";
 require_once __DIR__ . "/vendor/autoload.php";
+require_once __DIR__ . "/api/api_send_email.php";
 
 list($db_host, $db_user, $db_pass, $db_name, $stripekey) = getDBEnvVar();
 
@@ -98,16 +99,77 @@ if (!$token || !preg_match('/^[a-f0-9]{64}$/', $token)) {
 
                         $conn->commit();
 
+                        // Format date and time
+                        $formatted_time = formatTime($time);
+                        $formatted_date = date('l, F j, Y', strtotime($date));
+
+                        // Prepare refund text for plain text and HTML
+                        if ($refund_amt > 0) {
+                            $refund_text = "Refund Amount: $" . number_format($refund_amt, 2) . " (Full refund)\n"
+                                         . "Your refund will be processed within 5-10 business days and credited to your original payment method.\n";
+                            $refund_text_html = "<p><strong>Refund Amount:</strong> $" . number_format($refund_amt, 2) . " (Full refund)</p>
+                                                 <p>Your refund will be processed within 5-10 business days and credited to your original payment method.</p>";
+                        } else {
+                            $refund_text = "As this cancellation was made less than 24 hours before the booking, no refund will be issued per our cancellation policy.\n";
+                            $refund_text_html = "<p>As this cancellation was made less than 24 hours before the booking, no refund will be issued per our cancellation policy.</p>";
+                        }
+
+                        // ---------------------------
+                        // Plain text message
+                        // ---------------------------
+                        $message = "Booking Cancelled\n\n";
+                        $message .= "Hi {$name},\n\n";
+                        $message .= "Your booking has been successfully cancelled. Here are the details:\n\n";
+                        $message .= "Room: {$room}\n";
+                        $message .= "Date: {$formatted_date}\n";
+                        $message .= "Time: {$formatted_time}\n\n";
+                        $message .= $refund_text . "\n";
+                        $message .= "If you have any questions, please don't hesitate to contact us.\n";
+                        $message .= "We hope to see you again soon!\n\n";
+                        $message .= "This is an automated message. Please do not reply to this email.";
+
+                        // ---------------------------
+                        // HTML message
+                        // ---------------------------
+                        $html_message = "
+                        <html>
+                        <head>
+                            <style>
+                                body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+                                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                                .header { background-color: #dc3545; color: white; padding: 20px; text-align: center; }
+                                .content { padding: 20px; background-color: #f9f9f9; }
+                                .booking-details { background-color: white; padding: 15px; border-radius: 5px; margin: 15px 0; }
+                                .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
+                            </style>
+                        </head>
+                        <body>
+                            <div class='container'>
+                                <div class='header'>
+                                    <h1>Booking Cancelled</h1>
+                                </div>
+                                <div class='content'>
+                                    <p>Hi {$name},</p>
+                                    <p>Your booking has been successfully cancelled. Here are the details:</p>
+                                    <div class='booking-details'>
+                                        <p><strong>Room:</strong> {$room}</p>
+                                        <p><strong>Date:</strong> {$formatted_date}</p>
+                                        <p><strong>Time:</strong> {$formatted_time}</p>
+                                    </div>
+                                    {$refund_text_html}
+                                    <p>If you have any questions, please don't hesitate to contact us.</p>
+                                    <p>We hope to see you again soon!</p>
+                                </div>
+                                <div class='footer'>
+                                    <p>This is an automated message. Please do not reply to this email.</p>
+                                </div>
+                            </div>
+                        </body>
+                        </html>
+                        ";
+
                         // Send cancellation confirmation email
-                        sendCancellationEmail(
-                            $booking['email'],
-                            $booking['username'],
-                            $booking['roomName'],
-                            $booking['bookingDate'],
-                            $booking['bookingTimeslot'],
-                            $refund_amt,
-                            $refund_percentage
-                        );
+                        send_email($message, $html_message, $booking['email']);
 
                         // Set success message
                         $message = "Your booking has been successfully cancelled.";
@@ -185,73 +247,6 @@ function formatTime($time) {
     return $dt ? $dt->format('g:i A') : $time;
 }
 
-// Send cancellation email
-function sendCancellationEmail($email, $name, $room, $date, $time, $refund_amt, $refund_percentage) {
-    $to = $email;
-    $subject = "Booking Cancellation Confirmation";
-    
-    $formatted_time = formatTime($time);
-    $formatted_date = date('l, F j, Y', strtotime($date));
-    
-    $refund_text = "";
-    if ($refund_amt > 0) {
-        $refund_text = "
-        <p><strong>Refund Amount:</strong> $" . number_format($refund_amt, 2) . " (Full refund)</p>
-        <p>Your refund will be processed within 5-10 business days and credited to your original payment method.</p>
-        ";
-    } else {
-        $refund_text = "
-        <p>As this cancellation was made less than 24 hours before the booking, no refund will be issued per our cancellation policy.</p>
-        ";
-    }
-
-    $message = "
-    <html>
-    <head>
-        <style>
-            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background-color: #dc3545; color: white; padding: 20px; text-align: center; }
-            .content { padding: 20px; background-color: #f9f9f9; }
-            .booking-details { background-color: white; padding: 15px; border-radius: 5px; margin: 15px 0; }
-            .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
-        </style>
-    </head>
-    <body>
-        <div class='container'>
-            <div class='header'>
-                <h1>Booking Cancelled</h1>
-            </div>
-            <div class='content'>
-                <p>Hi {$name},</p>
-                <p>Your booking has been successfully cancelled. Here are the details:</p>
-                
-                <div class='booking-details'>
-                    <p><strong>Room:</strong> {$room}</p>
-                    <p><strong>Date:</strong> {$formatted_date}</p>
-                    <p><strong>Time:</strong> {$formatted_time}</p>
-                </div>
-
-                {$refund_text}
-
-                <p>If you have any questions, please don't hesitate to contact us.</p>
-                
-                <p>We hope to see you again soon!</p>
-            </div>
-            <div class='footer'>
-                <p>This is an automated message. Please do not reply to this email.</p>
-            </div>
-        </div>
-    </body>
-    </html>
-    ";
-
-    $headers = "MIME-Version: 1.0\r\n";
-    $headers .= "Content-type: text/html; charset=UTF-8\r\n";
-    $headers .= "From: noreply@yourdomain.com\r\n";
-
-    //mail($to, $subject, $message, $headers);
-}
 ?>
 <!DOCTYPE html>
 <html lang="en">
