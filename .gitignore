@@ -1,2 +1,5 @@
 .vscode
 .env
+src/vendor
+Docker*
+docker*

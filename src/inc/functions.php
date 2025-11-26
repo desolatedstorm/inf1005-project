@@ -20,8 +20,21 @@ function getDBEnvVar()
     $db_user = getenv('DB_USER');
     $db_pass = getenv('DB_PASS');
     $db_name = getenv('DB_NAME');
-    return array($db_host, $db_user, $db_pass, $db_name);
+    $stripekey = getenv('STRIPESECRETKEY');
+    return array($db_host, $db_user, $db_pass, $db_name, $stripekey);
 }
+
+function getDBconnection()
+{
+    list($db_host, $db_user, $db_pass, $db_name) = getDBEnvVar();
+    $conn = new mysqli($db_host, $db_user, $db_pass, $db_name);
+
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+    return $conn;
+}
+
 
 // Helper function to write member data to database.
 function saveMemeberToDB() 
@@ -77,9 +90,6 @@ function saveMemeberToDB()
 	}
 }
 
-?>
-
-<?php
 function authenticateUser()
 {
     global $fname, $lname, $email, $pwd, $errorMsg, $success;
@@ -137,4 +147,58 @@ function authenticateUser()
     }
 }
 
-?>
+//helper function to get the right css color for fear factor
+function getBadgeColor($fearLevel)
+{
+    switch ($fearLevel) {
+        case 'Very Scary':
+            return 'bg-dark text-light';
+        case 'Scary':
+            return 'bg-danger';
+        case 'Mildly Scary':
+            return 'bg-warning';
+        case 'Not Scary':
+            return 'bg-success';
+        default:
+            return 'bg-light text-dark';
+    }
+}
+
+//helper function to get the right css color for difficulty factor
+function getDifficultyColor($roomDifficulty)
+{
+    switch ($roomDifficulty) {
+        case 'Very Hard':
+            return 'bg-dark text-light';
+        case 'Hard':
+            return 'bg-danger';
+        case 'Medium':
+            return 'bg-warning text-dark';
+        case 'Easy':
+            return 'bg-success';
+        default:
+            return 'bg-light text-dark';
+    }
+}
+
+//helper function to get the right css color for live-actor factor
+function getExperienceColor($roomExperienceType)
+{
+    switch ($roomExperienceType) {
+        case 'Live Actor':
+            return 'bg-danger';
+        case 'No Live Actor':
+            return 'bg-light text-dark';
+        default:
+            return 'bg-secondary text-dark';
+    }
+}
+
+//helper function to slugify text
+function slugify($text)
+{
+    //replaces all spaces with hyphens
+    $text = str_replace(' ', '-', $text);
+    //and converts to lowercase
+    return strtolower($text);
+}
