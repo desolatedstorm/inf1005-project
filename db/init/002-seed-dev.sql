@@ -42,12 +42,6 @@ UNLOCK TABLES;
 LOCK TABLES `Reviews` WRITE;
 /*!40000 ALTER TABLE `Reviews` DISABLE KEYS */;
 INSERT INTO `Reviews` VALUES 
-(1,5,'Love this! Me and my wife had a great time!','2025-11-16 16:56:51',1,1),
-(2,4,'Great room! The puzzles were challenging but fun. Definitely recommend!','2025-11-17 10:30:00',4,1),
-(3,5,'Amazing experience! The atmosphere was incredibly immersive.','2025-11-18 14:45:00',5,1),
-(4,3,'Good room, but some puzzles were a bit confusing.','2025-11-19 09:15:00',6,1),
-(5,5,'Best escape room I have ever done! The live actor was fantastic!','2025-11-20 18:20:00',1,1),
-(6,4,'Really enjoyed it! Would love to try other rooms.','2025-11-21 11:00:00',4,2);
 /*!40000 ALTER TABLE `Reviews` ENABLE KEYS */;
 UNLOCK TABLES;
 
