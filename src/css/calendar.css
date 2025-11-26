@@ -13,7 +13,7 @@
   height: 100%;
   position: relative;
   margin: 20px auto;
-  background: #bcc3e8;
+  background: #cccccc;
 }
 
 .container {
@@ -50,7 +50,7 @@
   width: 50%;
   float: right;
   display: block;
-  background: #bcc3e8;
+  /* background: #cccccc; */
 }
 @media (max-width: 767.98px) {
   .right-panel {
@@ -95,8 +95,8 @@
 .event-card.timeslot:hover { transform: translateY(-4px); }
 
 .event-card.timeslot.active-timeslot {
-  background: #A855F7;
-  border-color: #A855F7;
+  background: #ff4444;
+  border-color: #ff4444;
 }
 
 .timeslots-container .event-card {
@@ -271,7 +271,7 @@
   transition: .2s ease all;
   color: white;
   border: none;
-  background: #A855F7; }
+  background: #ff4444; }
   .button.button-white {
     background: #fff;
     color: #000; }
@@ -281,7 +281,7 @@
     outline: none; }
 
 #cancel-button {
-  background: #cd4dcc; }
+  background: #ff4444; }
 
 #add-button {
   display: block;
@@ -332,10 +332,14 @@
   position: relative; }
 
 .table-date:not(.nil):hover, img:hover {
-  border-color: #A855F7; }
+  border-color: #ff4444; }
+
+.days-header {
+  color: #ff4444;
+}
 
 .active-date {
-  background: #A855F7;
+  background: #ff4444;
   color: #fff; }
 
 /* input dialog */
@@ -400,7 +404,7 @@
   height: 100%;
   width: 100%;
   padding: 20px;
-  background: #bcc3e8;
+  /* background: #cccccc; */
   border-bottom-right-radius: 3px;
   border-top-right-radius: 3px;
 }
@@ -422,7 +426,7 @@
   font-weight: 600;
   margin-bottom: 20px;
   color: #1a1a1a;
-  border-bottom: 2px solid #A855F7;
+  border-bottom: 2px solid #ff4444;
   padding-bottom: 10px;
 }
 
@@ -447,7 +451,7 @@
 .summary-row.total-row {
   font-weight: 600;
   font-size: 1.2rem;
-  color: #A855F7;
+  color: #ff4444;
   padding-top: 15px;
   margin-top: 5px;
   border-top: 2px solid #dee2e6;
@@ -560,7 +564,7 @@
 }
 
 .btn-primary {
-  background: #A855F7;
+  background: #ff4444;
   color: white;
   border: none;
   padding: 0.65rem 1.9rem;
@@ -571,7 +575,7 @@
 }
 
 .btn-primary:hover {
-  background: #9333ea;
+  background: #ff4444;
 }
 
 /* Bootstrap form control overrides for checkout */
@@ -584,7 +588,7 @@
 }
 
 .checkout-form .form-control:focus {
-  border-color: #A855F7;
+  border-color: #ff4444;
   box-shadow: 0 0 0 0.2rem rgba(168, 85, 247, 0.25);
   outline: none;
 }

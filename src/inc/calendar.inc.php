@@ -22,14 +22,14 @@ $price = $_SESSION['price'] ?? '';
                     <img src="images/next.png" class="right-button fa fa-chevron-right" id="next" alt="next button">
                 </div>
 
-                <table class="table table-bordered table-dark text-center"> 
-                    <td class="table-primary">Sun</td> 
-                    <td class="table-primary">Mon</td> 
-                    <td class="table-primary">Tue</td> 
-                    <td class="table-primary">Wed</td> 
-                    <td class="table-primary">Thu</td> 
-                    <td class="table-primary">Fri</td> 
-                    <td class="table-primary">Sat</td>
+                <table class="table table-bordered table-dark text-center days-header"> 
+                    <td>Sun</td> 
+                    <td>Mon</td> 
+                    <td>Tue</td> 
+                    <td>Wed</td> 
+                    <td>Thu</td> 
+                    <td>Fri</td> 
+                    <td>Sat</td>
                 </table> 
                 
                 <div class="frame"> 
