@@ -18,12 +18,12 @@ $room_name = htmlspecialchars($_GET['name']);
 ?>
 <!doctype html>
 <html lang="en">
-<link rel="icon" type="image/x-icon" href="../images/home.ico">
 
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="Leave a Review" />
+    <link rel="icon" type="image/x-icon" href="../images/home.ico">
 
     <title>Let Us Know Your Thoughts!</title>
     <?php include "inc/head.inc.php"; ?>
