@@ -220,7 +220,7 @@ $conn->close();
 
                                         <h5 class="card-title mt-2"><?php echo htmlspecialchars($room['roomName']); ?></h5>
 
-                                        <a href="room.php?id=<?php echo $room['roomID']; ?>" class="stretched-link"></a>
+                                        <a href="room.php?name=<?php echo urlencode($room['roomName']); ?>" class="stretched-link"></a></a>
                                     </div>
                                 </div>
                             </div>
