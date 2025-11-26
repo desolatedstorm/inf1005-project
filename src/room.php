@@ -133,7 +133,7 @@ if (isset($_GET['name'])) {
                 <h2>What Our Customers Say</h2>
             
                 <?php
-                $reviews = getRoomReviews($room_id);
+                $reviews = getRoomReviews($room_name);
                 
                 if (count($reviews) > 0):
                 ?>

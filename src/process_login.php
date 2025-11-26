@@ -1,6 +1,6 @@
 <?php
-	require_once "inc/secure_session_start.php";
-	require_once "login_functions.php";
+	require_once __DIR__ . "/inc/secure_session_start.php";
+	require_once __DIR__ . "/login_functions.php";
 	
 	$errorMsg = "";
 	$success = true;
@@ -56,7 +56,7 @@
 				$_SESSION["user_id"] = $user["userID"];
 				$_SESSION['email'] = $user['email'];
 				$_SESSION["username"] = $user["username"];
-				
+				$_SESSION["is_admin"] = $user["is_admin"];
 				// Regenerate session ID to prevent session fixation attacks
 				session_regenerate_id(true);
 

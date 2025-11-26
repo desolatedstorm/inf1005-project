@@ -529,77 +529,10 @@ function deleteUserAccount(int $user_id): array
     }
 }
 
-// Confirmation email for registering
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
-use PHPMailer\PHPMailer\SMTP;
-
-require_once __DIR__ . '/vendor/phpmailer/phpmailer/src/Exception.php';
-require_once __DIR__ . '/vendor/phpmailer/phpmailer/src/PHPMailer.php';
-require_once __DIR__ . '/vendor/phpmailer/phpmailer/src/SMTP.php';
 
 function sendConfirmationEmail($email, $username) {
-	// require_once __DIR__ . '/vendor/autoload.php';
-	// if (!file_exists(__DIR__ . '/src/vendor/autoload.php')) {
-	// 	die('Error: autoload.php not found at ' . __DIR__ . '/src/vendor/autoload.php');
-	// }
+	
 
-    $mail = new PHPMailer(true);
-    $sender_email = 'sender email';
-    try {
-        // -----------------------------
-        // OUTLOOK SMTP CONFIG
-        // -----------------------------
-        $mail->SMTPDebug = 2;
-        $mail->Debugoutput = 'html';
-        $mail->isSMTP();
-        $mail->Host       = 'host'; // im using my outlook account
-        $mail->SMTPAuth   = true;
-        $mail->Username   = $sender_email;   // your sender email
-        $mail->Password   = 'password';           // email or app password
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port       = 587;
-
-
-        // -----------------------------
-        // EMAIL HEADERS
-        // -----------------------------
-        $mail->setFrom($sender_email, 'Escape Quest');  
-        $mail->addAddress($email, $username);
-
-        // -----------------------------
-        // MESSAGE CONTENT
-        // -----------------------------
-        $mail->isHTML(true);
-        $mail->Subject = "Welcome to Escape Quest!";
-        $mail->Body    = "
-            Hi <strong>$username</strong>,<br><br>
-            Thank you for registering at <strong>Escape Quest</strong>!<br>
-            Your account has been created successfully.<br><br>
-            You can now log in and start booking our escape rooms.<br><br>
-            <em>See you soon!</em><br>
-        ";
-
-        $mail->AltBody = "Hi $username, \n\nThank you for registering at Escape Quest! Your account has been created.";
-
-        // -----------------------------
-        // SEND
-        // -----------------------------
-        try {
-            $mail->send();
-            return "success";
-        }
-        catch (Exception $e) {
-            return $e->getMessage();
-        }
-        
-        return true;
-
-    } catch (Exception $e) {
-        // Log errors somewhere safe later
-        error_log("Email Error: " . $mail->ErrorInfo);
-        return false;
-    }
 }
 
 // function testPHPMailerLoad() {
