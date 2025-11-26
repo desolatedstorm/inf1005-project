@@ -117,8 +117,7 @@ if (isset($_GET['name'])) {
                             <li>Rating: ★<?php echo $avg_rating; ?> (<?php echo $review_count; ?> reviews)</li>
                         </ul>
 
-                        <!-- leave this as it is for now there is a js function that opens this -->
-                        <!-- also copy this to the other pages -->
+                        <!-- booking popup button -->
                         <button type="button" id="openPopup" name="openPopup" class="book-btn">Book Now</button>
 
                         <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true): ?>
@@ -127,29 +126,6 @@ if (isset($_GET['name'])) {
 
                         <p class="cancellation-note">Free cancellation up to 24 hours before</p>
                     </div>
-                </div>
-
-
-                <div class="pricing-card">
-                    <div class="price-label">From</div>
-                    <div class="price"> $<?php echo $room['roomPriceOffPeak']?></div>
-                    <div style="color: #666; font-size: 0.9rem; margin-bottom: 1rem;">/person</div>
-
-                    <ul class="price-details">
-                        <li><?php echo $room['roomDuration']?> minutes </li>
-                        <li><?php echo $room['roomMin'] . '-' . $room['roomMax']; ?> players</li>
-                        <li>Rating: ★<?php echo $avg_rating; ?> (<?php echo $review_count; ?> reviews)</li>
-                    </ul>
-
-                    <!-- leave this as it is for now there is a js function that opens this -->
-                    <!-- also copy this to the other pages -->
-                    <button type="button" id="openPopup" name="openPopup" class="book-btn">Book Now</button>
-
-                    <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true): ?>
-                    <a href="reviews_page.php?room_id=<?php echo $room_id; ?>" class="rating-btn" style="text-decoration: none; display: block; text-align: center;">Rate Our Services</a>
-                    <?php endif; ?>
-
-                    <p class="cancellation-note">Free cancellation up to 24 hours before</p>
                 </div>
             </div>
 
