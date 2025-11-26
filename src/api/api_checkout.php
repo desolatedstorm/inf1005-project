@@ -3,10 +3,10 @@ session_start();
 header('Content-Type: application/json');
 
 require_once __DIR__ . "/../vendor/autoload.php";
-require_once __DIR__ . "/../inc/login_functions.php";
+require_once __DIR__ . "/../inc/functions.php";
+require_once __DIR__ . '/api_send_email.php';
 
 list($db_host, $db_user, $db_pass, $db_name, $stripekey) = getDBEnvVar();
-$sendgrid = getenv("SENDGRIDKEY");
 
 $success = true;
 $messages = '';
@@ -215,7 +215,59 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $user_email = $user_result['email'];
             $cancel_link = "https://escapify.net/cancel_booking.php?token=" . $cancel_token;
             
-            send_email($ref, $date, $time, $pax, $subtotal, $cancel_link, $user_email, $sendgrid);
+            // Create plain text version
+            $message = "Your booking has been confirmed!\n\n";
+            $message .= "Booking Ref: $booking_ref\n";
+            $message .= "Date: $date\n";
+            $message .= "Time: $time\n";
+            $message .= "Players: $pax\n";
+            $message .= "Total: $$subtotal\n\n";
+            $message .= "Need to cancel? Click here: " . $cancel_link;
+                
+            // Create HTML version (looks better in email clients)
+            $html_message = "
+            <html>
+            <body style='font-family: Arial, sans-serif; line-height: 1.6; color: #333;'>
+                <div style='max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px;'>
+                    <h2 style='color: #4CAF50;'>Booking Confirmed! ✓</h2>
+                    <p>Your booking has been confirmed. Here are your details:</p>
+                
+                    <table style='width: 100%; margin: 20px 0; border-collapse: collapse;'>
+                        <tr style='background-color: #f9f9f9;'>
+                            <td style='padding: 10px; border: 1px solid #ddd;'><strong>Booking Ref:</strong></td>
+                            <td style='padding: 10px; border: 1px solid #ddd;'>$booking_ref</td>
+                        </tr>
+                        <tr>
+                            <td style='padding: 10px; border: 1px solid #ddd;'><strong>Date:</strong></td>
+                            <td style='padding: 10px; border: 1px solid #ddd;'>$date</td>
+                        </tr>
+                        <tr style='background-color: #f9f9f9;'>
+                            <td style='padding: 10px; border: 1px solid #ddd;'><strong>Time:</strong></td>
+                            <td style='padding: 10px; border: 1px solid #ddd;'>$time</td>
+                        </tr>
+                        <tr>
+                            <td style='padding: 10px; border: 1px solid #ddd;'><strong>Players:</strong></td>
+                            <td style='padding: 10px; border: 1px solid #ddd;'>$pax</td>
+                        </tr>
+                        <tr style='background-color: #f9f9f9;'>
+                            <td style='padding: 10px; border: 1px solid #ddd;'><strong>Total:</strong></td>
+                            <td style='padding: 10px; border: 1px solid #ddd;'><strong>$$subtotal</strong></td>
+                        </tr>
+                    </table>
+                
+                    <p style='margin-top: 30px;'>Need to cancel your booking?</p>
+                    <a href='$cancel_link' style='display: inline-block; padding: 12px 24px; background-color: #f44336; color: white; text-decoration: none; border-radius: 4px; margin-top: 10px;'>Cancel Booking</a>
+                    <p style='margin-top: 30px; font-size: 12px; color: #666;'>
+                        Note: Cancellations must be made at least 24 hours before booking.<br>
+                        We look forward to seeing you!<br>
+                        If you have any questions, please contact us.
+                    </p>
+                </div>
+            </body>
+            </html>
+            ";
+
+            send_email($message, $html_message, $user_email);
         }
         catch (Exception $e) {
             echo json_encode(array(
@@ -251,85 +303,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 function generateBookingRef() {
     return strtoupper(substr(base_convert(bin2hex(random_bytes(4)), 16, 36), 0, 8));
-}
-
-function send_email($booking_ref, $date, $time, $pax, $subtotal, $cancel_link, $user_email, $API_KEY){
-
-    // Create plain text version
-    $message = "Your booking has been confirmed!\n\n";
-    $message .= "Booking Ref: $booking_ref\n";
-    $message .= "Date: $date\n";
-    $message .= "Time: $time\n";
-    $message .= "Players: $pax\n";
-    $message .= "Total: $$subtotal\n\n";
-    $message .= "Need to cancel? Click here: " . $cancel_link;
-
-    // Create HTML version (looks better in email clients)
-    $html_message = "
-    <html>
-    <body style='font-family: Arial, sans-serif; line-height: 1.6; color: #333;'>
-        <div style='max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px;'>
-            <h2 style='color: #4CAF50;'>Booking Confirmed! ✓</h2>
-            <p>Your booking has been confirmed. Here are your details:</p>
-
-            <table style='width: 100%; margin: 20px 0; border-collapse: collapse;'>
-                <tr style='background-color: #f9f9f9;'>
-                    <td style='padding: 10px; border: 1px solid #ddd;'><strong>Booking Ref:</strong></td>
-                    <td style='padding: 10px; border: 1px solid #ddd;'>$booking_ref</td>
-                </tr>
-                <tr>
-                    <td style='padding: 10px; border: 1px solid #ddd;'><strong>Date:</strong></td>
-                    <td style='padding: 10px; border: 1px solid #ddd;'>$date</td>
-                </tr>
-                <tr style='background-color: #f9f9f9;'>
-                    <td style='padding: 10px; border: 1px solid #ddd;'><strong>Time:</strong></td>
-                    <td style='padding: 10px; border: 1px solid #ddd;'>$time</td>
-                </tr>
-                <tr>
-                    <td style='padding: 10px; border: 1px solid #ddd;'><strong>Players:</strong></td>
-                    <td style='padding: 10px; border: 1px solid #ddd;'>$pax</td>
-                </tr>
-                <tr style='background-color: #f9f9f9;'>
-                    <td style='padding: 10px; border: 1px solid #ddd;'><strong>Total:</strong></td>
-                    <td style='padding: 10px; border: 1px solid #ddd;'><strong>$$subtotal</strong></td>
-                </tr>
-            </table>
-
-            <p style='margin-top: 30px;'>Need to cancel your booking?</p>
-            <a href='$cancel_link' style='display: inline-block; padding: 12px 24px; background-color: #f44336; color: white; text-decoration: none; border-radius: 4px; margin-top: 10px;'>Cancel Booking</a>
-            <p style='margin-top: 30px; font-size: 12px; color: #666;'>
-                Note: Cancellations must be made at least 24 hours before booking.<br>
-                We look forward to seeing you!<br>
-                If you have any questions, please contact us.
-            </p>
-        </div>
-    </body>
-    </html>
-    ";
-
-    // Send with SendGrid
-    $email = new \SendGrid\Mail\Mail();
-    $email->setFrom("noreply@escapify.net", "Escapify");
-    $email->setReplyTo("support@escapify.net", "Escapify Support");
-    $email->setSubject("Booking Confirmation - Escapify");
-    $email->addTo($user_email);
-    $email->addContent("text/plain", $message);
-    $email->addContent("text/html", $html_message);
-
-    $sendgrid = new \SendGrid(trim($API_KEY));
-
-    try {
-        $response = $sendgrid->send($email);
-
-        if ($response->statusCode() == 202) {
-            // Email sent successfully
-            //echo "Confirmation email sent!";
-        } else {
-            // Log the error
-            error_log("SendGrid error: " . $response->statusCode() . " - " . $response->body());
-        }
-    } catch (Exception $e) {
-        error_log("SendGrid exception: " . $e->getMessage());
-    }
 }
 ?>
