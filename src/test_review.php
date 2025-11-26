@@ -50,8 +50,10 @@ echo "</pre>";
 
 echo "<h3>Now you can:</h3>";
 echo "<ul>";
-echo "<li><a href='room.php?id=1'>Go to Room 1 and test rating</a></li>";
+echo "<li><a href='room.php?name=The Cursed Cabin'>Go to Room 1 (The Cursed Cabin) and test rating</a></li>";
+echo "<li><a href='room.php?name=Asylum'>Go to Room 2 (Asylum) and test rating</a></li>";
 echo "<li><a href='reviews_page.php?room_id=1'>Go directly to review page for Room 1</a></li>";
+echo "<li><a href='reviews_page.php?room_id=2'>Go directly to review page for Room 2</a></li>";
 echo "<li><a href='index.php'>Go to home page</a></li>";
 echo "</ul>";
 

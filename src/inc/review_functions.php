@@ -1,11 +1,11 @@
 <?php
 // get average rating for a specific room 
-function getAverageRating($room_name) {
+function getAverageRating($room_id) {
     require_once __DIR__ . "/functions.php";
     $conn = getDBconnection();
     
-    $stmt = $conn->prepare("SELECT AVG(rating) as avg_rating, COUNT(*) as review_count FROM Reviews R JOIN Rooms M ON R.Rooms_roomID = M.roomID WHERE M.roomName = ?");
-    $stmt->bind_param("s", $room_name);
+    $stmt = $conn->prepare("SELECT AVG(rating) as avg_rating, COUNT(*) as review_count FROM Reviews WHERE Rooms_roomID = ?");
+    $stmt->bind_param("i", $room_id);
     $stmt->execute();
     $result = $stmt->get_result();
     
@@ -22,12 +22,12 @@ function getAverageRating($room_name) {
 }
 
 // Get number of reviews for a specific room
-function getReviewCount($room_name) {
+function getReviewCount($room_id) {
     require_once __DIR__ . "/functions.php";
     $conn = getDBconnection();
     
-    $stmt = $conn->prepare("SELECT COUNT(*) as review_count FROM Reviews R JOIN Rooms M ON R.Rooms_roomID = M.roomID WHERE M.roomName = ?");
-    $stmt->bind_param("s", $room_name);
+    $stmt = $conn->prepare("SELECT COUNT(*) as review_count FROM Reviews WHERE Rooms_roomID = ?");
+    $stmt->bind_param("i", $room_id);
     $stmt->execute();
     $result = $stmt->get_result();
     
@@ -44,18 +44,17 @@ function getReviewCount($room_name) {
 }
 
 // Get all reviews for a specific room
-function getRoomReviews($room_name) {
+function getRoomReviews($room_id) {
     require_once __DIR__ . "/functions.php";
     $conn = getDBconnection();
     
     $stmt = $conn->prepare("SELECT r.*, u.username, u.email 
             FROM Reviews r 
             JOIN Users u ON r.Users_userID = u.userID 
-            JOIN Rooms rm ON r.Rooms_roomID = rm.roomID
-            WHERE rm.roomName = ? 
+            WHERE r.Rooms_roomID = ? 
             ORDER BY r.created_at DESC");
 
-    $stmt->bind_param("s", $room_name);
+    $stmt->bind_param("i", $room_id);
     $stmt->execute();
     $result = $stmt->get_result();
     

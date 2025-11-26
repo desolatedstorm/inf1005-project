@@ -22,9 +22,10 @@ if (isset($_GET['name'])) {
 
     if ($result->num_rows > 0) {
         $room = $result->fetch_assoc();
+        $room_id = $room['roomID'];
 
         // store in session for booking page
-        $_SESSION['room_id'] = $room['roomID'];
+        $_SESSION['room_id'] = $room_id;
         $_SESSION['room_name'] = $room_name;
         $_SESSION['desc'] = $room['roomDescription'];
         $_SESSION['min'] = $room['roomMin'];
