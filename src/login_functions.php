@@ -278,7 +278,7 @@ function authenticateUser($email, $password) {
     try {
         $conn = new mysqli($db_host, $db_user, $db_pass, $db_name);
 
-        $stmt = $conn->prepare("SELECT userID, username, email, passwordhash FROM Users WHERE email = ?");
+        $stmt = $conn->prepare("SELECT userID, username, email, passwordhash, is_admin FROM Users WHERE email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -292,7 +292,6 @@ function authenticateUser($email, $password) {
 
         $stmt->close();
         $conn->close();
-		
         if (password_verify($password, $user['passwordhash'])) {
 			//unset($user['passwordhash']);
 		
