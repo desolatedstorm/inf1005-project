@@ -14,6 +14,14 @@
     <div class="collapse navbar-collapse" id="navbarsExample11">
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
         <?php if (isset($_SESSION['user_id'])): ?>
+
+          <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] == 1): ?>
+            <li class="nav-item">
+                <!-- Using btn-danger (Red) to make it distinct from normal user buttons -->
+                <a class="nav-link btn btn-danger text-white mx-1" href="delete_room.php">Admin Panel</a>
+            </li>
+          <?php endif; ?>
+          
           <?php 
           // Check if current page is manage_account.php
           $current_page = basename($_SERVER['PHP_SELF']);
