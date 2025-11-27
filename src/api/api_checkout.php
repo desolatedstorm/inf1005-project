@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // ===========================
     // 1. VALIDATE INPUT DATA
     // ===========================
-    $user_id = $_SESSION['user-id'] ?? 7;
+    $user_id = $_SESSION['user_id'] ?? 7;
     if (!$user_id || $user_id <= 0) {
         $success = false;
         $messages .= 'Invalid user ID. ';
@@ -217,7 +217,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             // Create plain text version
             $message = "Your booking has been confirmed!\n\n";
-            $message .= "Booking Ref: $booking_ref\n";
+            $message .= "Booking Ref: $ref\n";
             $message .= "Date: $date\n";
             $message .= "Time: $time\n";
             $message .= "Players: $pax\n";
@@ -235,7 +235,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <table style='width: 100%; margin: 20px 0; border-collapse: collapse;'>
                         <tr style='background-color: #f9f9f9;'>
                             <td style='padding: 10px; border: 1px solid #ddd;'><strong>Booking Ref:</strong></td>
-                            <td style='padding: 10px; border: 1px solid #ddd;'>$booking_ref</td>
+                            <td style='padding: 10px; border: 1px solid #ddd;'>$ref</td>
                         </tr>
                         <tr>
                             <td style='padding: 10px; border: 1px solid #ddd;'><strong>Date:</strong></td>
@@ -284,7 +284,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ));
 
         } catch (Exception $e) {
+            echo json_encode(array(
+                'success' => false,
+                'message' => "Email error: " . $e->getMessage()
+            ));
             error_log("Email Error: " . $e->getMessage());
+            
         }
 
      catch (Exception $e) {
