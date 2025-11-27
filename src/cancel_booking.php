@@ -48,6 +48,7 @@ if (!$token || !preg_match('/^[a-f0-9]{64}$/', $token)) {
             if (!$booking) {
                 $error = "This booking cannot be cancelled or has already been cancelled.";
             } else {
+                $username = $booking['username'];
                 // Check if booking time has passed
                 $booking_datetime = $booking['bookingDate'] . ' ' . $booking['bookingTimeslot'];
                 $booking_timestamp = strtotime($booking_datetime);
@@ -100,8 +101,8 @@ if (!$token || !preg_match('/^[a-f0-9]{64}$/', $token)) {
                         $conn->commit();
 
                         // Format date and time
-                        $formatted_time = formatTime($time);
-                        $formatted_date = date('l, F j, Y', strtotime($date));
+                        $formatted_time = formatTime($booking['bookingTimeslot']);
+                        $formatted_date = date('l, F j, Y', strtotime($booking['bookingDate']));
 
                         // Prepare refund text for plain text and HTML
                         if ($refund_amt > 0) {
@@ -118,9 +119,9 @@ if (!$token || !preg_match('/^[a-f0-9]{64}$/', $token)) {
                         // Plain text message
                         // ---------------------------
                         $message = "Booking Cancelled\n\n";
-                        $message .= "Hi {$name},\n\n";
+                        $message .= "Hi {$username},\n\n";
                         $message .= "Your booking has been successfully cancelled. Here are the details:\n\n";
-                        $message .= "Room: {$room}\n";
+                        $message .= "Room: {$booking['roomName']}\n";
                         $message .= "Date: {$formatted_date}\n";
                         $message .= "Time: {$formatted_time}\n\n";
                         $message .= $refund_text . "\n";
@@ -149,10 +150,10 @@ if (!$token || !preg_match('/^[a-f0-9]{64}$/', $token)) {
                                     <h1>Booking Cancelled</h1>
                                 </div>
                                 <div class='content'>
-                                    <p>Hi {$name},</p>
+                                    <p>Hi {$username},</p>
                                     <p>Your booking has been successfully cancelled. Here are the details:</p>
                                     <div class='booking-details'>
-                                        <p><strong>Room:</strong> {$room}</p>
+                                        <p><strong>Room:</strong> {$booking['roomName']}</p>
                                         <p><strong>Date:</strong> {$formatted_date}</p>
                                         <p><strong>Time:</strong> {$formatted_time}</p>
                                     </div>

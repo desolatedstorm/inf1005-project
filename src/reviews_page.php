@@ -8,22 +8,22 @@ exit();
 }
 
 
-// Get room ID from URL
-if (!isset($_GET['room_id'])) {
+// Get room name from URL
+if (!isset($_GET['name'])) {
     header("Location: index.php");
     exit();
 }
 
-$room_id = (int)$_GET['room_id'];
+$room_name = htmlspecialchars($_GET['name']);
 ?>
 <!doctype html>
 <html lang="en">
-<link rel="icon" type="image/x-icon" href="../images/home.ico">
 
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="Leave a Review" />
+    <link rel="icon" type="image/x-icon" href="../images/home.ico">
 
     <title>Let Us Know Your Thoughts!</title>
     <?php include "inc/head.inc.php"; ?>
@@ -59,7 +59,7 @@ $room_id = (int)$_GET['room_id'];
         <p class="text-white">Your email address will not be published. Required fields are marked *</p>
 
         <form action="process_review.php" method="POST" class="mt-4">
-            <input type="hidden" name="room_id" value="<?php echo $room_id; ?>">
+            <input type="hidden" name="room_name" value="<?php echo $room_name; ?>">
             
             <div class="mb-4">
                 <label class="form-label">Rating *</label>
@@ -88,7 +88,7 @@ $room_id = (int)$_GET['room_id'];
             </div>
 
             <button type="submit" class="btn btn-primary">Submit Review</button>
-            <a href="room.php?id=<?php echo $room_id; ?>" class="btn btn-secondary">Cancel</a>
+            <a href="room.php?name=<?php echo urlencode($room_name); ?>" class="btn btn-secondary">Cancel</a>
         </form>
     </main>
 
