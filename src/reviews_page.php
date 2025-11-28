@@ -28,27 +28,7 @@ $room_name = htmlspecialchars($_GET['name']);
     <title>Let Us Know Your Thoughts!</title>
     <?php include "inc/head.inc.php"; ?>
     <link href="css/style.css" rel="stylesheet" />
-    <style>
-        .star-rating {
-            direction: rtl;
-            display: inline-flex;
-            font-size: 2rem;
-            gap: 0.25rem;
-        }
-        .star-rating input[type="radio"] {
-            display: none;
-        }
-        .star-rating label {
-            color: #ddd;
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-        .star-rating label:hover,
-        .star-rating label:hover ~ label,
-        .star-rating input[type="radio"]:checked ~ label {
-            color: #ffc107;
-        }
-    </style>
+    <link href="css/rating.css?v=<?php echo time(); ?>" rel="stylesheet" />
 </head>
 
 <body>

@@ -6,9 +6,12 @@
       https://js.stripe.com https://cdn.jsdelivr.net 
       https://cdnjs.cloudflare.com
       https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js 
-      https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js; 
+      https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js
+      https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015;
       frame-src 'self' https://js.stripe.com https://hooks.stripe.com; 
       connect-src 'self' https://api.stripe.com;">
+
+<link rel="icon" type="image/x-icon" href="../images/home.ico">
 
 <!-- CSS -->
 <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
