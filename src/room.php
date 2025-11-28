@@ -53,6 +53,7 @@ if (isset($_GET['name'])) {
     <title><?php echo $room ? htmlspecialchars($room['roomName']) : 'Room Not Found' ?></title>
     <?php include "inc/head.inc.php" ?>
     <link rel="stylesheet" href="css/rooms.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="css/rating.css?v=<?php echo time(); ?>">
     <link rel="preload" href="css/popup.css" as="style">
     <link rel="stylesheet" href="css/popup.css">
     <script defer src="js/popup.js"></script>

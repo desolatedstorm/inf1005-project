@@ -192,15 +192,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <!doctype html>
 <html lang="en">
-<link rel="icon" type="image/x-icon" href="images/home.ico">
 
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Member Registration" />
+    <link rel="icon" type="image/x-icon" href="images/home.ico">
+    <meta name="description" content="Member Registration">
     <title>Member Registration</title>
     <?php include "inc/head.inc.php"; ?>
-    <link href="css/sign-in.css" rel="stylesheet" />
+    <link href="css/sign-in.css" rel="stylesheet">
     <style>
         .form-control.is-invalid {
             border-color: #dc3545;
@@ -241,7 +239,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <?php include "inc/nav.inc.php"; ?>
     <main>
         <form class="form-signin" method="post" novalidate>
-            <img class="mb-4" src="../images/home.png" alt="Logo" width="72" height="57" />
+            <img class="mb-4" src="../images/home.png" alt="Logo" width="72" height="57">
             <h1 class="h3 mb-3 fw-normal">Member Registration</h1>
 
             <?php if ($success === true): ?>
@@ -263,22 +261,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <?php if ($success !== true): ?>
             <div class="form-floating mb-2">
                 <input type="text" name="username" class="form-control" id="floatingUsername" 
-                       placeholder="Username" value="<?= htmlspecialchars($username) ?>" required />
+                       placeholder="Username" value="<?= htmlspecialchars($username) ?>" required>
                 <label for="floatingUsername">Username</label>
             </div>
             <div class="requirements">
-                <small>
+                <div class="text-muted small">
                     <strong>Username must:</strong>
                     <ul>
                         <li>Be 3-20 characters long</li>
                         <li>Contain only letters, numbers, and underscores</li>
                     </ul>
-                </small>
+                </div>
             </div>
 
             <div class="form-floating mb-2">
                 <input type="email" name="email" class="form-control" id="floatingEmail" 
-                       placeholder="Email" value="<?= htmlspecialchars($email) ?>" required />
+                       placeholder="Email" value="<?= htmlspecialchars($email) ?>" required>
                 <label for="floatingEmail">Email address</label>
             </div>
             <div class="requirements mb-3">
@@ -287,11 +285,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             <div class="form-floating mb-2">
                 <input type="password" name="password" class="form-control" id="floatingPassword" 
-                       placeholder="Password" required />
+                       placeholder="Password" required>
                 <label for="floatingPassword">Password</label>
             </div>
             <div class="requirements" id="passwordRequirements">
-                <small>
+                <div class="text-muted small">
                     <strong>Password must contain:</strong>
                     <ul>
                         <li id="req-length" class="requirement-unmet">At least 8 characters</li>
@@ -300,17 +298,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <li id="req-number" class="requirement-unmet">One number (0-9)</li>
                         <li id="req-special" class="requirement-unmet">One special character (!@#$%^&*...)</li>
                     </ul>
-                </small>
+                </div>
             </div>
 
             <div class="form-floating mb-3">
                 <input type="password" name="password_confirm" class="form-control" id="floatingPasswordConfirm" 
-                       placeholder="Confirm Password" required />
+                       placeholder="Confirm Password" required>
                 <label for="floatingPasswordConfirm">Confirm Password</label>
             </div>
 
             <div class="form-check text-start my-3">
-                <input type="checkbox" name="agree" class="form-check-input" id="checkTerms" required />
+                <input type="checkbox" name="agree" class="form-check-input" id="checkTerms" required>
                 <label class="form-check-label" for="checkTerms">
                     I agree to terms and conditions.
                 </label>
