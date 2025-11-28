@@ -61,7 +61,7 @@ if (isset($_GET['name'])) {
 <body>
     <?php include "inc/nav.inc.php" ?>
 
-    <main class="page-content">
+    <main class="page-content" title="Rooms">
         <div class="container">
             <a href="index.php" class="back-link">← Back to Home</a>
 
@@ -84,10 +84,10 @@ if (isset($_GET['name'])) {
                             <span class="badge bg-light text-dark"><?php echo htmlspecialchars($room['roomGenre']) ?></span>
                         </div>
 
-                        <h3>About This Room</h3>
+                        <h2>About This Room</h2>
                         <p><?php echo htmlspecialchars($room['roomDescription']) ?></p>
                         <hr>
-                        <h4>What to Expect</h4>
+                        <h3>What to Expect</h3>
                         <ul>
                             <li>Immersive storyline and detailed set design</li>
                             <li>Challenging puzzles that require teamwork</li>
@@ -95,7 +95,7 @@ if (isset($_GET['name'])) {
                             <li>Photo opportunities after completion</li>
                         </ul>
 
-                        <h3>Important Information</h3>
+                        <h4>Important Information</h4>
                         <ul>
                             <li>Please arrive 10 minutes before your scheduled time</li>
                             <li>Late arrivals may result in reduced game time</li>
@@ -187,10 +187,10 @@ if (isset($_GET['name'])) {
             </div>
         </div>
         <!-- booking pop up -->
-        <div id="modal" class="modal">
+        <div id="modal" class="modal" tabindex="0">
             <div class="modal-content">
                 <span class="close">&times;</span>
-                <iframe id="popupFrame" src="about:blank"></iframe>
+                <iframe id="popupFrame" src="about:blank" title="booking pop up"></iframe>
             </div>
         </div>
 
