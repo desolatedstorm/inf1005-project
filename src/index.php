@@ -185,7 +185,7 @@ $conn->close();
                                 data-title="<?php echo htmlspecialchars($room['roomName']); ?>">
 
                                 <div class="card">
-                                    <img src="<?php echo htmlspecialchars($room['imagePath'] ?? '/images/placeholder.png'); ?>"
+                                    <img src="<?php echo htmlspecialchars(str_replace(' ', '%20', $room['imagePath'] ?? '/images/placeholder.png')); ?>"
                                         class="card-img-top" alt="<?php echo htmlspecialchars($room['roomName']); ?>">
 
 

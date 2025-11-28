@@ -66,11 +66,11 @@ if (isset($_GET['name'])) {
             <a href="index.php" class="back-link">← Back to Home</a>
 
             <?php if ($room): ?>
-                <img src="<?php echo htmlspecialchars($room['imagePath'] ?? '/images/placeholder.png'); ?>"
+                <img src="<?php echo htmlspecialchars(str_replace(' ', '%20', $room['imagePath'] ?? '/images/placeholder.png')); ?>"
                     alt="<?php echo htmlspecialchars($room['roomName']) ?>" class="room-hero">
 
                 <div class="thumbnail-gallery">
-                    <img src="<?php echo htmlspecialchars($room['imagePath'] ?? '/images/placeholder.png'); ?>" alt="Thumbnail 1" class="active" onclick="changeHeroImage(this.src)">
+                    <img src="<?php echo htmlspecialchars(str_replace(' ', '%20', $room['imagePath'] ?? '/images/placeholder.png')); ?>" alt="Thumbnail 1" class="active" onclick="changeHeroImage(this.src)">
                 </div>
 
                 <div class="room-content">
