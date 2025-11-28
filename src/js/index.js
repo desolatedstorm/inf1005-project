@@ -82,32 +82,105 @@ function filterRooms() {
         }
     });
 
-    const roomContainer = document.getElementById('roomContainer');
-    const noResultsDiv = document.getElementById('noResultsMessage');
-
-    // attempting to make it so that the page wont abruptly move upwards when no matches found with the filter
-    // not really working
-    if (visibleCount === 0) {
-        // Hide the room cards (in case they were not fully filtered out) and show the message
-        if (roomContainer) {
-             roomContainer.style.display = 'none'; 
-        }
-        if (noResultsDiv) {
-            noResultsDiv.style.display = 'block';
-        }
-    } else {
-        // Show the room cards and hide the message
-        if (roomContainer) {
-            roomContainer.style.display = 'flex'; // Use 'flex' or 'block' based on your CSS row setting
-        }
-        if (noResultsDiv) {
-            noResultsDiv.style.display = 'none';
-        }
-    }
-
     //update the "Showing {num} rooms" text
     const roomCountText = document.querySelector('.text-center.my-4 p');
     if (roomCountText) {
         roomCountText.textContent = `Showing ${visibleCount} room${visibleCount !== 1 ? 's' : ''}`;
     }
 }
+
+
+/*
+* this function is used to filter the room listings
+*/
+function filterTable() {
+
+  const input = document.getElementById("adminSearchInput");
+  const filter = input.value.toUpperCase();
+
+
+  const table = document.getElementById("roomsTable");
+  const tableBody = table.getElementsByTagName("tbody")[0];
+  const rows = tableBody.getElementsByTagName("tr");
+  const noResults = document.getElementById("noAdminResults");
+
+  let visibleCount = 0;
+
+
+  for (let i = 0; i < rows.length; i++) {
+    const idCell = rows[i].getElementsByTagName("td")[0];
+    const nameCell = rows[i].getElementsByTagName("td")[2];
+
+    if (nameCell && idCell) {
+      const nameText = nameCell.textContent || nameCell.innerText;
+      const idText = idCell.textContent || idCell.innerText;
+
+      // check for matches
+      if (nameText.toUpperCase().indexOf(filter) > -1 || idText.toUpperCase().indexOf(filter) > -1) {
+        rows[i].style.display = ""; // show
+        visibleCount++;
+      } else {
+        rows[i].style.display = "none"; // hide
+      }
+    }
+  }
+
+  // "no results" message
+  if (visibleCount === 0) {
+    noResults.style.display = "block";
+    // aria 
+    noResults.setAttribute("aria-hidden", "false");
+  } else {
+    table.style.display = "table";
+    noResults.style.display = "none";
+    noResults.setAttribute("aria-hidden", "true");
+  }
+}
+
+
+/*
+* this function is used in create_room and edit_room to check their logic
+*/
+document.addEventListener("DOMContentLoaded", function () {
+
+  // select the first form on the page (works for create and edit pages)
+  const form = document.querySelector('form');
+
+  if (form) {
+    form.addEventListener('submit', function (e) {
+      let errorList = [];
+
+      const minEl = form.querySelector('[name="roomMin"]');
+      const maxEl = form.querySelector('[name="roomMax"]');
+      const offEl = form.querySelector('[name="roomPriceOffpeak"]');
+      const peakEl = form.querySelector('[name="roomPricePeak"]');
+
+      const min = minEl ? parseInt(minEl.value) || 0 : 0;
+      const max = maxEl ? parseInt(maxEl.value) || 0 : 0;
+      const priceOff = offEl ? parseFloat(offEl.value) || 0 : 0;
+      const pricePeak = peakEl ? parseFloat(peakEl.value) || 0 : 0;
+
+      // logic checks
+
+      // check Min vs Max players
+      if (min > max) {
+        errorList.push("Invalid Players: Minimum (" + min + ") cannot be greater than Maximum (" + max + ").");
+      }
+
+      // check prices non-negative
+      if (priceOff < 0 || pricePeak < 0) {
+        errorList.push("Invalid Price: Prices cannot be negative.");
+      }
+
+      // check Price when Peak vs Off-Peak
+      if (priceOff > pricePeak) {
+        errorList.push("Invalid Price: Off-Peak ($" + priceOff + ") should be lower than Peak ($" + pricePeak + ").");
+      }
+
+      if (errorList.length > 0) {
+        e.preventDefault(); // stop submission of form
+        alert(errorList.join("\n")); // show errors
+      }
+    });
+  }
+});

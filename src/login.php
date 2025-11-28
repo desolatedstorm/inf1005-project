@@ -85,16 +85,12 @@ ob_end_flush();
 <html lang="en">
 
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Member Login" />
+    <meta name="description" content="Member Login">
     
     <title>Member Login</title>
     
-    <link rel="icon" type="image/x-icon" href="images/home.ico">
-    
     <?php include "inc/head.inc.php"; ?>
-    <link href="css/sign-in.css" rel="stylesheet" />
+    <link href="css/sign-in.css" rel="stylesheet">
     
     <style>
         html,
@@ -136,7 +132,7 @@ ob_end_flush();
     
     <main>
         <form class="form-signin" method="POST" novalidate>
-            <img class="mb-4" src="../images/home.png" alt="Logo" width="72" height="57" />
+            <img class="mb-4" src="../images/home.png" alt="Logo" width="72" height="57">
             
             <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
             
@@ -150,13 +146,13 @@ ob_end_flush();
             <div class="form-floating mb-2">
                 <input type="email" class="form-control" name="email" id="floatingInput" 
                        value="<?= htmlspecialchars($email) ?>" required placeholder="name@example.com" 
-                       autocomplete="email" />
+                       autocomplete="email">
                 <label for="floatingInput">Email address</label>
             </div>
             
             <div class="form-floating mb-3">
                 <input type="password" class="form-control" name="password" id="floatingPassword" 
-                       required placeholder="Password" autocomplete="current-password" />
+                       required placeholder="Password" autocomplete="current-password">
                 <label for="floatingPassword">Password</label>
             </div>
             
