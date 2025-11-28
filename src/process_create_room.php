@@ -75,7 +75,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $uploadOk = 0;
         }
 
-        // Check file size (Limit to 5MB)
+        // check file size (Limit to 5MB)
         if ($_FILES["roomImage"]["size"] > 5000000) {
             $errorMsg = "Sorry, your file is too large.";
             $uploadOk = 0;

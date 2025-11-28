@@ -66,8 +66,7 @@ if (isset($_GET['name'])) {
             <a href="index.php" class="back-link">← Back to Home</a>
 
             <?php if ($room): ?>
-                <img src="<?php echo htmlspecialchars($room['imagePath'] ?? '/images/placeholder.png'); ?>"
-                    alt="<?php echo htmlspecialchars($room['roomName']) ?>" class="room-hero">
+                <img src="<?php echo htmlspecialchars($room['imagePath'] ?? '/images/placeholder.png'); ?>" alt="<?php echo htmlspecialchars($room['roomName']); ?>" class="room-hero">
 
                 <div class="thumbnail-gallery">
                     <img src="<?php echo htmlspecialchars($room['imagePath'] ?? '/images/placeholder.png'); ?>" alt="Thumbnail 1" class="active" onclick="changeHeroImage(this.src)">
@@ -127,64 +126,64 @@ if (isset($_GET['name'])) {
                     </div>
                 </div>
 
-            <!-- Reviews Section -->
-            <div class="reviews-section">
-                <h2>What Our Customers Say</h2>
-            
-                <?php
-                $reviews = getRoomReviews($room_id);
-                
-                if (count($reviews) > 0):
-                ?>
-                    <div class="reviews-summary">
-                        <div>
-                            <?php echo displayStarRating($avg_rating); ?>
-                        </div>
-                        <div class="reviews-summary-rating">
-                            <?php echo $avg_rating; ?> out of 5
-                        </div>
-                        <div class="reviews-summary-count">
-                            Based on <?php echo $review_count; ?> <?php echo $review_count == 1 ? 'review' : 'reviews'; ?>
-                        </div>
-                    </div>
+                <!-- Reviews Section -->
+                <div class="reviews-section">
+                    <h2>What Our Customers Say</h2>
 
-                    <div class="reviews-list">
-                        <?php foreach ($reviews as $review): ?>
-                            <div class="review-item">
-                                <div class="review-header">
-                                    <div>
-                                        <div class="review-username">
-                                            <?php echo htmlspecialchars($review['username']); ?>
-                                        </div>
-                                        <div class="review-stars">
-                                            <?php echo displayStarRating($review['rating']); ?>
-                                        </div>
-                                    </div>
-                                    <div class="review-date">
-                                        <?php 
-                                        $date = new DateTime($review['created_at']);
-                                        echo $date->format('M j, Y'); 
-                                        ?>
-                                    </div>
-                                </div>
-                                
-                                <?php if (!empty($review['comment'])): ?>
-                                    <div class="review-comment">
-                                        <?php echo nl2br(htmlspecialchars($review['comment'])); ?>
-                                    </div>
-                                <?php endif; ?>
+                    <?php
+                    $reviews = getRoomReviews($room_id);
+
+                    if (count($reviews) > 0):
+                    ?>
+                        <div class="reviews-summary">
+                            <div aria-hidden="true">
+                                <?php echo displayStarRating($avg_rating); ?>
                             </div>
-                        <?php endforeach; ?>
-                    </div>
-                <?php else: ?>
-                    <div class="reviews-empty">
-                        <p>No reviews yet. Be the first to review this room!</p>
-                        <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true): ?>
-                            <a href="reviews_page.php?name=<?php echo urlencode($room_name); ?>" class="btn btn-primary">Write a Review</a>
-                        <?php endif; ?>
-                    </div>
-                <?php endif; ?>
-            </div>
+                            <div class="reviews-summary-rating">
+                                <?php echo $avg_rating; ?> out of 5
+                            </div>
+                            <div class="reviews-summary-count">
+                                Based on <?php echo $review_count; ?> <?php echo $review_count == 1 ? 'review' : 'reviews'; ?>
+                            </div>
+                        </div>
+
+                        <div class="reviews-list">
+                            <?php foreach ($reviews as $review): ?>
+                                <div class="review-item">
+                                    <div class="review-header">
+                                        <div>
+                                            <div class="review-username">
+                                                <?php echo htmlspecialchars($review['username']); ?>
+                                            </div>
+                                            <div class="review-stars">
+                                                <?php echo displayStarRating($review['rating']); ?>
+                                            </div>
+                                        </div>
+                                        <div class="review-date">
+                                            <?php
+                                            $date = new DateTime($review['created_at']);
+                                            echo $date->format('M j, Y');
+                                            ?>
+                                        </div>
+                                    </div>
+
+                                    <?php if (!empty($review['comment'])): ?>
+                                        <div class="review-comment">
+                                            <?php echo nl2br(htmlspecialchars($review['comment'])); ?>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php else: ?>
+                        <div class="reviews-empty">
+                            <p>No reviews yet. Be the first to review this room!</p>
+                            <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true): ?>
+                                <a href="reviews_page.php?name=<?php echo urlencode($room_name); ?>" class="btn btn-primary">Write a Review</a>
+                            <?php endif; ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
         </div>
         <!-- booking pop up -->
         <div id="modal" class="modal" tabindex="0">
@@ -208,7 +207,6 @@ if (isset($_GET['name'])) {
             </a>
         </div>
     <?php endif; ?>
-
     </main>
 
     <?php

@@ -54,6 +54,7 @@ $conn->close();
     <title>Manage Rooms - Escape Quest</title>
     <?php include "inc/head.inc.php" ?>
     <link rel="stylesheet" href="css/rooms.css">
+    <script defer src="js/index.js"></script>
 </head>
 
 <body>
@@ -167,51 +168,6 @@ $conn->close();
     </main>
 
     <?php include "inc/footer.inc.php" ?>
-
-    <!-- ⚡ JAVASCRIPT FOR INSTANT FILTERING -->
-    <script>
-        function filterTable() {
-            // 1. Get input value
-            const input = document.getElementById("adminSearchInput");
-            const filter = input.value.toUpperCase();
-
-            // 2. Get table and rows
-            const table = document.getElementById("roomsTable");
-            const rows = table.getElementsByClassName("searchable-row");
-            const noResults = document.getElementById("noAdminResults");
-
-            let visibleCount = 0;
-
-            // 3. Loop through all table rows
-            for (let i = 0; i < rows.length; i++) {
-                // Get ID column (index 0) and Name column (index 2)
-                const idCell = rows[i].getElementsByTagName("td")[0];
-                const nameCell = rows[i].getElementsByTagName("td")[2];
-
-                if (nameCell || idCell) {
-                    const nameText = nameCell.textContent || nameCell.innerText;
-                    const idText = idCell.textContent || idCell.innerText;
-
-                    // Check if search term is inside Name OR ID
-                    if (nameText.toUpperCase().indexOf(filter) > -1 || idText.toUpperCase().indexOf(filter) > -1) {
-                        rows[i].style.display = ""; // Show
-                        visibleCount++;
-                    } else {
-                        rows[i].style.display = "none"; // Hide
-                    }
-                }
-            }
-
-            // 4. Toggle "No Results" message
-            if (visibleCount === 0) {
-                table.style.display = "none";
-                noResults.style.display = "block";
-            } else {
-                table.style.display = "table";
-                noResults.style.display = "none";
-            }
-        }
-    </script>
 </body>
 
 </html>

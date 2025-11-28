@@ -45,6 +45,7 @@ if (!$room) {
     <title>Edit Room - Escape Quest</title>
     <?php include "inc/head.inc.php" ?>
     <link rel="stylesheet" href="css/rooms.css">
+    <script defer src="js/index.js"></script>
 </head>
 
 <body>
@@ -56,6 +57,10 @@ if (!$room) {
                 <div class="col-lg-8">
                     <div class="pricing-card text-start p-5">
                         <h2 class="text-center mb-4 text-warning">Edit Room: <?php echo htmlspecialchars($room['roomName']); ?></h2>
+
+                        <p class="text-center text-light mb-4" style="font-size: 0.9rem;">
+                            Fields marked with <span class="text-danger">*</span> are required.
+                        </p>
 
                         <form action="process_edit_room.php" method="POST" enctype="multipart/form-data">
 
