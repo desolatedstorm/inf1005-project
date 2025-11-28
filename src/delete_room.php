@@ -127,7 +127,7 @@ $conn->close();
                                 <tr class="searchable-row">
                                     <td class="fw-bold text-warning"><?php echo $room['roomID']; ?></td>
                                     <td>
-                                        <img src="<?php echo htmlspecialchars($room['imagePath'] ?? 'images/placeholder.png'); ?>" alt="Thumbnail" style="width: 60px; height: 40px; object-fit: cover; border-radius: 4px;">
+                                        <img src="<?php echo htmlspecialchars(str_replace(' ', '%20', $room['imagePath'] ?? 'images/placeholder.png')); ?>" alt="Thumbnail" style="width: 60px; height: 40px; object-fit: cover; border-radius: 4px;">
                                     </td>
                                     <td><?php echo htmlspecialchars($room['roomName']); ?></td>
                                     <td>
