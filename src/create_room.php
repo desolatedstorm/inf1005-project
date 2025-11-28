@@ -1,0 +1,155 @@
+<?php
+
+// 1. Start the session (if not already started)
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+include "inc/functions.php";
+
+// 2. SECURITY CHECK
+// If user is NOT logged in OR user is NOT an admin
+if (!isset($_SESSION['user_id']) || !isset($_SESSION['is_admin']) || $_SESSION['is_admin'] != 1) {
+    // Redirect them to login page
+    header("Location: login.php");
+    exit(); // Stop the script immediately
+}
+
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Create New Room - Escape Quest</title>
+    <?php include "inc/head.inc.php" ?>
+    <link rel="stylesheet" href="css/rooms.css">
+</head>
+
+<body>
+    <?php include "inc/nav.inc.php" ?>
+
+    <main class="page-content section-gap">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="pricing-card text-start p-5">
+                        <h2 class="text-center mb-4 text-warning">Create a New Room</h2>
+                        
+                        <form action="process_create_room.php" method="POST" enctype="multipart/form-data">
+                            
+                            <!-- roomName -->
+                            <div class="mb-3">
+                                <label for="roomName" class="form-label text-light">Room Name</label>
+                                <input type="text" class="form-control" id="roomName" name="roomName" required>
+                            </div>
+
+                            <!-- roomDescription -->
+                            <div class="mb-3">
+                                <label for="roomDescription" class="form-label text-light">Description</label>
+                                <textarea class="form-control" id="roomDescription" name="roomDescription" rows="4" required></textarea>
+                            </div>
+
+                            <!-- roomLocation -->
+                            <div class="mb-3">
+                                <label for="roomLocation" class="form-label text-light">Location</label>
+                                <input type="text" class="form-control" id="roomLocation" name="roomLocation" placeholder="e.g. Main Street Branch" required>
+                            </div>
+
+                            <!-- roomDuration -->
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label for="roomDuration" class="form-label text-light">Duration (mins)</label>
+                                    <input type="number" class="form-control" id="roomDuration" name="roomDuration" min="30" max="180" required>
+                                </div>
+
+                                <!-- roomMin -->
+                                <div class="col-md-4 mb-3">
+                                    <label for="roomMin" class="form-label text-light">Min Players</label>
+                                    <input type="number" class="form-control" id="roomMin" name="roomMin" min="1" required>
+                                </div>
+
+                                <!-- roomMax -->
+                                <div class="col-md-4 mb-3">
+                                    <label for="roomMax" class="form-label text-light">Max Players</label>
+                                    <input type="number" class="form-control" id="roomMax" name="roomMax" min="1" required>
+                                </div>
+                            </div>
+
+                            <!-- roomPriceOffPeak and roomPricePeak -->
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="roomPriceOffpeak" class="form-label text-light">Off-Peak Price ($)</label>
+                                    <input type="number" step="0.01" class="form-control" id="roomPriceOffpeak" name="roomPriceOffpeak" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="roomPricePeak" class="form-label text-light">Peak Price ($)</label>
+                                    <input type="number" step="0.01" class="form-control" id="roomPricePeak" name="roomPricePeak" required>
+                                </div>
+                            </div>
+
+                            <hr class="border-secondary my-4">
+
+                            <!-- roomDifficulty, roomFearLevel, roomGenre, roomExperienceType -->
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label text-light">Difficulty</label>
+                                    <select class="form-select" name="roomDifficulty" required>
+                                        <option value="Easy">Easy</option>
+                                        <option value="Medium">Medium</option>
+                                        <option value="Hard">Hard</option>
+                                        <option value="Very Hard">Very Hard</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label text-light">Fear Level</label>
+                                    <select class="form-select" name="roomFearLevel" required>
+                                        <option value="Not Scary">Not Scary</option>
+                                        <option value="Mildly Scary">Mildly Scary</option>
+                                        <option value="Scary">Scary</option>
+                                        <option value="Very Scary">Very Scary</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label text-light">Genre</label>
+                                    <select class="form-select" name="roomGenre" required>
+                                        <option value="Horror">Horror</option>
+                                        <option value="Thriller">Thriller</option>
+                                        <option value="Fantasy">Fantasy</option>
+                                        <option value="Adventure">Adventure</option>
+                                        <option value="Mystery">Mystery</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label text-light">Experience Type</label>
+                                    <select class="form-select" name="roomExperienceType" required>
+                                        <option value="No Live Actor">No Live Actor</option>
+                                        <option value="Live Actor">Live Actor</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Image Upload -->
+                            <div class="mb-4">
+                                <label for="roomImage" class="form-label text-light">Room Image (Optional)</label>
+                                <input class="form-control" type="file" id="roomImage" name="roomImage" accept="image/*">
+                                <div class="form-text text-light">Accepted formats: JPG, PNG, GIF. Max size: 5MB.</div>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="book-btn">Create Room</button>
+                                <a href="index.php" class="btn btn-outline-light">Cancel</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <?php include "inc/footer.inc.php" ?>
+</body>
+</html>
