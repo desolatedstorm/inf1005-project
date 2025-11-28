@@ -184,7 +184,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // cancellation token (64 random varchar)
         $cancel_token = bin2hex(random_bytes(32));
 
-        // Store it in your Bookings table (you'll need to add this column)
+        // Store it in your Bookings table
         $stmt = $conn->prepare("UPDATE Bookings SET cancel_token = ? WHERE bookingID = ?");
         $stmt->bind_param("si", $cancel_token, $booking_id);
         if (!$stmt->execute()) {
