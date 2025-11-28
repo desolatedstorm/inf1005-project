@@ -53,6 +53,7 @@ if (isset($_GET['name'])) {
     <title><?php echo $room ? htmlspecialchars($room['roomName']) : 'Room Not Found' ?></title>
     <?php include "inc/head.inc.php" ?>
     <link rel="stylesheet" href="css/rooms.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="css/rating.css?v=<?php echo time(); ?>">
     <link rel="preload" href="css/popup.css" as="style">
     <link rel="stylesheet" href="css/popup.css">
     <script defer src="js/popup.js"></script>
@@ -66,10 +67,11 @@ if (isset($_GET['name'])) {
             <a href="index.php" class="back-link">← Back to Home</a>
 
             <?php if ($room): ?>
-                <img src="<?php echo htmlspecialchars($room['imagePath'] ?? '/images/placeholder.png'); ?>" alt="<?php echo htmlspecialchars($room['roomName']); ?>" class="room-hero">
+                <img src="<?php echo htmlspecialchars(str_replace(' ', '%20', $room['imagePath'] ?? '/images/placeholder.png')); ?>"
+                    alt="<?php echo htmlspecialchars($room['roomName']) ?>" class="room-hero">
 
                 <div class="thumbnail-gallery">
-                    <img src="<?php echo htmlspecialchars($room['imagePath'] ?? '/images/placeholder.png'); ?>" alt="Thumbnail 1" class="active" onclick="changeHeroImage(this.src)">
+                    <img src="<?php echo htmlspecialchars(str_replace(' ', '%20', $room['imagePath'] ?? '/images/placeholder.png')); ?>" alt="Thumbnail 1" class="active" onclick="changeHeroImage(this.src)">
                 </div>
 
                 <div class="room-content">

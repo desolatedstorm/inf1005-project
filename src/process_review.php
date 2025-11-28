@@ -10,6 +10,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
 
 $errorMsg = "";
 $success = true;
+$room_name = ""; 
 
 // Check if form was submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
