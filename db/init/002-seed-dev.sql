@@ -83,7 +83,7 @@ LOCK TABLES `Users` WRITE;
 INSERT INTO `Users` 
 VALUES 
 (1,'victim_1','test@example.com','some_hashed_password','2025-11-12 16:28:58',0),
-(4,'admin_user','admin@myhorror.com','your_secure_hashed_password','2025-11-12 16:56:51',1),
+(4,'admin_user','admin@myhorror.com','$2y$10$bOX0pGK2xUwckXZ4KhXt1e362iGsAfvp4szD0kHnksDFBoKaKMduu','2025-11-12 16:56:51',1),
 (5,'tester','test@yourhorror.com','another_hashed_password','2025-11-12 17:03:17',0),
 (6,'test_user_cas','cascade@example.com','some_hash','2025-11-12 17:04:24',0);
 /*!40000 ALTER TABLE `Users` ENABLE KEYS */;
