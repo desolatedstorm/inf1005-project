@@ -2,8 +2,13 @@
 <section class="checkout-form" style="display:none;">
     <?php
     // Get user details from session
-    $user_name = $_SESSION['username'] ?? 7; //TODO: REMOVE
-    $user_email = $_SESSION['email'] ?? 'tester@test.com';
+    $user_name = $_SESSION['username'] ?? '';
+    $user_email = $_SESSION['email'] ?? '';
+
+    if (!$user_email || !$user_name) {
+        header("Location: login.php");
+        die("User not logged in");
+    }
     
     // Stripe publishable key
     $stripe_publishable_key = 'pk_test_51STfLcAksjEcZwsYPOGI0xqUKScqT1AS4GFHnubNNqd3e0YVWomPXk9cABvxKyuOc4yokyT8VtlvzXd6LkWHQiTG0003O6qTzj';
