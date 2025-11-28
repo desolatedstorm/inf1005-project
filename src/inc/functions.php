@@ -202,3 +202,53 @@ function slugify($text)
     //and converts to lowercase
     return strtolower($text);
 }
+
+function filterTable() {
+    // 1. Get input elements
+    const input = document.getElementById("adminSearchInput");
+    const filter = input.value.toUpperCase();
+    
+    // 2. Get table and status message
+    const table = document.getElementById("roomsTable");
+    const tableBody = table.getElementsByTagName("tbody")[0];
+    const rows = tableBody.getElementsByTagName("tr");
+    const noResults = document.getElementById("noAdminResults");
+    
+    let visibleCount = 0;
+
+    // 3. Loop through all rows
+    for (let i = 0; i < rows.length; i++) {
+        // ID is column 0, Name is column 2
+        const idCell = rows[i].getElementsByTagName("td")[0];
+        const nameCell = rows[i].getElementsByTagName("td")[2];
+        
+        if (nameCell && idCell) {
+            const nameText = nameCell.textContent || nameCell.innerText;
+            const idText = idCell.textContent || idCell.innerText;
+
+            // Check match
+            if (nameText.toUpperCase().indexOf(filter) > -1 || idText.toUpperCase().indexOf(filter) > -1) {
+                rows[i].style.display = ""; // Show
+                visibleCount++;
+            } else {
+                rows[i].style.display = "none"; // Hide
+            }
+        }
+    }
+
+    // 4. Toggle "No Results" Message
+    // If no rows are visible, hide the table header/body and show message
+    if (visibleCount === 0) {
+        // Optional: Hide the table header if you want a totally blank look
+        // table.style.display = "none"; 
+        
+        // Show the 'No Results' div
+        noResults.style.display = "block";
+        // Update ARIA live region for screen readers
+        noResults.setAttribute("aria-hidden", "false");
+    } else {
+        table.style.display = "table";
+        noResults.style.display = "none";
+        noResults.setAttribute("aria-hidden", "true");
+    }
+}ƒ

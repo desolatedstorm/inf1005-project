@@ -7,16 +7,14 @@ if (session_status() === PHP_SESSION_NONE) {
 
 include "inc/functions.php";
 
-// 2. SECURITY CHECK
-// If user is NOT logged in OR user is NOT an admin
+// security check
 if (!isset($_SESSION['user_id']) || !isset($_SESSION['is_admin']) || $_SESSION['is_admin'] != 1) {
-    // Redirect them to login page
     header("Location: login.php");
-    exit(); // Stop the script immediately
+    exit(); 
 }
 
 
-// check if form is submitted or not 
+// check if form is submitted or not
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $conn = getDbConnection();
@@ -46,28 +44,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // image upload
     $target_dir = "images/";
     $imagePath = "images/placeholder.png"; // Default fallback
-
+    
+    // logic checks
     if ($min > $max) {
-        $errorMsg = "Minimum players cannot be greater than maximum players.";
-        $success = false;
+        die("<h3 style='color:white; background:red; padding:20px; text-align:center;'>Error: Minimum players cannot be greater than maximum. <br><a href='javascript:history.back()' style='color:white;'>Go Back</a></h3>");
     }
 
-    // Logic Check: Prices cannot be negative
-    if ($priceOff < 0 || $pricePeak < 0) {
-        $errorMsg = "Prices cannot be negative.";
-        $success = false;
+    if ($priceOff > $pricePeak) {
+        die("<h3 style='color:white; background:red; padding:20px; text-align:center;'>Error: Price off-peak cannot be greater than peak price. <br><a href='javascript:history.back()' style='color:white;'>Go Back</a></h3>");
     }
+
+    if ($priceOff < 0 || $pricePeak < 0) {
+        die("<h3 style='color:white; background:red; padding:20px; text-align:center;'>Error: Price cannot be negative. <br><a href='javascript:history.back()' style='color:white;'>Go Back</a></h3>");
+    }
+
 
     if (isset($_FILES["roomImage"]) && $_FILES["roomImage"]["error"] == 0) {
 
         $fileName = basename($_FILES["roomImage"]["name"]);
-        // Create unique filename to avoid overwrites (e.g., room_timestamp_filename.jpg)
+        // unique filename to avoid overwrites (e.g., room_timestamp_filename.jpg)
         $newFileName = "room_" . time() . "_" . $fileName;
         $target_file = $target_dir . $newFileName;
         $uploadOk = 1;
         $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
-        // Check if image file is a actual image
+        // check if image is an actual image
         $check = getimagesize($_FILES["roomImage"]["tmp_name"]);
         if ($check === false) {
             $errorMsg = "File is not an image.";
@@ -80,9 +81,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $uploadOk = 0;
         }
 
-        // Allow certain file formats
-        if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif") {
-            $errorMsg = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+        // allow certain file formats
+        if ($imageFileType != "jpg" && $imageFileType != "png") {
+            $errorMsg = "Sorry, only JPG, & PNG files are allowed.";
             $uploadOk = 0;
         }
 
@@ -125,7 +126,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             );
 
             if ($stmt->execute()) {
-                // Redirect to the newly created room or index
+                // redirect to created room
                 $newID = $stmt->insert_id;
                 header("Location: room.php?name=" . urlencode($name));
                 exit();
@@ -140,14 +141,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $conn->close();
 
-    // If we reached here, there was an error
+    // error message
     echo "<div style='background-color: #333; color: white; padding: 20px; text-align: center;'>";
     echo "<h3>Error Creating Room</h3>";
     echo "<p>$errorMsg</p>";
     echo "<a href='create_room.php' style='color: #f59f00;'>Go Back</a>";
     echo "</div>";
 } else {
-    // Not a POST request
     header("Location: create_room.php");
     exit();
 }

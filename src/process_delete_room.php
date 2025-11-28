@@ -1,18 +1,15 @@
 <?php
 ob_start();
-// 1. Start the session (if not already started)
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
 include "inc/functions.php";
 
-// 2. SECURITY CHECK
-// If user is NOT logged in OR user is NOT an admin
+// security check
 if (!isset($_SESSION['user_id']) || !isset($_SESSION['is_admin']) || $_SESSION['is_admin'] != 1) {
-    // Redirect them to login page
     header("Location: login.php");
-    exit(); // Stop the script immediately
+    exit(); 
 }
 
 
@@ -20,7 +17,6 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['is_admin']) || $_SESSION['
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['roomID'])) {
 
     $conn = getDbConnection();
-    // security check forces roomID to be an integer
     $roomID = (int)$_POST['roomID'];
 
     // get image path before deleting the room (so we can delete the image too)
