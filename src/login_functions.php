@@ -278,6 +278,7 @@ function authenticateUser($email, $password) {
     try {
         $conn = new mysqli($db_host, $db_user, $db_pass, $db_name);
 
+        // Added is_admin to the SELECT statement
         $stmt = $conn->prepare("SELECT userID, username, email, passwordhash, is_admin FROM Users WHERE email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
@@ -292,8 +293,10 @@ function authenticateUser($email, $password) {
 
         $stmt->close();
         $conn->close();
+		
         if (password_verify($password, $user['passwordhash'])) {
-			//unset($user['passwordhash']);
+			// Remove password hash before returning for security
+			unset($user['passwordhash']);
 		
         //if ($password === $user['passwordhash']) {
 			return $user; // success, return user data
@@ -533,14 +536,4 @@ function sendConfirmationEmail($email, $username) {
 	
 
 }
-
-// function testPHPMailerLoad() {
-//     try {
-//         $mail = new PHPMailer();
-//         return "PHPMailer loaded successfully!";
-//     } catch (Exception $e) {
-//         return "PHPMailer load error: " . $e->getMessage();
-//     }
-// }
-
 ?>
