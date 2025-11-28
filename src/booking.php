@@ -2,7 +2,7 @@
 session_start();
 
 $user_id = $_SESSION['user_id'] ?? '';
-$token = $_GET['booking_token'] ?? '';
+$token = $_SESSION['allow_booking'] ?? '';
 $room_id = $_SESSION['room_id'] ?? '';
 $room_name = $_SESSION['room_name'] ?? '';
 $desc = $_SESSION['desc'] ?? '';

@@ -359,6 +359,17 @@
     // This function is called from the Stripe payment form after successful payment
     window.handlePaymentSuccess = function() {
         console.log("Payment successful, saving booking...");
+        
+        // Get billing details
+        const billingData = {
+            billing_address: document.getElementById('billing-address').value,
+            billing_city: document.getElementById('billing-city').value,
+            billing_postal: document.getElementById('billing-postal').value,
+            billing_country: document.getElementById('billing-country').value
+        };
+
+        // Combine booking data with billing data
+        const finalData = { ...bookingData, ...billingData };
 
         // Now save to database with status "Confirmed"
         $.ajax({

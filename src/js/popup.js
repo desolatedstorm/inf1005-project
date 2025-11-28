@@ -53,24 +53,13 @@ function popUp()
 
     iframe.style.opacity = "0" // hide frame until style loaded
 
-    $.ajax({
-        type: 'POST',
-        url: 'api/api_generate_token.php',
-        dataType: 'json',
-       success: function(response) {
-        console.log(response.success);
-        if (response.success) {
-            iframe.src = popUpURL + "?booking_token=" + response.token;
-        }
-        else {
-            throw new Error("Unable to get Token");
-        }
-    },
-    error: function(xhr, status, error) {
-        console.error("Error opening booking page", error);
-    }
-    });
-
+    fetch("api/api_generate_token.php")
+    .then(response => {
+        if (!response.ok) throw new Error("Token error");
+        iframe.src = popUpURL;
+        
+    })
+    .catch(err => console.error(err));
 }
 
 function closeModal()
