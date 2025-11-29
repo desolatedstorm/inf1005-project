@@ -50,7 +50,7 @@ $conn->close();
 
             <!-- filter -->
             <div class="filter-box">
-                <h4 class="mb-3">Find Your Perfect Challenge</h4>
+                <h3 class="mb-3">Find Your Perfect Challenge</h3>
 
                 <div class="mb-3">
                     <h6>Fear Factor</h6>
@@ -185,7 +185,7 @@ $conn->close();
                                 data-title="<?php echo htmlspecialchars($room['roomName']); ?>">
 
                                 <div class="card">
-                                    <img src="<?php echo htmlspecialchars($room['imagePath'] ?? '/images/placeholder.png'); ?>"
+                                    <img src="<?php echo htmlspecialchars(str_replace(' ', '%20', $room['imagePath'] ?? '/images/placeholder.png')); ?>"
                                         class="card-img-top" alt="<?php echo htmlspecialchars($room['roomName']); ?>">
 
 
@@ -208,7 +208,10 @@ $conn->close();
 
                                         <h5 class="card-title mt-2"><?php echo htmlspecialchars($room['roomName']); ?></h5>
 
-                                        <a href="room.php?name=<?php echo urlencode($room['roomName']); ?>" class="stretched-link"></a>
+                                         <a href="room.php?name=<?php echo urlencode($room['roomName']); ?>" 
+                                           class="stretched-link" 
+                                           aria-label="Go to <?php echo htmlspecialchars($room['roomName']); ?>" 
+                                           title=""></a>
                                     </div>
                                 </div>
                             </div>

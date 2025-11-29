@@ -10,6 +10,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
 
 $errorMsg = "";
 $success = true;
+$room_name = ""; 
 
 // Check if form was submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -26,18 +27,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
     
-    // Validate room ID
-    if (empty($_POST["room_id"])) {
-        $errorMsg .= "Room ID is required.<br>";
+    // Validate room name
+    if (empty($_POST["room_name"])) {
+        $errorMsg .= "Room name is required.<br>";
         $success = false;
     } else {
-        $room_id = (int)$_POST["room_id"];
+        $room_name = trim($_POST["room_name"]);
     }
     
     // Comment is optional but sanitize if provided
     $comment = isset($_POST["comment"]) ? trim($_POST["comment"]) : "";
     
-    // Get user ID from session (you'll need to set this during login)
+    // Get user ID from session
     if (!isset($_SESSION['user_id'])) {
         $errorMsg .= "User session not found. Please login again.<br>";
         $success = false;
@@ -49,39 +50,47 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         try {
             $conn = getDBconnection();
             
-            // Get room name for redirect
-            $room_stmt = $conn->prepare("SELECT roomName FROM Rooms WHERE roomID = ?");
-            $room_stmt->bind_param("i", $room_id);
-            $room_stmt->execute();
-            $room_result = $room_stmt->get_result();
-            $room_data = $room_result->fetch_assoc();
-            $room_name = $room_data['roomName'] ?? '';
-            $room_stmt->close();
-            
-            // Check if user already reviewed this room
-            $check_stmt = $conn->prepare("SELECT reviewID FROM Reviews WHERE Users_userID = ? AND Rooms_roomID = ?");
-            $check_stmt->bind_param("ii", $user_id, $room_id);
-            $check_stmt->execute();
-            $result = $check_stmt->get_result();
-            
-            if ($result->num_rows > 0) {
-                // Update existing review
-                $stmt = $conn->prepare("UPDATE Reviews SET rating = ?, comment = ? WHERE Users_userID = ? AND Rooms_roomID = ?");
-                $stmt->bind_param("isii", $rating, $comment, $user_id, $room_id);
-            } else {
-                // Insert new review
-                $stmt = $conn->prepare("INSERT INTO Reviews (rating, comment, Users_userID, Rooms_roomID) VALUES (?, ?, ?, ?)");
-                $stmt->bind_param("isii", $rating, $comment, $user_id, $room_id);
-            }
-            
-            if (!$stmt->execute()) {
-                $errorMsg = "Error saving review: " . $stmt->error;
+            // Resolve room name to room ID
+            $stmtRoom = $conn->prepare("SELECT roomID, roomName FROM Rooms WHERE roomName = ?");
+            $stmtRoom->bind_param("s", $room_name);
+            $stmtRoom->execute();
+            $resRoom = $stmtRoom->get_result();
+            if ($resRoom->num_rows === 0) {
+                $errorMsg .= "Room not found: " . htmlspecialchars($room_name) . "<br>";
                 $success = false;
+                $stmtRoom->close();
+                $conn->close();
+            } else {
+                $rowRoom = $resRoom->fetch_assoc();
+                $room_id = (int)$rowRoom['roomID'];
+                $room_name = $rowRoom['roomName'];
+                $stmtRoom->close();
+                
+                // Check if user already reviewed this room
+                $check_stmt = $conn->prepare("SELECT reviewID FROM Reviews WHERE Users_userID = ? AND Rooms_roomID = ?");
+                $check_stmt->bind_param("ii", $user_id, $room_id);
+                $check_stmt->execute();
+                $result = $check_stmt->get_result();
+                
+                if ($result->num_rows > 0) {
+                    // Update existing review
+                    $stmt = $conn->prepare("UPDATE Reviews SET rating = ?, comment = ? WHERE Users_userID = ? AND Rooms_roomID = ?");
+                    $stmt->bind_param("isii", $rating, $comment, $user_id, $room_id);
+                } else {
+                    // Insert new review
+                    $stmt = $conn->prepare("INSERT INTO Reviews (rating, comment, Users_userID, Rooms_roomID) VALUES (?, ?, ?, ?)");
+                    $stmt->bind_param("isii", $rating, $comment, $user_id, $room_id);
+                }
+                
+                if (!$stmt->execute()) {
+                    $errorMsg = "Error saving review: " . $stmt->error;
+                    $success = false;
+                }
+                
+                $stmt->close();
+                $check_stmt->close();
+                $conn->close();
             }
-            
-            $stmt->close();
-            $check_stmt->close();
-            $conn->close();
             
         } catch (Exception $e) {
             $errorMsg = "Exception: " . $e->getMessage();
